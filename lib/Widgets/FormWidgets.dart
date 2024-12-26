@@ -3,13 +3,16 @@ import 'package:get/get.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
 import '../Controllers/BasicInfoController.dart';
-import 'package:intl/intl.dart'; // Ensure this import is added
+import 'package:intl/intl.dart';
+
+import 'ProfileCard.dart';
+import 'ProfilePendingCard.dart'; // Ensure this import is added
 
 class FormWidgets {
   final BasicInfoController controller = Get.put(BasicInfoController());
 
   // Method to build tabs
-  static Widget buildTabs(BasicInfoController controller) {
+  static Widget buildTabs(BasicInfoController controller, String tab1,String tab2) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[200],
@@ -17,8 +20,8 @@ class FormWidgets {
       ),
       child: Row(
         children: [
-          _buildTabButton(controller, 'Basic', 0),
-          _buildTabButton(controller, 'Preferences', 1),
+          _buildTabButton(controller, tab1, 0),
+          _buildTabButton(controller, tab2, 1),
         ],
       ),
     );
@@ -358,7 +361,6 @@ class FormWidgets {
           ),
 
           // add pink button
-
         ],
       ),
     );
@@ -394,7 +396,7 @@ class FormWidgets {
             SizedBox(height: 24),
 
             // Country of Current Residence Dropdown Pair
-           buildDropdownPair(
+            buildDropdownPair(
               label: 'Country of Current Residence',
               value: controller.currentResidence,
               lookingForValue: controller.lookingForResidence,
@@ -407,7 +409,6 @@ class FormWidgets {
       ),
     );
   }
-
 
   static Widget buildPreferencesForm2(BasicInfoController controller) {
     return Padding(
@@ -467,30 +468,30 @@ class FormWidgets {
 
           // Ethnicity
           buildDropdownPair(
-            label: 'Ethnicity',
-            value: controller.ethnicity,
-            lookingForValue: controller.lookingForEthnicity,
-            items: controller.ethnicityOptions,
-            hinttext: "Select Ethnicity"
-          ),
+              label: 'Ethnicity',
+              value: controller.ethnicity,
+              lookingForValue: controller.lookingForEthnicity,
+              items: controller.ethnicityOptions,
+              hinttext: "Select Ethnicity"),
 
           SizedBox(height: 16),
 
-          PinkButton(text: "Next", onTap: (){
-            Get.to(Profilepicture());
-          })
+          PinkButton(
+              text: "Next",
+              onTap: () {
+                Get.to(Profilepicture());
+              })
         ],
       ),
     );
   }
 
-
- static Widget buildDropdownPair({
+  static Widget buildDropdownPair({
     required String label,
     required Rxn<String> value,
     required Rxn<String> lookingForValue,
     required List<String> items,
-   required String hinttext,
+    required String hinttext,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -620,6 +621,7 @@ class FormWidgets {
         ...controller.incomeOptions.map(
           (option) => Obx(
             () => Container(
+              padding: EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(8),
@@ -639,4 +641,205 @@ class FormWidgets {
     );
   }
 
+  // create a search view widget with search text hint and icon to search text
+  static Widget buildSearchView({
+    required String hintText,
+    required RxString searchQuery,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: TextField(
+                onChanged: (text) => searchQuery.value = text,
+                decoration: InputDecoration(
+                  hintText: hintText,
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(fontSize: 22, color: Colors.grey)),
+          ),
+          Icon(Icons.search, color: Colors.grey),
+        ],
+      ),
+    );
+  }
+
+  // know add card widget with image full full and height and at the bottom of the image add a  name with age , below it job status, and his with country flag
+  static Widget buildProfileCard() {
+    return Column(children: [
+      Container(
+        width: Get.width,
+        height: Get.height * 0.22,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          // add grey color border
+          border: Border.all(color: Colors.blueGrey),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[200]!,
+              blurRadius: 10,
+              spreadRadius: 5,
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            // Profile Image as the background
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                'assets/images/profile.jpg',
+                width: Get.width,
+                height: Get.height,
+                fit: BoxFit.cover,
+              ),
+            ),
+            // Profile Details Section
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.only(left: 10, bottom: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'John Doe, 25',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                    Text(
+                      'Software Engineer',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      SizedBox(height: 12),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            width: Get.width * 0.18,
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            child: Center(
+              child: Text(
+                'Ignore',
+                style: TextStyle(color: Colors.pink, ),
+              ),
+            ),
+          ),
+          Container(
+            width: Get.width * 0.18,
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.pinkAccent,
+              borderRadius: BorderRadius.all(
+                Radius.circular(8),
+              ),
+            ),
+            child: Center(
+              child: Text('Accept', style: TextStyle(color: Colors.white)),
+            ),
+          ),
+        ],
+      ),
+    ]);
+  }
+
+  static Widget buildCompletedTab() {
+    RxString searchQuery = "".obs;
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: Get.height * 0.01),
+          FormWidgets.buildSearchView(hintText: "Search", searchQuery: searchQuery),
+          SizedBox(height: Get.height * 0.01),
+          // Remove Expanded or use a constrained height
+          SizedBox(
+            height: Get.height * 0.7, // Adjust based on your desired layout
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Two columns
+                crossAxisSpacing: 16, // Horizontal space between cards
+                mainAxisSpacing: 16, // Vertical space between cards
+                childAspectRatio: 0.65, // Adjust the aspect ratio of the cards
+              ),
+              itemCount: 10, // Adjust based on the number of items you have
+              itemBuilder: (context, index) {
+                return ProfileCard(
+                  imageUrl: 'assets/images/profile.jpg',
+                  name: 'Samina, 25',
+                  profession: 'Software Engineer',
+                  ignoreButtonText: 'Call',
+                  acceptButtonText: 'Chat',
+                  onIgnore: () {
+                    print('Call');
+                  },
+                  onAccept: () {
+                    print('Chat');
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Widget buildPendingTab() {
+    RxString searchQuery = "".obs;
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: Get.height * 0.01),
+          // Remove Expanded or use a constrained height
+          SizedBox(
+            height: Get.height , // Adjust based on your desired layout
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Two columns
+                crossAxisSpacing: 16, // Horizontal space between cards
+                mainAxisSpacing: 16, // Vertical space between cards
+                childAspectRatio: 0.80, // Adjust the aspect ratio of the cards
+              ),
+              itemCount: 10, // Adjust based on the number of items you have
+              itemBuilder: (context, index) {
+                return ProfilePendingCard(
+                  imageUrl: 'assets/images/profile.jpg',
+                  name: 'Sara Malik - 24',
+                  profession: 'Employed, Banker',
+                  onClose: (){}
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

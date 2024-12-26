@@ -42,10 +42,10 @@ class OnboardingPage extends StatelessWidget {
             // Onboarding Content
             Positioned(
               bottom: Get.height * 0.15,
-              left: Get.width * 0.2,
+              left: Get.width * 0.15,
               child: Container(
                 //add box decoration to the container with border radius of 16 and color of white with opacity of 0.2
-                width: Get.width * 0.6,
+                width: Get.width * 0.7,
                 height: Get.height * 0.3,
                 decoration: BoxDecoration(
                   color: Colors.black.withOpacity(0.4),
@@ -60,13 +60,13 @@ class OnboardingPage extends StatelessWidget {
                       Text(
                         title,
                         style: const TextStyle(
-                          fontSize: 28,
+                          fontSize: 30,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 22),
                       // Subtitle
                       Text(
                         subtitle,

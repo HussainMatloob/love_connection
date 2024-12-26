@@ -7,6 +7,7 @@ class BasicInfoController extends GetxController {
   final gender = Rxn<String>();
   final dateOfBirth = Rxn<DateTime>();
   final currentPage = 0.obs;
+  final MatchescurrentPage = 0.obs;
 
   void setGender(String? value) => gender.value = value;
   void setDateOfBirth(DateTime? value) => dateOfBirth.value = value;

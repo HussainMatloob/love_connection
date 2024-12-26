@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../Widgets/BasicinfoBottom.dart';
+import '../../Widgets/ProfileExplorWidget.dart';
 
 class Explore extends StatefulWidget {
   const Explore({super.key});
@@ -9,157 +11,98 @@ class Explore extends StatefulWidget {
 }
 
 class _ExploreState extends State<Explore> {
+  PageController _pageController = PageController();
+  List<Map<String, String>> profiles = [
+    {
+      'name': 'Samina',
+      'age': '28',
+      'details': 'Software Developer from Pakistan',
+      'location': 'Islamabad, Pakistan',
+      'image': 'assets/images/profile.jpg',
+    },
+    {
+      'name': 'Ali',
+      'age': '30',
+      'details': 'Graphic Designer from Lahore',
+      'location': 'Lahore, Pakistan',
+      'image': 'assets/images/PROFILE.png',
+    },
+    {
+      'name': 'Ayesha',
+      'age': '26',
+      'details': 'Marketing Specialist from Karachi',
+      'location': 'Karachi, Pakistan',
+      'image': 'assets/images/image2.jpg',
+    },
+
+    {
+      'name': 'Sara',
+      'age': '29',
+      'details': 'Fashion Designer from Lahore',
+      'location': 'Lahore, Pakistan',
+      'image': 'assets/images/image1.jpg',
+    },
+    {
+      'name': 'Sajal Ali',
+      'age': '30',
+      'details': 'Actress from Karachi',
+      'location': 'Karachi, Pakistan',
+      'image': 'assets/images/image3.jpg',
+    },
+    // Add more profiles as needed
+  ];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar:  PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight), // Standard AppBar height
-          child:  AppBar(
-              title: Text('Explore'),
-              backgroundColor: Colors.transparent,
-              centerTitle: true,// Makes the background transparent to show the gradient
-              elevation: 0, // Removes shadow
-            ),
-          ),
-
         body: Stack(
           children: [
-            Container(
-              width: Get.width,
-              height: Get.height,
-              child: Image.asset(
-                'assets/images/profile.jpg',
-                fit: BoxFit.cover,
-              ),
-            ),
-
+            // Top header section
             Positioned(
-              bottom: Get.height * 0.18, // 20% from the bottom
-              left: Get.width * 0.05, // 10% from the left
-              right: Get.width * 0.05, // 10% from the right
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Container for the Close Icon with white background
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white, // Background color is white
-                        shape: BoxShape.circle, // Circular shape
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                          // Close button action
-                        },
-                        icon: Icon(
-                          Icons.close,
-                          color: Colors.pink, // Icon color is pink
-                        ),
-                      ),
-                    ),
-                    // Container for the Check Icon with pink background
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.pink.shade200, // Background color is pink
-                        shape: BoxShape.circle, // Circular shape
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                          // Check button action
-                        },
-                        icon: Icon(
-                          Icons.check,
-                          color: Colors.white, // Icon color is white
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
+              top: 0,
               child: Container(
-                padding: EdgeInsets.all(20),
+                width: Get.width,
+                height: 60,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      Colors.black.withOpacity(0.9),
-                      Colors.black.withOpacity(0.8),
-                      Colors.black.withOpacity(0.7),
-                      Colors.black.withOpacity(0.6),
-                      Colors.black.withOpacity(0.5),
-                      Colors.black.withOpacity(0.4),
-                      Colors.black.withOpacity(0.3),
-                      Colors.black.withOpacity(0.2),
-                      Colors.black.withOpacity(0.1),
-                      Colors.black.withOpacity(0.05),
-                      Colors.black.withOpacity(0.025),
-                    ],
+                    colors: [Colors.white, Colors.pink.shade100],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Samina -25',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
+                child: Center(
+                  child: Text(
+                    'Explore',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
-                    Text(
-                      'Bachelors in Computer Science',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      'United States',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    SizedBox(height: 20),
-                    // Circular button with rounded corners
-                    Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                            topRight: Radius.circular(25),
-                          ),
-                        ),
-                        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                        child: Text(
-                          'Basic Info',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                  ],
+                  ),
                 ),
               ),
             ),
-            // add one more container in center with corner radius and padding of 20 of top left and right with center text basic info with underline
+
+            // PageView for swipeable profiles
+            Positioned.fill(
+              top: 60, // Offset to avoid overlapping with the AppBar
+              child: PageView.builder(
+                itemCount: profiles.length,
+                controller: _pageController,
+                scrollDirection: Axis.vertical, // Vertical swipe
+                itemBuilder: (context, index) {
+                  final profile = profiles[index];
+                  return ProfileInfoWidget(
+                    name: profile['name']!,
+                    age: profile['age']!,
+                    details: profile['details']!,
+                    location: profile['location']!,
+                    image: profile['image']!,
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

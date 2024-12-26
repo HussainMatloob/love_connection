@@ -48,6 +48,7 @@ class _ProfilepictureState extends State<Profilepicture> {
             GestureDetector(
               onTap: () {
                 // Add image upload logic here
+
               },
               child: DottedBorder(
                 color: Colors.pink.shade300,

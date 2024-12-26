@@ -34,7 +34,7 @@ class _HomeState extends State<Home> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FormWidgets.buildTabs(controller),
+                  FormWidgets.buildTabs(controller, 'Basic', 'Preferences'),
                 ],
               ),
             ),
