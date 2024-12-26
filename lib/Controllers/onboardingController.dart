@@ -7,11 +7,11 @@ class OnboardingController extends GetxController {
     if (currentPage < 2) {
       currentPage++;
     } else {
-      Get.offAllNamed('/home'); // Navigate to home or another route
+      Get.offAllNamed('/BasicInfoScreens'); // Navigate to BasicInfoScreens or another route
     }
   }
 
   void skipOnboarding() {
-    Get.offAllNamed('/home'); // Navigate to home or another route
+    Get.offAllNamed('/BasicInfoScreens'); // Navigate to BasicInfoScreens or another route
   }
 }
