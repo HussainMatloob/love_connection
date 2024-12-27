@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
-import '../../Widgets/BasicinfoBottom.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../Widgets/FormWidgets.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -19,7 +19,7 @@ class _ProfileState extends State<Profile> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Profile'),
+          title: Text('Profile', style: GoogleFonts.outfit(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 22),),
           centerTitle: true,
           // add menu button on action
           actions: [
@@ -58,15 +58,15 @@ class _ProfileState extends State<Profile> {
                     children: [
                       Text(
                         'Haider - 27',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                        style: GoogleFonts.outfit(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
                       ),
                       Text(
                         'Electrical Engineer, Masters\nEmployed, Lahore',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        style: GoogleFonts.outfit(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
                       ),
                     ],
                   ),
@@ -106,10 +106,10 @@ class _ProfileState extends State<Profile> {
                           // Text below the line
                           Text(
                             'Basic Info',
-                            style: TextStyle(
+                            style: GoogleFonts.outfit(
                               color: Colors.black,
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ],
@@ -167,7 +167,7 @@ class _ProfileState extends State<Profile> {
                       color: Colors.white, // White icon color for contrast
                     ),
                   ),
-                  title: const Text('Saved Profiles'),
+                  title:  Text('Saved Profiles', style: GoogleFonts.outfit(fontWeight: FontWeight.w300,fontSize: 12) ,),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16,),
                   onTap: () {
                     // Your action here
@@ -184,7 +184,7 @@ class _ProfileState extends State<Profile> {
                       color: Colors.white, // White icon color for contrast
                     ),
                   ),
-                  title: const Text('Settings'),
+                  title:  Text('Settings', style: GoogleFonts.outfit(fontWeight: FontWeight.w300,fontSize: 12)),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16,),
                   onTap: () {
                     // Your action here
@@ -201,7 +201,7 @@ class _ProfileState extends State<Profile> {
                       color: Colors.white, // White icon color for contrast
                     ),
                   ),
-                  title: const Text('Share App'),
+                  title:  Text('Share App', style: GoogleFonts.outfit(fontWeight: FontWeight.w300,fontSize: 12)),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16,),
                   onTap: () {
                     // Your action here
@@ -220,7 +220,7 @@ class _ProfileState extends State<Profile> {
                           .white, // White icon color to contrast with the pink background
                     ),
                   ),
-                  title: const Text('Logout'),
+                  title:  Text('Logout', style: GoogleFonts.outfit(fontWeight: FontWeight.w300,fontSize: 12)),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16,),
                   onTap: () {
                     // Your logout logic here
@@ -237,227 +237,159 @@ class _ProfileState extends State<Profile> {
   void showBasicInfoBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Allows the bottom sheet to expand fully
-      shape: RoundedRectangleBorder(
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 60, left: 16, right: 16),
-          child: Column(
-              children: [
-                Center(
-                  child: Container(
-                    width: Get.width * 0.75,
-                    height: 60,
+        return FractionallySizedBox(
+          heightFactor: 0.75, // Adjust height as needed
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Upgrade Button
+                  const SizedBox(height: 10),
+                  Center(
+                    child: InkWell(
+                      onTap: () {
+                        // Your action here
+                        Navigator.pop(context); // Close the bottom sheet
+                        FormWidgets().showUpgradeDialog(context);
+                      },
+                      child: Container(
+                        width: Get.width * 0.6,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.yellow.shade600,
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                             Text(
+                              'Upgrade',
+                              style: GoogleFonts.outfit(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            SvgPicture.asset(
+                              'assets/svg/premium.svg',
+                              color: Colors.black,
+                              width: 24,
+                              height: 24,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Informational Text
+                  FormWidgets().buildInfoRow(
+                    context,
+                    "Boost your profile to the top of search results and get faster,\n handpicked matches tailored to your preferences.",
+                  ),
+                  const SizedBox(height: 10),
+                  FormWidgets().buildInfoRow(
+                    context,
+                    "Enjoy unlimited messages and see who liked your profile\n to connect with more potential matches.",
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Basic Information Section
+                  Container(
                     decoration: BoxDecoration(
-                      color: Colors.yellow.shade700,
-                      borderRadius: BorderRadius.circular(18 ),
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Upgrade',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        // Header
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                             Text(
+                              'Basic Information',
+                              style: GoogleFonts.outfit(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            const Icon(Icons.edit, color: Colors.pink),
+                          ],
                         ),
-                        const SizedBox(width: 10),
-                        SvgPicture.asset(
-                          'assets/svg/premium.svg',
-                          color: Colors.black,
-                          width: 20,
-                          height: 20,
+                        const SizedBox(height: 10),
 
-                        ),
+                        // Basic Information Data Rows
+                        FormWidgets().buildBasicInfoRow('Name', 'Sara Sara'),
+                        const SizedBox(height: 10),
+                        FormWidgets().buildBasicInfoRow('Marital Status', 'Single'),
+                        const SizedBox(height: 10),
+                        FormWidgets().buildBasicInfoRow('Sect', 'Sunni'),
+                        const SizedBox(height: 10),
+                        FormWidgets().buildBasicInfoRow('Caste', 'Malik'),
+                        const SizedBox(height: 10),
+                        FormWidgets().buildBasicInfoRow('Height', '5\'6"'),
+                        const SizedBox(height: 10),
+                        FormWidgets().buildBasicInfoRow('Date of Birth', '01 Jan 1999'),
+                        const SizedBox(height: 10),
+                        FormWidgets().buildBasicInfoRow('Religion', 'Islam'),
+                        const SizedBox(height: 10),
+                        FormWidgets().buildBasicInfoRow('Nationality', 'Pakistani'),
                       ],
                     ),
                   ),
+
+                  const SizedBox(height: 10),
+
+                  // Education Information Section
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child:  Text(
+                      'Education Information',
+                      style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 18,
+                      ),
+                    ),
                   ),
-                const SizedBox(height: 20),
-
-                // Informational Text
-                const Text(
-                  '• Boost your profile to the top of search results and get faster, handpicked matches tailored to your preferences.', style: TextStyle(fontSize: 14, color: Colors.black,fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-
-                const Text(
-                  '• Enjoy unlimited messages and see who liked your profile to connect with more potential matches.', style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 50),
-
-                // Basic Information Header
-                Container(
-                  width: Get.width,
-                  height: 40,
-                  decoration: const BoxDecoration(
-                    color: Colors.grey ,
-
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
-                          'Basic Information',
-                          style: TextStyle(
-                               fontSize: 24),
-                        ),
-                        Icon(Icons.edit, color: Colors.pink),
+                  const SizedBox(height: 10),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        FormWidgets().buildBasicInfoRow('Education', 'Bachelors in Computer Science'),
+                        const SizedBox(height: 10),
+                        FormWidgets().buildBasicInfoRow('Monthly Income', '\$2000'),
+                        const SizedBox(height: 10),
+                        FormWidgets().buildBasicInfoRow('Employment Status', 'Employed'),
                       ],
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-
-                // Basic Information Data
-                Table(
-                  columnWidths: const {
-                    0: FlexColumnWidth(2),
-                    1: FlexColumnWidth(2),
-                  },
-                  children: const [
-                    TableRow(
-                      children: [
-                        Text('Name', style: TextStyle(color: Colors.grey)),
-                        Text('Marital Status',
-                            style: TextStyle(color: Colors.grey)),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        Text('Sara Sara',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('Single',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        SizedBox(height: 10), // Spacer
-                        SizedBox(height: 10), // Spacer
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        Text('Sect', style: TextStyle(color: Colors.grey)),
-                        Text('Caste', style: TextStyle(color: Colors.grey)),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        Text('Sunni',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('Malik',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        SizedBox(height: 10), // Spacer
-                        SizedBox(height: 10), // Spacer
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        Text('Height', style: TextStyle(color: Colors.grey)),
-                        Text('Date of Birth',
-                            style: TextStyle(color: Colors.grey)),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        Text('5\'6"',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('01 Jan 1999',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        SizedBox(height: 10), // Spacer
-                        SizedBox(height: 10), // Spacer
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        Text('Religion', style: TextStyle(color: Colors.grey)),
-                        Text('Nationality',
-                            style: TextStyle(color: Colors.grey)),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        Text('Islam',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('Pakistani',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    'Education Information',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Table(
-                  columnWidths: const {
-                    0: FlexColumnWidth(2),
-                    1: FlexColumnWidth(2),
-                  },
-                  children: const [
-                    TableRow(
-                      children: [
-                        Text('Education', style: TextStyle(color: Colors.grey)),
-                        Text('Monthly Income',
-                            style: TextStyle(color: Colors.grey)),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        Text('Bachelors in Computer Science',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('\$2000',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        SizedBox(height: 10), // Spacer
-                        SizedBox(height: 10), // Spacer
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        Text('Employment Status',
-                            style: TextStyle(color: Colors.grey)),
-                        Text('', style: TextStyle(color: Colors.grey)),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        Text('Employed',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('', style: TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ],
-                ),
-              ]),
+                ],
+              ),
+            ),
+          ),
         );
       },
     );
   }
+
 }

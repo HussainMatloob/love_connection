@@ -1,18 +1,23 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
 import '../Controllers/BasicInfoController.dart';
 import 'package:intl/intl.dart';
-
+import 'package:google_fonts/google_fonts.dart'; // Import GoogleFonts
+import 'PlanOption.dart';
 import 'ProfileCard.dart';
 import 'ProfilePendingCard.dart'; // Ensure this import is added
 
 class FormWidgets {
   final BasicInfoController controller = Get.put(BasicInfoController());
+  int? selectedIndex; // Track selected index
 
   // Method to build tabs
-  static Widget buildTabs(BasicInfoController controller, String tab1,String tab2) {
+  static Widget buildTabs(
+      BasicInfoController controller, String tab1, String tab2) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[200],
@@ -47,9 +52,13 @@ class FormWidgets {
             child: Center(
               child: Text(
                 text,
-                style: TextStyle(
+                style: GoogleFonts.outfit(
+                  // Use the Outfit font
                   color: isSelected ? Colors.black : Colors.grey,
+                  // Change color based on selection
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  // Change weight based on selection
+                  fontSize: 16, // Optionally set the font size
                 ),
               ),
             ),
@@ -73,7 +82,7 @@ class FormWidgets {
             SizedBox(height: Get.height * 0.03),
             Text(
               'Gender',
-              style: TextStyle(
+              style: GoogleFonts.outfit(
                 color: Colors.grey[600],
                 fontSize: Get.width * 0.04,
               ),
@@ -83,7 +92,7 @@ class FormWidgets {
             SizedBox(height: Get.height * 0.03),
             Text(
               'Date of Birth',
-              style: TextStyle(
+              style: GoogleFonts.outfit(
                 color: Colors.grey[600],
                 fontSize: Get.width * 0.04,
               ),
@@ -104,9 +113,10 @@ class FormWidgets {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: GoogleFonts.outfit(
             color: Colors.grey[600],
-            fontSize: Get.width * 0.04,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
           ),
         ),
         SizedBox(height: Get.height * 0.01),
@@ -170,9 +180,9 @@ class FormWidgets {
               SizedBox(height: Get.height * 0.01),
               Text(
                 label,
-                style: TextStyle(
+                style: GoogleFonts.outfit(
                   color: isSelected ? color : Colors.grey[600],
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  fontWeight: isSelected ? FontWeight.w400 : FontWeight.normal,
                 ),
               ),
             ],
@@ -216,9 +226,9 @@ class FormWidgets {
                   date != null
                       ? DateFormat('dd/MM/yyyy').format(date)
                       : 'DD/MM/YYYY',
-                  style: TextStyle(
-                    color: date != null ? Colors.black : Colors.grey,
-                  ),
+                  style: GoogleFonts.outfit(
+                      color: date != null ? Colors.black : Colors.grey,
+                      fontWeight: FontWeight.w400),
                 );
               }),
             ),
@@ -265,10 +275,10 @@ class FormWidgets {
       children: [
         Text(
           label,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: Get.width * 0.04,
-          ),
+          style: GoogleFonts.outfit(
+              color: Colors.grey[600],
+              fontSize: 16,
+              fontWeight: FontWeight.w400),
         ),
         SizedBox(height: Get.height * 0.01),
         Container(
@@ -286,11 +296,20 @@ class FormWidgets {
                   ),
                   border: InputBorder.none,
                 ),
-                hint: Text('Select ${label}'),
+                hint: Text(
+                  'Select ${label}',
+                  style: GoogleFonts.outfit(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 13,
+                  ),
+                ),
                 items: items.map((String item) {
                   return DropdownMenuItem(
                     value: item,
-                    child: Text(item),
+                    child: Text(
+                      item,
+                      style: GoogleFonts.outfit(fontWeight: FontWeight.w400),
+                    ),
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
@@ -498,10 +517,10 @@ class FormWidgets {
       children: [
         Text(
           label,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: Get.width * 0.04,
-          ),
+          style: GoogleFonts.outfit(
+              color: Colors.grey[600],
+              fontSize: 16,
+              fontWeight: FontWeight.w400),
         ),
         SizedBox(height: 8),
         Row(
@@ -518,11 +537,15 @@ class FormWidgets {
                         contentPadding: EdgeInsets.symmetric(horizontal: 16),
                         border: InputBorder.none,
                       ),
-                      hint: Text(hinttext),
+                      hint: Text(hinttext,style: GoogleFonts.outfit(fontSize: 13 , fontWeight: FontWeight.w400),),
                       items: items.map((String item) {
                         return DropdownMenuItem(
                           value: item,
-                          child: Text(item),
+                          child: Text(
+                            item,
+                            style:
+                                GoogleFonts.outfit(fontWeight: FontWeight.w400),
+                          ),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
@@ -544,11 +567,18 @@ class FormWidgets {
                         contentPadding: EdgeInsets.symmetric(horizontal: 16),
                         border: InputBorder.none,
                       ),
-                      hint: Text('Looking for'),
+                      hint: Text(
+                        'Looking for',
+                        style: GoogleFonts.outfit(fontWeight: FontWeight.w400,fontSize: 13),
+                      ),
                       items: items.map((String item) {
                         return DropdownMenuItem(
                           value: item,
-                          child: Text(item),
+                          child: Text(
+                            item,
+                            style:
+                                GoogleFonts.outfit(fontWeight: FontWeight.w400),
+                          ),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
@@ -573,7 +603,7 @@ class FormWidgets {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: GoogleFonts.outfit(
             color: Colors.grey[600],
             fontSize: Get.width * 0.04,
           ),
@@ -590,11 +620,17 @@ class FormWidgets {
                   contentPadding: EdgeInsets.symmetric(horizontal: 16),
                   border: InputBorder.none,
                 ),
-                hint: Text('Select ${label}'),
+                hint: Text(
+                  'Select ${label}',
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.w400, fontSize: 13),
+                ),
                 items: items.map((String item) {
                   return DropdownMenuItem(
                     value: item,
-                    child: Text(item),
+                    child: Text(
+                      item,
+                      style: GoogleFonts.outfit(fontWeight: FontWeight.w400),
+                    ),
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
@@ -612,10 +648,10 @@ class FormWidgets {
       children: [
         Text(
           'Monthly Household Income',
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: Get.width * 0.04,
-          ),
+          style: GoogleFonts.outfit(
+              color: Colors.grey[600],
+              fontSize: Get.width * 0.04,
+              fontWeight: FontWeight.w400),
         ),
         SizedBox(height: 8),
         ...controller.incomeOptions.map(
@@ -627,7 +663,10 @@ class FormWidgets {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: RadioListTile<String>(
-                title: Text(option),
+                title: Text(
+                  option,
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.w400,fontSize: 13),
+                ),
                 value: option,
                 groupValue: controller.monthlyIncome.value,
                 onChanged: (value) => controller.monthlyIncome.value = value,
@@ -635,8 +674,10 @@ class FormWidgets {
                 activeColor: Colors.pink,
               ),
             ),
+
           ),
         ),
+
       ],
     );
   }
@@ -662,7 +703,10 @@ class FormWidgets {
                   hintText: hintText,
                   border: InputBorder.none,
                 ),
-                style: TextStyle(fontSize: 22, color: Colors.grey)),
+                style: GoogleFonts.outfit(
+                    fontSize: 22,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w400)),
           ),
           Icon(Icons.search, color: Colors.grey),
         ],
@@ -680,7 +724,7 @@ class FormWidgets {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           // add grey color border
-          border: Border.all(color: Colors.blueGrey),
+          border: Border.all(color: Colors.pinkAccent),
           boxShadow: [
             BoxShadow(
               color: Colors.grey[200]!,
@@ -713,16 +757,18 @@ class FormWidgets {
                   children: [
                     Text(
                       'John Doe, 25',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                      style: GoogleFonts.outfit(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
                     ),
                     Text(
                       'Software Engineer',
-                      style: TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 12,
                         color: Colors.white,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
@@ -746,7 +792,9 @@ class FormWidgets {
             child: Center(
               child: Text(
                 'Ignore',
-                style: TextStyle(color: Colors.pink, ),
+                style: GoogleFonts.outfit(
+                  color: Colors.pink,
+                ),
               ),
             ),
           ),
@@ -760,7 +808,8 @@ class FormWidgets {
               ),
             ),
             child: Center(
-              child: Text('Accept', style: TextStyle(color: Colors.white)),
+              child: Text('Accept',
+                  style: GoogleFonts.outfit(color: Colors.white)),
             ),
           ),
         ],
@@ -775,7 +824,8 @@ class FormWidgets {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: Get.height * 0.01),
-          FormWidgets.buildSearchView(hintText: "Search", searchQuery: searchQuery),
+          FormWidgets.buildSearchView(
+              hintText: "Search", searchQuery: searchQuery),
           SizedBox(height: Get.height * 0.01),
           // Remove Expanded or use a constrained height
           SizedBox(
@@ -819,7 +869,7 @@ class FormWidgets {
           SizedBox(height: Get.height * 0.01),
           // Remove Expanded or use a constrained height
           SizedBox(
-            height: Get.height , // Adjust based on your desired layout
+            height: Get.height, // Adjust based on your desired layout
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, // Two columns
@@ -830,16 +880,226 @@ class FormWidgets {
               itemCount: 10, // Adjust based on the number of items you have
               itemBuilder: (context, index) {
                 return ProfilePendingCard(
-                  imageUrl: 'assets/images/profile.jpg',
-                  name: 'Sara Malik - 24',
-                  profession: 'Employed, Banker',
-                  onClose: (){}
-                );
+                    imageUrl: 'assets/images/profile.jpg',
+                    name: 'Sara Malik - 24',
+                    profession: 'Employed, Banker',
+                    onClose: () {});
               },
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildInfoRow(BuildContext context, String text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 5),
+          child: Container(
+            width: 10,
+            height: 10,
+            decoration: const BoxDecoration(
+              color: Colors.pink,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            text,
+            style: GoogleFonts.outfit(
+              fontSize: 13,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildBasicInfoRow(String heading, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          heading,
+          style: GoogleFonts.outfit(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w400),
+        ),
+        Text(
+          value,
+          style: GoogleFonts.outfit(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void showUpgradeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          backgroundColor: Colors.transparent,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+            // Blur effect
+            child: Container(
+              // add blur inside the container
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.black
+                    .withOpacity(0.4), // Semi-transparent black background
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Close button
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context); // Close dialog
+                        },
+                        child: const Icon(Icons.close, color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Title
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Unlock\n",
+                            style: GoogleFonts.roboto(
+                              color: Colors.white,
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "Unlimited\n",
+                            style: GoogleFonts.roboto(
+                              color: Colors.yellow.shade600,
+                              // Set yellow color here
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "Profiles",
+                            style: GoogleFonts.roboto(
+                              color: Colors.white,
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    // Subtitle
+                    Text(
+                      "All the following options\n include unlimited access",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    const SizedBox(height: 30),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        PlanOption(
+                          badge: "Save 35%",
+                          plan: "Monthly",
+                          price: "\$4.99",
+                          perWeek: "\$1.25/Wk",
+                          index: 0, // Provide index for the first plan
+                        ),
+                        const SizedBox(width: 10),
+                        PlanOption(
+                          badge: "Save 60%",
+                          plan: "Yearly",
+                          price: "\$21.99",
+                          perWeek: "\$1.25/Wk",
+                          isPopular: true,
+                          index: 1, // Provide index for the second plan
+                        ),
+                        const SizedBox(width: 10),
+                        PlanOption(
+                          badge: "",
+                          plan: "Weekly",
+                          price: "\$1.99",
+                          perWeek: "\$1.25/Wk",
+                          index: 2, // Provide index for the third plan
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    // Continue Button
+                    SizedBox(
+                      width: Get.width * 0.7,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context); // Close dialog and proceed
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.yellow.shade600,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 30),
+                        ),
+                        child: Text(
+                          "Continue",
+                          style: GoogleFonts.roboto(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    // Cancel Text
+                    Text(
+                      "Cancel anytime",
+                      style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

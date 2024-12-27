@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../Widgets/BasicinfoBottom.dart';
 import '../../Widgets/ProfileExplorWidget.dart';
 
@@ -74,9 +75,9 @@ class _ExploreState extends State<Explore> {
                 child: Center(
                   child: Text(
                     'Explore',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                    style: GoogleFonts.outfit(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w400,
                       color: Colors.black,
                     ),
                   ),

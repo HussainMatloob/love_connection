@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
 
 import 'bottom_nav/BottomNavbar.dart';
@@ -20,7 +21,12 @@ class _ProfilepictureState extends State<Profilepicture> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Profile Picture'),
+          title: Text('Profile Picture',
+              style: GoogleFonts.outfit(
+                color: Colors.black,
+                fontSize: 22,
+                fontWeight: FontWeight.w400,
+              )),
           centerTitle: true,
         ),
         body: Column(
@@ -36,9 +42,9 @@ class _ProfilepictureState extends State<Profilepicture> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Mandatory*',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                  style: GoogleFonts.outfit(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
                     color: Colors.black,
                   ),
                 ),
@@ -74,7 +80,7 @@ class _ProfilepictureState extends State<Profilepicture> {
                       const SizedBox(height: 8),
                       Text(
                         'Upload Image',
-                        style: TextStyle(
+                        style: GoogleFonts.outfit(
                           color: Colors.grey,
                           fontSize: 16,
                         ),

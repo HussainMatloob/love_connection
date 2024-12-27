@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePendingCard extends StatelessWidget {
   final String imageUrl;
@@ -23,7 +24,7 @@ class ProfilePendingCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blueGrey), // Grey border
+        border: Border.all(color: Colors.pinkAccent), // Grey border
         boxShadow: [
           BoxShadow(
             color: Colors.grey[200]!,
@@ -55,18 +56,18 @@ class ProfilePendingCard extends StatelessWidget {
                 children: [
                   Text(
                     name,
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w400,
                       color: Colors.white,
                     ),
                   ),
                   Text(
                     profession,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white,
-                    ),
+                    style: GoogleFonts.outfit(
+                        fontSize: 12,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400),
                   ),
                 ],
               ),
@@ -94,7 +95,6 @@ class ProfilePendingCard extends StatelessWidget {
             ),
           ),
           // Profile Details Section
-
         ],
       ),
     );

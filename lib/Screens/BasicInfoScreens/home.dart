@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:love_connection/Screens/BasicInfo.dart';
 import 'package:love_connection/Widgets/FormWidgets.dart';
-
+import 'package:google_fonts/google_fonts.dart'; // Import GoogleFonts
 import '../../Controllers/BasicInfoController.dart';
 import '../Preferences.dart';
 
@@ -23,7 +23,13 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Basic Information'),
+        title: Text(
+          'Basic Information',
+          style: GoogleFonts.outfit(
+            // Use the Outfit font
+            color: Colors.black,
+          ),
+        ),
         centerTitle: true,
       ),
       body: SafeArea(

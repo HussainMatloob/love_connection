@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'BasicinfoBottom.dart';
 
 class ProfileInfoWidget extends StatelessWidget {
@@ -69,9 +70,10 @@ class ProfileInfoWidget extends StatelessWidget {
                     ),
                     Text(
                       'Save',
-                      style: TextStyle(
-                        color: Colors.black, // Text color is black
-                      ),
+                      style: GoogleFonts.outfit(
+                          color: Colors.black, // Text color is black
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
@@ -112,7 +114,7 @@ class ProfileInfoWidget extends StatelessWidget {
 
         // Close and Check buttons
         Positioned(
-          bottom: Get.height * 0.25,
+          bottom: Get.height * 0.2,
           left: Get.width * 0.05,
           right: Get.width * 0.05,
           child: Padding(
@@ -176,39 +178,45 @@ class ProfileInfoWidget extends StatelessWidget {
                   Colors.black.withOpacity(0.1),
                   Colors.black.withOpacity(0.05),
                   Colors.black.withOpacity(0.025),
+                  Colors.black.withOpacity(0.0125),
                 ],
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '$name - $age',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '$name - $age',
+                    style: GoogleFonts.outfit(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  details,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
+                  Text(
+                    details,
+                    style: GoogleFonts.outfit(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  location,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
+                  Text(
+                    location,
+                    style: GoogleFonts.outfit(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-              ],
+                  SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         ),
@@ -248,10 +256,10 @@ class ProfileInfoWidget extends StatelessWidget {
                   // Text below the line
                   Text(
                     'Basic Info',
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       color: Colors.black,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ],

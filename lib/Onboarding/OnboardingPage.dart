@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_fonts/google_fonts.dart'; // Import GoogleFonts
 
 class OnboardingPage extends StatelessWidget {
   final String imagePath;
   final String title;
   final String subtitle;
-  final VoidCallback onNext;
-  final VoidCallback onSkip;
+
 
   const OnboardingPage({
     Key? key,
     required this.imagePath,
     required this.title,
     required this.subtitle,
-    required this.onNext,
-    required this.onSkip,
   }) : super(key: key);
 
   @override
@@ -29,6 +27,8 @@ class OnboardingPage extends StatelessWidget {
             // Background Image
             Positioned.fill(
               child: Image.asset(
+                width: Get.width,
+                height: Get.height,
                 imagePath,
                 fit: BoxFit.cover,
               ),
@@ -59,18 +59,19 @@ class OnboardingPage extends StatelessWidget {
                       // Title
                       Text(
                         title,
-                        style: const TextStyle(
-                          fontSize: 30,
+                        style: GoogleFonts.outfit(  // Use the Outfit font
+                          fontSize: 31,
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
+
                         ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 22),
-                      // Subtitle
+
                       Text(
                         subtitle,
-                        style: const TextStyle(
+                        style: GoogleFonts.outfit(  // Use the Outfit font
                           fontSize: 16,
                           color: Colors.white,
                         ),
@@ -104,35 +105,7 @@ class OnboardingPage extends StatelessWidget {
             ),
 
 
-            Positioned(
-              bottom: 24,
-              left: 0,
-              right: 0,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: onSkip,
-                      child: const Text(
-                        "Skip",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    FloatingActionButton(
-                      onPressed: onNext,
-                      backgroundColor: Colors.pinkAccent,
-                      // add raduis to the button
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: const Icon(Icons.arrow_forward, color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+
           ],
         ),
       ),

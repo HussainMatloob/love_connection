@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileCard extends StatelessWidget {
   final String imageUrl;
@@ -31,7 +32,7 @@ class ProfileCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.blueGrey), // Grey border
+            border: Border.all(color: Colors.pinkAccent), // Grey border
             boxShadow: [
               BoxShadow(
                 color: Colors.grey[200]!,
@@ -64,15 +65,15 @@ class ProfileCard extends StatelessWidget {
                     children: [
                       Text(
                         name,
-                        style: TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w400,
                           color: Colors.white,
                         ),
                       ),
                       Text(
                         profession,
-                        style: TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 12,
                           color: Colors.white,
                         ),
@@ -100,7 +101,7 @@ class ProfileCard extends StatelessWidget {
                 child: Center(
                   child: Text(
                     ignoreButtonText,
-                    style: TextStyle(color: Colors.pink),
+                    style: GoogleFonts.outfit(color: Colors.pink),
                   ),
                 ),
               ),
@@ -117,7 +118,7 @@ class ProfileCard extends StatelessWidget {
                 child: Center(
                   child: Text(
                     acceptButtonText,
-                    style: TextStyle(color: Colors.white),
+                    style: GoogleFonts.outfit(color: Colors.white),
                   ),
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PinkButton extends StatelessWidget {
   final String text;
@@ -25,7 +26,7 @@ class PinkButton extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(
             text,
-            style: TextStyle(
+            style: GoogleFonts.outfit(
               color: Colors.white, // White text color
               fontSize: 16,
               fontWeight: FontWeight.bold,
