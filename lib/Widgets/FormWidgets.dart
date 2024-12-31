@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:love_connection/Controllers/AuthController.dart';
+import 'package:love_connection/Controllers/PendingSendRequests.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
 import '../Controllers/BasicInfoController.dart';
@@ -14,6 +16,8 @@ import 'ProfilePendingCard.dart'; // Ensure this import is added
 class FormWidgets {
   final BasicInfoController controller = Get.put(BasicInfoController());
   int? selectedIndex; // Track selected index
+
+  final AuthController authController = Get.put(AuthController());
 
   // Method to build tabs
   static Widget buildTabs(
@@ -68,17 +72,20 @@ class FormWidgets {
     });
   }
 
-  // Method to build the form
   static Widget buildForm(BasicInfoController controller) {
+    final AuthController authController = Get.put(AuthController());
+
     return Padding(
       padding: EdgeInsets.all(Get.width * 0.05),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildInputField(controller, 'First Name', controller.firstName),
+            _buildInputField(
+                authController, 'First Name', authController.firstName),
             SizedBox(height: Get.height * 0.02),
-            _buildInputField(controller, 'Last Name', controller.lastName),
+            _buildInputField(
+                authController, 'Last Name', authController.lastName),
             SizedBox(height: Get.height * 0.03),
             Text(
               'Gender',
@@ -88,7 +95,7 @@ class FormWidgets {
               ),
             ),
             SizedBox(height: Get.height * 0.02),
-            _buildGenderSelection(controller),
+            _buildGenderSelection(authController),
             SizedBox(height: Get.height * 0.03),
             Text(
               'Date of Birth',
@@ -98,7 +105,7 @@ class FormWidgets {
               ),
             ),
             SizedBox(height: Get.height * 0.02),
-            _buildDateOfBirth(controller),
+            _buildDateOfBirth(authController),
           ],
         ),
       ),
@@ -107,7 +114,7 @@ class FormWidgets {
 
   // Method to build input field
   static Widget _buildInputField(
-      BasicInfoController controller, String label, RxString value) {
+      AuthController controller, String label, RxString value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -141,7 +148,7 @@ class FormWidgets {
   }
 
   // Method to build gender selection
-  static Widget _buildGenderSelection(BasicInfoController controller) {
+  static Widget _buildGenderSelection(AuthController controller) {
     return Row(
       children: [
         Expanded(
@@ -158,7 +165,7 @@ class FormWidgets {
   }
 
   // Method to build gender option
-  static Widget _buildGenderOption(BasicInfoController controller, String label,
+  static Widget _buildGenderOption(AuthController controller, String label,
       String value, IconData icon, Color color) {
     return Obx(() {
       final isSelected = controller.gender.value == value;
@@ -193,7 +200,7 @@ class FormWidgets {
   }
 
   // Method to build date of birth picker
-  static Widget _buildDateOfBirth(BasicInfoController controller) {
+  static Widget _buildDateOfBirth(AuthController controller) {
     return GestureDetector(
       onTap: () async {
         final date = await showDatePicker(
@@ -329,14 +336,14 @@ class FormWidgets {
         children: [
           _buildDropdownField(
             label: 'Height',
-            value: controller.height,
-            items: controller.heightOptions,
+            value: authController.height,
+            items: authController.heightOptions,
           ),
           SizedBox(height: Get.height * 0.02),
           _buildDropdownField(
             label: 'Marital Status',
-            value: controller.maritalStatus,
-            items: controller.maritalStatusOptions,
+            value: authController.maritalStatus,
+            items: authController.maritalStatusOptions,
           ),
           SizedBox(height: Get.height * 0.02),
           Row(
@@ -344,16 +351,16 @@ class FormWidgets {
               Expanded(
                 child: _buildDropdownField(
                   label: 'Religion',
-                  value: controller.religion,
-                  items: controller.religionOptions,
+                  value: authController.religion,
+                  items: authController.religionOptions,
                 ),
               ),
               SizedBox(width: Get.width * 0.02),
               Expanded(
                 child: _buildDropdownField(
                   label: 'Looking for',
-                  value: controller.lookingForReligion,
-                  items: controller.religionOptions,
+                  value: authController.lookingForReligion,
+                  items: authController.religionOptions,
                 ),
               ),
             ],
@@ -364,16 +371,16 @@ class FormWidgets {
               Expanded(
                 child: _buildDropdownField(
                   label: 'Nationality',
-                  value: controller.nationality,
-                  items: controller.nationalityOptions,
+                  value: authController.nationality,
+                  items: authController.nationalityOptions,
                 ),
               ),
               SizedBox(width: Get.width * 0.02),
               Expanded(
                 child: _buildDropdownField(
                   label: 'Looking for',
-                  value: controller.lookingForNationality,
-                  items: controller.nationalityOptions,
+                  value: authController.lookingForNationality,
+                  items: authController.nationalityOptions,
                 ),
               ),
             ],
@@ -386,6 +393,7 @@ class FormWidgets {
   }
 
   static Widget buildPreferencesForm(BasicInfoController controller) {
+    final AuthController authController = Get.put(AuthController());
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.all(Get.width * 0.05),
@@ -395,9 +403,9 @@ class FormWidgets {
             // Education Level Dropdown Pair
             buildDropdownPair(
               label: 'Education Level',
-              value: controller.educationLevel,
-              lookingForValue: controller.lookingForEducation,
-              items: controller.educationOptions,
+              value: authController.educationLevel,
+              lookingForValue: authController.lookingForEducation,
+              items: authController.educationOptions,
               hinttext: 'Select Education',
             ),
             SizedBox(height: 24),
@@ -405,8 +413,8 @@ class FormWidgets {
             // Employment Status Dropdown
             FormWidgets().buildSingleDropdown(
               label: 'Employment Status',
-              value: controller.employmentStatus,
-              items: controller.employmentOptions,
+              value: authController.employmentStatus,
+              items: authController.employmentOptions,
             ),
             SizedBox(height: 24),
 
@@ -417,9 +425,9 @@ class FormWidgets {
             // Country of Current Residence Dropdown Pair
             buildDropdownPair(
               label: 'Country of Current Residence',
-              value: controller.currentResidence,
-              lookingForValue: controller.lookingForResidence,
-              items: controller.countryOptions,
+              value: authController.currentResidence,
+              lookingForValue: authController.lookingForResidence,
+              items: authController.countryOptions,
               hinttext: 'Select Country',
             ),
             SizedBox(height: 24),
@@ -430,6 +438,7 @@ class FormWidgets {
   }
 
   static Widget buildPreferencesForm2(BasicInfoController controller) {
+    final AuthController authController = Get.put(AuthController());
     return Padding(
       padding: EdgeInsets.all(Get.width * 0.05),
       child: Column(
@@ -438,9 +447,9 @@ class FormWidgets {
           // City of Current Residence
           buildDropdownPair(
             label: 'City of Current Residence',
-            value: controller.cityOfResidence,
-            lookingForValue: controller.lookingForCity,
-            items: controller.cityOptions,
+            value: authController.cityOfResidence,
+            lookingForValue: authController.lookingForCity,
+            items: authController.cityOptions,
             hinttext: 'Select City',
           ),
           SizedBox(height: 16),
@@ -448,9 +457,9 @@ class FormWidgets {
           // Caste
           buildDropdownPair(
             label: 'Caste',
-            value: controller.caste,
-            lookingForValue: controller.lookingForCaste,
-            items: controller.casteOptions,
+            value: authController.caste,
+            lookingForValue: authController.lookingForCaste,
+            items: authController.casteOptions,
             hinttext: 'Select Caste',
           ),
           SizedBox(height: 16),
@@ -458,9 +467,9 @@ class FormWidgets {
           // Sub-Caste (optional)
           buildDropdownPair(
             label: 'Sub-Caste (optional)',
-            value: controller.subCaste,
-            lookingForValue: controller.lookingForSubCaste,
-            items: controller.subCasteOptions,
+            value: authController.subCaste,
+            lookingForValue: authController.lookingForSubCaste,
+            items: authController.subCasteOptions,
             hinttext: 'Select Sub-Caste',
           ),
           SizedBox(height: 16),
@@ -468,9 +477,9 @@ class FormWidgets {
           // Sect
           buildDropdownPair(
             label: 'Sect',
-            value: controller.sect,
-            lookingForValue: controller.lookingForSect,
-            items: controller.sectOptions,
+            value: authController.sect,
+            lookingForValue: authController.lookingForSect,
+            items: authController.sectOptions,
             hinttext: 'Select Sect',
           ),
           SizedBox(height: 16),
@@ -478,9 +487,9 @@ class FormWidgets {
           // Sub-Sect (optional)
           buildDropdownPair(
             label: 'Sub-Sect (optional)',
-            value: controller.subSect,
-            lookingForValue: controller.lookingForSubSect,
-            items: controller.subSectOptions,
+            value: authController.subSect,
+            lookingForValue: authController.lookingForSubSect,
+            items: authController.subSectOptions,
             hinttext: 'Select Sub-Sect',
           ),
           SizedBox(height: 16),
@@ -488,9 +497,9 @@ class FormWidgets {
           // Ethnicity
           buildDropdownPair(
               label: 'Ethnicity',
-              value: controller.ethnicity,
-              lookingForValue: controller.lookingForEthnicity,
-              items: controller.ethnicityOptions,
+              value: authController.ethnicity,
+              lookingForValue: authController.lookingForEthnicity,
+              items: authController.ethnicityOptions,
               hinttext: "Select Ethnicity"),
 
           SizedBox(height: 16),
@@ -537,7 +546,11 @@ class FormWidgets {
                         contentPadding: EdgeInsets.symmetric(horizontal: 16),
                         border: InputBorder.none,
                       ),
-                      hint: Text(hinttext,style: GoogleFonts.outfit(fontSize: 13 , fontWeight: FontWeight.w400),),
+                      hint: Text(
+                        hinttext,
+                        style: GoogleFonts.outfit(
+                            fontSize: 13, fontWeight: FontWeight.w400),
+                      ),
                       items: items.map((String item) {
                         return DropdownMenuItem(
                           value: item,
@@ -569,7 +582,8 @@ class FormWidgets {
                       ),
                       hint: Text(
                         'Looking for',
-                        style: GoogleFonts.outfit(fontWeight: FontWeight.w400,fontSize: 13),
+                        style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.w400, fontSize: 13),
                       ),
                       items: items.map((String item) {
                         return DropdownMenuItem(
@@ -622,7 +636,8 @@ class FormWidgets {
                 ),
                 hint: Text(
                   'Select ${label}',
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.w400, fontSize: 13),
+                  style: GoogleFonts.outfit(
+                      fontWeight: FontWeight.w400, fontSize: 13),
                 ),
                 items: items.map((String item) {
                   return DropdownMenuItem(
@@ -654,7 +669,7 @@ class FormWidgets {
               fontWeight: FontWeight.w400),
         ),
         SizedBox(height: 8),
-        ...controller.incomeOptions.map(
+        ...authController.incomeOptions.map(
           (option) => Obx(
             () => Container(
               padding: EdgeInsets.only(bottom: 12),
@@ -665,19 +680,19 @@ class FormWidgets {
               child: RadioListTile<String>(
                 title: Text(
                   option,
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.w400,fontSize: 13),
+                  style: GoogleFonts.outfit(
+                      fontWeight: FontWeight.w400, fontSize: 13),
                 ),
                 value: option,
-                groupValue: controller.monthlyIncome.value,
-                onChanged: (value) => controller.monthlyIncome.value = value,
+                groupValue: authController.monthlyIncome.value,
+                onChanged: (value) =>
+                    authController.monthlyIncome.value = value,
                 contentPadding: EdgeInsets.zero,
                 activeColor: Colors.pink,
               ),
             ),
-
           ),
         ),
-
       ],
     );
   }
@@ -860,36 +875,66 @@ class FormWidgets {
     );
   }
 
-  static Widget buildPendingTab() {
-    RxString searchQuery = "".obs;
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: Get.height * 0.01),
-          // Remove Expanded or use a constrained height
-          SizedBox(
-            height: Get.height, // Adjust based on your desired layout
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Two columns
-                crossAxisSpacing: 16, // Horizontal space between cards
-                mainAxisSpacing: 16, // Vertical space between cards
-                childAspectRatio: 0.80, // Adjust the aspect ratio of the cards
-              ),
-              itemCount: 10, // Adjust based on the number of items you have
-              itemBuilder: (context, index) {
-                return ProfilePendingCard(
-                    imageUrl: 'assets/images/profile.jpg',
-                    name: 'Sara Malik - 24',
-                    profession: 'Employed, Banker',
-                    onClose: () {});
-              },
-            ),
+  Widget buildPendingTab() {
+    final GetPendingRequestsController pendingRequestsController =
+        Get.put(GetPendingRequestsController());
+
+    return Obx(() {
+      if (pendingRequestsController.isLoading.value) {
+        // Show a loading indicator while fetching data
+        return const Center(child: CircularProgressIndicator());
+      } else if (pendingRequestsController.pendingRequests.isEmpty) {
+        // Show a message if there are no pending requests
+        return const Center(
+          child: Text(
+            'No pending requests found.',
+            style: TextStyle(fontSize: 16, color: Colors.black54),
           ),
-        ],
-      ),
-    );
+        );
+      } else {
+        // Display the list of pending profiles
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: Get.height * 0.01),
+              SizedBox(
+                height: Get.height, // Adjust based on your desired layout
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Two columns
+                    crossAxisSpacing: 16, // Horizontal space between cards
+                    mainAxisSpacing: 16, // Vertical space between cards
+                    childAspectRatio:
+                        0.80, // Adjust the aspect ratio of the cards
+                  ),
+                  itemCount: pendingRequestsController.pendingRequests.length,
+                  itemBuilder: (context, index) {
+                    final pendingProfile =
+                        pendingRequestsController.pendingRequests[index];
+
+                    return ProfilePendingCard(
+                      imageUrl: pendingProfile['profileimage'] != null
+                          ? 'https://projects.funtashtechnologies.com/gomeetapi/${pendingProfile['profileimage']}'
+                          : 'assets/images/profile.jpg',
+                      name:
+                          '${pendingProfile['firstname']} ${pendingProfile['lastname']} - ${pendingProfile['age'] ?? 'N/A'}',
+                      profession:
+                          pendingProfile['profession'] ?? 'Unknown Profession',
+                      onClose: () {
+                        // Handle onClose action, e.g., remove from the list
+                        pendingRequestsController.pendingRequests
+                            .removeAt(index);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    });
   }
 
   Widget buildInfoRow(BuildContext context, String text) {
@@ -928,7 +973,8 @@ class FormWidgets {
       children: [
         Text(
           heading,
-          style: GoogleFonts.outfit(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w400),
+          style: GoogleFonts.outfit(
+              color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w400),
         ),
         Text(
           value,

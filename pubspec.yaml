@@ -39,6 +39,11 @@ dependencies:
   dotted_border: ^2.1.0
   flutter_svg: ^1.0.0
   google_fonts: ^4.0.3
+  shared_preferences: ^2.3.4
+  dio: ^5.4.0
+  permission_handler: ^10.4.0
+  image_picker: ^1.0.7
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:

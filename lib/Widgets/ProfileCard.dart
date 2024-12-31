@@ -46,7 +46,7 @@ class ProfileCard extends StatelessWidget {
               // Profile Image as the background
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
+                child: Image.network(
                   imageUrl,
                   width: Get.width,
                   height: Get.height,

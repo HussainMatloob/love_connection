@@ -10,13 +10,25 @@ class ProfileInfoWidget extends StatelessWidget {
   final String location;
   final String image;
 
-  // Constructor to accept profile data
+  // New parameters for bottom sheet data
+  final Map<String, String> personalInfo;
+  final Map<String, String> educationInfo;
+
+  final VoidCallback onClose;
+  final VoidCallback onCheck;
+
+
+  // Constructor to accept profile data and bottom sheet data
   ProfileInfoWidget({
     required this.name,
     required this.age,
     required this.details,
     required this.location,
     required this.image,
+    required this.personalInfo,
+    required this.educationInfo,
+    required this.onClose,
+    required this.onCheck,
   });
 
   @override
@@ -27,32 +39,31 @@ class ProfileInfoWidget extends StatelessWidget {
         Container(
           width: Get.width,
           height: Get.height,
-          child: Image.asset(
-            image ?? 'assets/images/profile.jpg',
+          child: Image.network(
+            image,
             fit: BoxFit.cover,
           ),
         ),
         Positioned(
-          top: 8, // 8% from the top
-          right: 5, // 5% from the left
+          top: 8,
+          right: 5,
           child: Row(
-            spacing: 10,
             children: [
-              // Container for the Favorite Icon with text
+              // Favorite icon with text
               Container(
-                width: Get.width * 0.2, // 20% of the screen width
-                height: Get.height * 0.03, // 3% of the screen height
+                width: Get.width * 0.2,
+                height: Get.height * 0.03,
                 decoration: BoxDecoration(
-                  color: Colors.white, // Background color is white
+                  color: Colors.white,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
-                      offset: Offset(0, 3), // Shadow position, bottom
+                      offset: Offset(0, 3),
                     ),
                   ],
-                  borderRadius: BorderRadius.circular(20), // Rounded corners
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -65,37 +76,37 @@ class ProfileInfoWidget extends StatelessWidget {
                       icon: Icon(
                         Icons.favorite,
                         color: Colors.pink,
-                        size: 16, // Icon color is pink
+                        size: 16,
                       ),
                     ),
                     Text(
                       'Save',
                       style: GoogleFonts.outfit(
-                          color: Colors.black, // Text color is black
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400),
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ],
                 ),
               ),
-              // Container for the Menu Icon
+              // Menu icon
               Container(
-                width: 30, // Adjust the width as needed
-                height: 30, // Adjust the height as needed
+                width: 30,
+                height: 30,
                 decoration: BoxDecoration(
-                  color: Colors.white, // Background color
-                  shape: BoxShape.circle, // Circular shape
+                  color: Colors.white,
+                  shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 4,
-                      offset: Offset(0, 3), // Shadow position
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
                 child: Center(
-                  // Ensures the icon is centered inside the container
                   child: IconButton(
                     onPressed: () {
                       // Menu button action
@@ -103,7 +114,7 @@ class ProfileInfoWidget extends StatelessWidget {
                     icon: Icon(
                       Icons.more_vert,
                       color: Colors.black,
-                      size: 15, // Icon color
+                      size: 15,
                     ),
                   ),
                 ),
@@ -129,9 +140,7 @@ class ProfileInfoWidget extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
-                    onPressed: () {
-                      // Handle close action
-                    },
+                    onPressed: onClose,
                     icon: Icon(
                       Icons.close,
                       color: Colors.pink,
@@ -145,9 +154,7 @@ class ProfileInfoWidget extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
-                    onPressed: () {
-                      // Handle check action
-                    },
+                    onPressed: onCheck,
                     icon: Icon(
                       Icons.check,
                       color: Colors.white,
@@ -248,11 +255,11 @@ class ProfileInfoWidget extends StatelessWidget {
                 children: [
                   // Line above the text
                   Container(
-                    width: 50, // Line width of 50
-                    height: 2, // Line thickness
-                    color: Colors.black, // Line color
+                    width: 50,
+                    height: 2,
+                    color: Colors.black,
                   ),
-                  SizedBox(height: 5), // Space between the line and the text
+                  SizedBox(height: 5),
                   // Text below the line
                   Text(
                     'Basic Info',
@@ -275,27 +282,14 @@ class ProfileInfoWidget extends StatelessWidget {
   void showBasicInfoBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Allows the bottom sheet to expand fully
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
         return BasicInfoBottomSheet(
-          personalInfo: {
-            'name': 'Sara Sara',
-            'maritalStatus': 'Single',
-            'sect': 'Sunni',
-            'caste': 'Malik',
-            'height': '5\'6"',
-            'dob': '01 Jan 1999',
-            'religion': 'Islam',
-            'nationality': 'Pakistani',
-          },
-          educationInfo: {
-            'education': 'Bachelors in Computer Science',
-            'monthlyIncome': '\$2000',
-            'employmentStatus': 'Employed',
-          },
+          personalInfo: personalInfo,
+          educationInfo: educationInfo,
         );
       },
     );

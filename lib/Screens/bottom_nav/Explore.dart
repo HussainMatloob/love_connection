@@ -1,60 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../Widgets/BasicinfoBottom.dart';
+import 'package:love_connection/Controllers/SendConnectionRequest.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../Controllers/GetuserController.dart';
 import '../../Widgets/ProfileExplorWidget.dart';
 
-class Explore extends StatefulWidget {
-  const Explore({super.key});
+class Explore extends StatelessWidget {
+  Explore({super.key});
 
-  @override
-  State<Explore> createState() => _ExploreState();
-}
-
-class _ExploreState extends State<Explore> {
-  PageController _pageController = PageController();
-  List<Map<String, String>> profiles = [
-    {
-      'name': 'Samina',
-      'age': '28',
-      'details': 'Software Developer from Pakistan',
-      'location': 'Islamabad, Pakistan',
-      'image': 'assets/images/profile.jpg',
-    },
-    {
-      'name': 'Ali',
-      'age': '30',
-      'details': 'Graphic Designer from Lahore',
-      'location': 'Lahore, Pakistan',
-      'image': 'assets/images/PROFILE.png',
-    },
-    {
-      'name': 'Ayesha',
-      'age': '26',
-      'details': 'Marketing Specialist from Karachi',
-      'location': 'Karachi, Pakistan',
-      'image': 'assets/images/image2.jpg',
-    },
-
-    {
-      'name': 'Sara',
-      'age': '29',
-      'details': 'Fashion Designer from Lahore',
-      'location': 'Lahore, Pakistan',
-      'image': 'assets/images/image1.jpg',
-    },
-    {
-      'name': 'Sajal Ali',
-      'age': '30',
-      'details': 'Actress from Karachi',
-      'location': 'Karachi, Pakistan',
-      'image': 'assets/images/image3.jpg',
-    },
-    // Add more profiles as needed
-  ];
+  // Reference to GetUsersController
+  final GetUsersController usersController = Get.put(GetUsersController());
+  final SendConectionController sendConectionController = Get.put(SendConectionController());
 
   @override
   Widget build(BuildContext context) {
+    // Fetch user data on page load
+    usersController.fetchUsers();
+
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -88,25 +51,93 @@ class _ExploreState extends State<Explore> {
             // PageView for swipeable profiles
             Positioned.fill(
               top: 60, // Offset to avoid overlapping with the AppBar
-              child: PageView.builder(
-                itemCount: profiles.length,
-                controller: _pageController,
-                scrollDirection: Axis.vertical, // Vertical swipe
-                itemBuilder: (context, index) {
-                  final profile = profiles[index];
-                  return ProfileInfoWidget(
-                    name: profile['name']!,
-                    age: profile['age']!,
-                    details: profile['details']!,
-                    location: profile['location']!,
-                    image: profile['image']!,
+              child: Obx(() {
+                if (usersController.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (usersController.users.isEmpty) {
+                  return const Center(child: Text('No profiles found.'));
+                } else if(sendConectionController.isLoading.value){
+                  return const Center(child: CircularProgressIndicator());
+                }
+                else {
+                  return PageView.builder(
+                    itemCount: usersController.users.length,
+                    controller: PageController(),
+                    scrollDirection: Axis.vertical, // Vertical swipe
+                    itemBuilder: (context, index) {
+                      final profile = usersController.users[index];
+                      return ProfileInfoWidget(
+                        name: '${profile['firstname']} ${profile['lastname']}',
+                        age: _calculateAge(profile['dateofbirth'] ?? ''),
+                        details: '${profile['education']} from ${profile['city']}',
+                        location: profile['city'] ?? '',
+                        image: _getImageUrl(profile["profileimage"] ?? ''),
+                        onClose: (){},
+                        onCheck: () async {
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          final userID = prefs.getInt("userid").toString();
+                            sendConectionController.sendConnectionRequest(userID,profile['id']);
+                            usersController.users.removeAt(index);
+                        },
+                        personalInfo: {
+                          'name': '${profile['firstname']} ${profile['lastname']}',
+                          'maritalStatus': profile['maritalstatus'] ?? 'Unknown',
+                          'sect': profile['sect'] ?? 'Unknown',
+                          'caste': profile['cast'] ?? 'Unknown',
+                          'height': profile['height'] ?? 'Unknown',
+                          'dob': _formatDate(profile['dateofbirth'] ?? 'Unknown'),
+                          'religion': profile['religion'] ?? 'Unknown',
+                          'nationality': profile['nationality'] ?? 'Unknown',
+                        },
+                        educationInfo: {
+                          'education': profile['education'] ?? 'Unknown',
+                          'monthlyIncome': profile['monthlyincome'] ?? 'Unknown',
+                          'employmentStatus': profile['employmentstatus'] ?? 'Unknown',
+                        },
+                      );
+                    },
                   );
-                },
-              ),
+                }
+              }),
             ),
           ],
         ),
       ),
     );
   }
+
+  // Helper method to calculate age from date of birth
+  String _calculateAge(String dateOfBirth) {
+    if (dateOfBirth.isEmpty) return 'Unknown';
+    final dob = DateTime.tryParse(dateOfBirth);
+    if (dob == null) return 'Unknown';
+    final currentDate = DateTime.now();
+    int age = currentDate.year - dob.year;
+    if (currentDate.month < dob.month || (currentDate.month == dob.month && currentDate.day < dob.day)) {
+      age--;
+    }
+    return age.toString();
+  }
+
+  // Helper method to construct image URL
+  String _getImageUrl(String relativePath) {
+    const baseUrl = 'https://projects.funtashtechnologies.com/gomeetapi/'; // Replace with your base URL
+    return baseUrl + relativePath;
+  }
+  String _formatDate(String date) {
+    if (date == '00000000' || date.isEmpty || date == 'null') {
+      return 'Unknown';
+    }
+
+    try {
+      // Assuming the date is in 'yyyyMMdd' format
+      final parsedDate = DateTime.parse(
+        '${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(6, 8)}',
+      );
+      return '${parsedDate.day}-${parsedDate.month}-${parsedDate.year}';
+    } catch (e) {
+      return 'Unknown';
+    }
+  }
+
 }

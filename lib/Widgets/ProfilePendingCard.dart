@@ -9,12 +9,12 @@ class ProfilePendingCard extends StatelessWidget {
   final VoidCallback? onClose;
 
   const ProfilePendingCard({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.name,
     required this.profession,
     this.onClose,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class ProfilePendingCard extends StatelessWidget {
           // Profile Image as the background
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
+            child: Image.network(
               imageUrl,
               width: Get.width,
               height: Get.height,
@@ -74,7 +74,7 @@ class ProfilePendingCard extends StatelessWidget {
             ),
           ),
           // Close Button
-          Positioned(
+          Positioned( // Position the close button at the top rightL
             top: 8,
             left: 8,
             child: GestureDetector(
