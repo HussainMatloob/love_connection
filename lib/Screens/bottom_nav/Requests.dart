@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:love_connection/ApiService/ApiService.dart';
+import 'package:love_connection/Controllers/AcceptRequestController.dart';
 import 'package:love_connection/Widgets/FormWidgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Controllers/GetConnectionRequest.dart';
 import '../../Widgets/ProfileCard.dart';
 
@@ -16,6 +19,7 @@ class Requests extends StatefulWidget {
 class _RequestsState extends State<Requests> {
   // Controller instance
   final GetReceivedConnectionRequestController controller = Get.put(GetReceivedConnectionRequestController());
+  final AcceptRequestController acceptRequestController = Get.put(AcceptRequestController(ApiService()));
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +80,18 @@ class _RequestsState extends State<Requests> {
                         ignoreButtonText: 'Ignore',
                         acceptButtonText: 'Accept',
                         onIgnore: () {
-                          print('Ignore request from ${request['firstname']}');
+                          // remove the request from the list
+                          controller.Getrequests.removeAt(index);
+                          controller.update();
                         },
-                        onAccept: () {
-                          print('Accept request from ${request['firstname']}');
+                        onAccept: () async {
+
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          String userId = prefs.getString("userid").toString();
+                          acceptRequestController.acceptRequest(
+                            userId: userId,
+                            connectionId: request['id'].toString(),
+                          );
                         },
                       );
                     },

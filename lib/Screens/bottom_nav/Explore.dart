@@ -74,8 +74,8 @@ class Explore extends StatelessWidget {
                         image: _getImageUrl(profile["profileimage"] ?? ''),
                         onClose: (){},
                         onCheck: () async {
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                          final userID = prefs.getInt("userid").toString();
+                          final prefs = await SharedPreferences.getInstance();
+                          final userID = prefs.getString("userid").toString();
                             sendConectionController.sendConnectionRequest(userID,profile['id']);
                             usersController.users.removeAt(index);
                         },

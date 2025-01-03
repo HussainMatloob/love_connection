@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class BasicInfoBottomSheet extends StatelessWidget {
   final Map<String, String> personalInfo;
@@ -83,6 +84,16 @@ class BasicInfoBottomSheet extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String formatDate(String dob) {
+    // Parse the original date string
+    DateTime parsedDate = DateTime.parse(dob);
+
+    // Format the date to the desired format
+    String formattedDate = DateFormat('MMMM d, yyyy').format(parsedDate);
+
+    return formattedDate;
   }
 
   Widget _buildInfoRow(String label1, String value1, String label2, String value2) {

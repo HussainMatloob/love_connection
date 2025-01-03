@@ -199,7 +199,7 @@ class AuthController extends GetxController {
           backgroundColor: Colors.green.withOpacity(0.8),
           colorText: Colors.white,
         );
-        // Save the user ID to shared preferences
+
         // Navigate to next screen or show confirmation
         Get.offAll(Bottomnavbar());
       } else {

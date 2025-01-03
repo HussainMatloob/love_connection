@@ -22,8 +22,8 @@ class GetUsersController extends GetxController {
       // get it here from shared preferences
       final userID; 
       
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      userID = prefs.getInt("userid").toString();
+      final prefs = await SharedPreferences.getInstance();
+      userID = prefs.getString("userid").toString();
       
       print("============================== USERS DATA =============================");
       print("================================ User id is :${userID}========================================");

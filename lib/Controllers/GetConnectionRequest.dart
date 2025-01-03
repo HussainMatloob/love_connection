@@ -20,7 +20,7 @@ class GetReceivedConnectionRequestController extends GetxController {
     try {
 
       final prefs = await SharedPreferences.getInstance();
-      String  userID = prefs.getInt("userid").toString();
+      String  userID = prefs.getString("userid").toString();
 
       print("============================== USERS DATA SENDS REQUEST =============================");
       print("================================ User id is :${userID}========================================");

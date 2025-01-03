@@ -17,7 +17,7 @@ class GetPendingRequestsController extends GetxController{
     try {
       isLoading(true);
       final prefs = await SharedPreferences.getInstance();
-      String  userID = prefs.getInt("userid").toString();
+      String  userID = prefs.getString("userid").toString();
       print("================================ User id is :$userID========================================");
 
       // Call the API

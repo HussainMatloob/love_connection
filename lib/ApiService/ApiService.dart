@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   final String _baseUrl = 'https://projects.funtashtechnologies.com/gomeetapi';
-
   // Register User
   // Future<Map<String, dynamic>> registerUser({
   //   required String firstname,
@@ -164,14 +163,15 @@ class ApiService {
 
         final parsedBody = jsonDecode(responseBody);
         // Extract the 'userid' and save it
-        if (parsedBody['Userid'] != null) {
-          int userId = int.parse(parsedBody['Userid'].toString());
+        if (parsedBody['userid'] != null) {
+          int userId = int.parse(parsedBody['userid'].toString());
           print(" Register Successfully User ID: $userId");
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setInt('userid', userId);
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString('userid', userId.toString());
+          print("================================ user succesfully registered user id  : $userId========================================");
         }
         print('Response: $responseBody');
-        return {'ResponseCode': '200', 'Result': 'true', 'ResponseMsg': 'Success'};
+        return {'ResponseCode': '200', 'Result': 'true', 'ResponseMsg': 'Success', 'Data': parsedBody};
       } else {
         final responseBody = await response.stream.bytesToString();
         print('Error Response: $responseBody');
@@ -188,17 +188,17 @@ class ApiService {
   Future<Map<String, dynamic>> getUsers({required String userId}) async {
     try {
       final url = Uri.parse('$_baseUrl/getusers.php');
-      final request = http.MultipartRequest('POST', url);
-
-      // Add text fields
-      request.fields['userid'] = userId;
-
-      // Send the request
-      final response = await request.send();
+      final response = await http.post(
+        url,
+        body: {'userid': userId},
+      );
 
       if (response.statusCode == 200) {
-        final responseBody = await response.stream.bytesToString();
-        final jsonData = json.decode(responseBody);
+        // final responseBody = await response.stream.bytesToString();
+        //         // final jsonData = json.decode(responseBody);
+
+        final jsonData = json.decode(response.body);
+
 
         if (jsonData['ResponseCode'] == '200') {
           // Return full response including `Data` array
@@ -381,4 +381,157 @@ class ApiService {
       };
     }
   }
+  
+  // Get user data by user id 
+  Future<Map<String, dynamic>> GetUserInfo() async {
+    try {
+
+      final prefs = await SharedPreferences.getInstance();
+      final userid=prefs.getString('userid').toString();
+      print("================================ User id is :$userid  in Get User Info ========================================");
+      final url = Uri.parse('$_baseUrl/getprofiledata.php');
+      final response = await http.post(url, body: {'userId': userid});
+
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+
+        if (responseBody['ResponseCode'] == '200') {
+          // Return the response if successful, including the Data array
+          return {
+            'ResponseCode': responseBody['ResponseCode'],
+            'Result': responseBody['Result'],
+            'ResponseMsg': responseBody['ResponseMsg'],
+            'UserData': responseBody['UserData'],
+          };
+        } else {
+          // If response code is not 200, return failure details
+          return {
+            'ResponseCode': responseBody['ResponseCode'],
+            'Result': responseBody['Result'],
+            'ResponseMsg': responseBody['ResponseMsg'],
+            'UserData': [],
+          };
+        }
+      } else {
+        // Return failure if status code is not 200
+        return {
+          'ResponseCode': response.statusCode.toString(),
+          'Result': 'false',
+          'ResponseMsg': 'Failed to fetch user data',
+          'UserData': [],
+        };
+      }
+    } catch (e) {
+      // Return error response if an exception occurs
+      return {
+        'ResponseCode': '500',
+        'Result': 'false',
+        'ResponseMsg': e.toString(),
+        'UserData': [],
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> acceptRequest({
+    required String userId,
+    required String connectionId,
+  }) async {
+    try {
+      final url = Uri.parse('$_baseUrl/acceptrequest.php');
+      final response = await http.post(
+        url,
+        body: {
+          'userid': userId,
+          'connectionuserid': connectionId,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+
+        if (responseBody['ResponseCode'] == '200') {
+          return {
+            'ResponseCode': responseBody['ResponseCode'],
+            'Result': responseBody['Result'],
+            'ResponseMsg': responseBody['ResponseMsg'],
+          };
+        } else {
+          // If API response indicates a failure
+          return {
+            'ResponseCode': responseBody['ResponseCode'],
+            'Result': responseBody['Result'],
+            'ResponseMsg': responseBody['ResponseMsg'],
+          };
+        }
+      } else {
+        // If HTTP response status code is not 200
+        return {
+          'ResponseCode': response.statusCode.toString(),
+          'Result': 'false',
+          'ResponseMsg': 'Failed to accept request',
+        };
+      }
+    } catch (e) {
+      // If an exception occurs
+      return {
+        'ResponseCode': '500',
+        'Result': 'false',
+        'ResponseMsg': e.toString(),
+      };
+    }
+  }
+
+  // create a method for get connection by user id and with end point getconnections.php
+  Future<Map<String, dynamic>> getConnections() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userid=prefs.getString('userid').toString();
+      print("================================ User id is :$userid  in Get Connections ========================================");
+
+      final url = Uri.parse('$_baseUrl/getconnections.php');
+      final response = await http.post(
+        url,
+        body: {'userId': userid},
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+
+        if (responseBody['ResponseCode'] == '200') {
+          // Return the response if successful, including the Data array
+          return {
+            'ResponseCode': responseBody['ResponseCode'],
+            'Result': responseBody['Result'],
+            'ResponseMsg': responseBody['ResponseMsg'],
+            'ConnectionsData': responseBody['ConnectionsData'],
+          };
+        } else {
+          // If response code is not 200, return failure details
+          return {
+            'ResponseCode': responseBody['ResponseCode'],
+            'Result': responseBody['Result'],
+            'ResponseMsg': responseBody['ResponseMsg'],
+            'ConnectionsData': [],
+          };
+        }
+      } else {
+        // Return failure if status code is not 200
+        return {
+          'ResponseCode': response.statusCode.toString(),
+          'Result': 'false',
+          'ResponseMsg': 'Failed to fetch connections',
+          'ConnectionsData': [],
+        };
+      }
+    } catch (e) {
+      // Return error response if an exception occurs
+      return {
+        'ResponseCode': '500',
+        'Result': 'false',
+        'ResponseMsg': e.toString(),
+        'ConnectionsData': [],
+      };
+    }
+  }
+
 }

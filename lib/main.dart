@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:love_connection/Splash.dart';
 import 'Onboarding/OnboardingScreen.dart';
 import 'Screens/BasicInfoScreens/home.dart';
 
@@ -16,8 +17,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/onboarding',
+      initialRoute: '/splash',
       getPages: [
+        GetPage(name: '/splash', page: () => SplashScreen()), // Define your home screen
         GetPage(name: '/onboarding', page: () => OnboardingScreen()),
         GetPage(name: '/BasicInfoScreens', page: () => Home()), // Define your home screen
       ],

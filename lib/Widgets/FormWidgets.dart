@@ -2,7 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:love_connection/ApiService/ApiService.dart';
 import 'package:love_connection/Controllers/AuthController.dart';
+import 'package:love_connection/Controllers/GetConnections.dart';
 import 'package:love_connection/Controllers/PendingSendRequests.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
@@ -832,47 +834,86 @@ class FormWidgets {
     ]);
   }
 
-  static Widget buildCompletedTab() {
+   Widget buildCompletedTab() {
+    final GetConnectionsController connectionsController=
+        Get.put(GetConnectionsController(ApiService()));
+
     RxString searchQuery = "".obs;
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: Get.height * 0.01),
-          FormWidgets.buildSearchView(
-              hintText: "Search", searchQuery: searchQuery),
-          SizedBox(height: Get.height * 0.01),
-          // Remove Expanded or use a constrained height
-          SizedBox(
-            height: Get.height * 0.7, // Adjust based on your desired layout
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Two columns
-                crossAxisSpacing: 16, // Horizontal space between cards
-                mainAxisSpacing: 16, // Vertical space between cards
-                childAspectRatio: 0.65, // Adjust the aspect ratio of the cards
-              ),
-              itemCount: 10, // Adjust based on the number of items you have
-              itemBuilder: (context, index) {
-                return ProfileCard(
-                  imageUrl: 'assets/images/profile.jpg',
-                  name: 'Samina, 25',
-                  profession: 'Software Engineer',
-                  ignoreButtonText: 'Call',
-                  acceptButtonText: 'Chat',
-                  onIgnore: () {
-                    print('Call');
-                  },
-                  onAccept: () {
-                    print('Chat');
-                  },
-                );
-              },
-            ),
+    return Obx(() {
+      if (connectionsController.isLoading.value) {
+        // Show a loading indicator while fetching data
+        return const Center(child: CircularProgressIndicator());
+      } else if (connectionsController.connections.isEmpty) {
+        // Show a message if there are no pending requests
+        return const Center(
+          child: Text(
+            'No pending requests found.',
+            style: TextStyle(fontSize: 16, color: Colors.black54),
           ),
-        ],
-      ),
-    );
+        );
+      } else {
+        // Display the list of pending profiles
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: Get.height * 0.01),
+              FormWidgets.buildSearchView(
+                  hintText: "Search", searchQuery: searchQuery),
+              SizedBox(height: Get.height * 0.01),
+              // Remove Expanded or use a constrained height
+              SizedBox(
+                height: Get.height * 0.7, // Adjust based on your desired layout
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Two columns
+                    crossAxisSpacing: 16, // Horizontal space between cards
+                    mainAxisSpacing: 16, // Vertical space between cards
+                    childAspectRatio: 0.65, // Adjust the aspect ratio of the cards
+                  ),
+                  itemCount: connectionsController.connections.length, // Adjust based on the number of items you have
+                  itemBuilder: (context, index) {
+                    final connections =
+                    connectionsController.connections[index];
+                    return ProfileCard(
+                      imageUrl: connections['profileimage'] != null
+                          ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['profileimage']}'
+                          : 'assets/images/profile.jpg',
+                      name: '${connections['firstname']} ${connections['lastname']} - ${_formatDate(connections['age'] ?? 'N/A')}',
+                      profession: connections['profession'] ?? 'Unknown Profession',
+                      ignoreButtonText: 'Call',
+                      acceptButtonText: 'Chat',
+                      onIgnore: () {
+                        print('Call');
+                      },
+                      onAccept: () {
+                        print('Chat');
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    });
+  }
+
+  String _formatDate(String date) {
+    if (date == '00000000' || date.isEmpty || date == 'null') {
+      return 'Unknown';
+    }
+
+    try {
+      // Assuming the date is in 'yyyyMMdd' format
+      final parsedDate = DateTime.parse(
+        '${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(6, 8)}',
+      );
+      return '${parsedDate.day}-${parsedDate.month}-${parsedDate.year}';
+    } catch (e) {
+      return 'Unknown';
+    }
   }
 
   Widget buildPendingTab() {
@@ -918,7 +959,7 @@ class FormWidgets {
                           ? 'https://projects.funtashtechnologies.com/gomeetapi/${pendingProfile['profileimage']}'
                           : 'assets/images/profile.jpg',
                       name:
-                          '${pendingProfile['firstname']} ${pendingProfile['lastname']} - ${pendingProfile['age'] ?? 'N/A'}',
+                          '${pendingProfile['firstname']} ${pendingProfile['lastname']} - ${_formatDate(pendingProfile['age'] ?? 'N/A')}',
                       profession:
                           pendingProfile['profession'] ?? 'Unknown Profession',
                       onClose: () {
