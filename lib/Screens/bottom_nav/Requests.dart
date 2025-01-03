@@ -18,13 +18,14 @@ class Requests extends StatefulWidget {
 
 class _RequestsState extends State<Requests> {
   // Controller instance
-  final GetReceivedConnectionRequestController controller = Get.put(GetReceivedConnectionRequestController());
+  final GetReceivedConnectionRequestController _controller = Get.put(GetReceivedConnectionRequestController());
   final AcceptRequestController acceptRequestController = Get.put(AcceptRequestController(ApiService()));
 
   @override
   Widget build(BuildContext context) {
     // Fetch the data when the screen is loaded
-    controller.fetchReceivedConnectionRequests();
+    _controller.fetchReceivedConnectionRequests();
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -45,22 +46,22 @@ class _RequestsState extends State<Requests> {
             children: [
               FormWidgets.buildSearchView(
                 hintText: "Search",
-                searchQuery: controller.searchQuerytext, // Use the controller's searchQuerytext
+                searchQuery: _controller.searchQuerytext, // Use the controller's searchQuerytext
               ),
               SizedBox(height: Get.height * 0.02),
               Expanded(
                 child: Obx(() {
-                  if (controller.isLoading.value) {
+                  if (_controller.isLoading.value) {
                     // Show loading spinner while data is being fetched
                     return Center(child: CircularProgressIndicator());
                   }
-
-                  if (controller.errorMessage.isNotEmpty) {
-                    // Show error message if there is any
-                    return Center(child: Text(controller.errorMessage.value));
+                  else if(acceptRequestController.isLoading.value) {
+                    return Center(child: CircularProgressIndicator());
                   }
+                 else if (_controller.errorMessage.isNotEmpty) {
 
-                  // Data is fetched successfully, display it in GridView
+                    return Center(child: Text(_controller.errorMessage.value));
+                  }
                   return GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, // Two columns
@@ -68,9 +69,9 @@ class _RequestsState extends State<Requests> {
                       mainAxisSpacing: 16, // Vertical space between cards
                       childAspectRatio: 0.65, // Adjust the aspect ratio of the cards
                     ),
-                    itemCount: controller.Getrequests.length, // Use the length of sendRequests
+                    itemCount: _controller.Getrequests.length, // Use the length of sendRequests
                     itemBuilder: (context, index) {
-                      final request = controller.Getrequests[index];
+                      final request = _controller.Getrequests[index];
                       final imageUrl = 'https://projects.funtashtechnologies.com/gomeetapi/${request['profileimage']}'; // API URL for image
 
                       return ProfileCard(
@@ -81,11 +82,10 @@ class _RequestsState extends State<Requests> {
                         acceptButtonText: 'Accept',
                         onIgnore: () {
                           // remove the request from the list
-                          controller.Getrequests.removeAt(index);
-                          controller.update();
+                          _controller.Getrequests.removeAt(index);
+                          _controller.update();
                         },
                         onAccept: () async {
-
                           SharedPreferences prefs = await SharedPreferences.getInstance();
                           String userId = prefs.getString("userid").toString();
                           acceptRequestController.acceptRequest(

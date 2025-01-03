@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../ApiService/ApiService.dart';
@@ -10,6 +11,8 @@ class AcceptRequestController extends GetxController{
   var responseMessage = ''.obs;
 
   AcceptRequestController(this._apiService);
+
+  // use onit to fetch data when the controller is initialized
 
   Future<void> acceptRequest({
     required String userId,
@@ -25,6 +28,8 @@ class AcceptRequestController extends GetxController{
       // Update response message based on API result
       if (response['Result'] == 'true') {
         responseMessage.value = response['ResponseMsg']; // Success message
+        // show response message in SnackBar
+        Get.snackbar('Success', responseMessage.value , snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.pinkAccent[800]);
       } else {
         responseMessage.value = response['ResponseMsg']; // Failure message
       }

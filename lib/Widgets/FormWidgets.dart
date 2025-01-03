@@ -835,9 +835,7 @@ class FormWidgets {
   }
 
    Widget buildCompletedTab() {
-    final GetConnectionsController connectionsController=
-        Get.put(GetConnectionsController(ApiService()));
-
+    final GetConnectionsController connectionsController= Get.put(GetConnectionsController(ApiService()));
     RxString searchQuery = "".obs;
     return Obx(() {
       if (connectionsController.isLoading.value) {
@@ -847,7 +845,7 @@ class FormWidgets {
         // Show a message if there are no pending requests
         return const Center(
           child: Text(
-            'No pending requests found.',
+            'Completed Requests Are Not Found.',
             style: TextStyle(fontSize: 16, color: Colors.black54),
           ),
         );
@@ -877,7 +875,7 @@ class FormWidgets {
                     connectionsController.connections[index];
                     return ProfileCard(
                       imageUrl: connections['profileimage'] != null
-                          ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['profileimage']}'
+                          ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['profileimage'] }'
                           : 'assets/images/profile.jpg',
                       name: '${connections['firstname']} ${connections['lastname']} - ${_formatDate(connections['age'] ?? 'N/A')}',
                       profession: connections['profession'] ?? 'Unknown Profession',
@@ -900,6 +898,18 @@ class FormWidgets {
     });
   }
 
+  // searchQuery.listen((query) {
+  // // Update filtered connections based on the search query
+  // connectionsController.filterConnections(query);
+  // });
+
+  // void filterConnections(String query) {
+  //   var filtered = originalConnectionsList.where((connection) {
+  //     return connection['firstname'].toLowerCase().contains(query.toLowerCase()) ||
+  //         connection['lastname'].toLowerCase().contains(query.toLowerCase());
+  //   }).toList();
+  //   connections.value = filtered;
+  // }
   String _formatDate(String date) {
     if (date == '00000000' || date.isEmpty || date == 'null') {
       return 'Unknown';

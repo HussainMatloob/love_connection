@@ -35,4 +35,5 @@ class GetPendingRequestsController extends GetxController{
       isLoading(false);
     }
   }
+
 }

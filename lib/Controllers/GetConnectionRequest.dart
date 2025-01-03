@@ -4,7 +4,7 @@ import '../ApiService/ApiService.dart';
 
 class GetReceivedConnectionRequestController extends GetxController {
   // List to store send connection requests data
-  var Getrequests = <Map<String, String>>[].obs;
+  var Getrequests = [].obs;
   var isLoading = true.obs; // To track loading state
   var errorMessage = ''.obs;
   var searchQuerytext = ''.obs; // To store search query text
@@ -26,21 +26,18 @@ class GetReceivedConnectionRequestController extends GetxController {
       print("================================ User id is :${userID}========================================");
       // Call the API // Set loading to true
       final response = await ApiService().getSendConRequest(userId: userID);
-
-      if (response['ResponseCode'] == '200') {
-        Getrequests.value =
-            List<Map<String, String>>.from(response['Data'].map((request) {
-          return {
-            'firstname': request['firstname'],
-            'lastname': request['lastname'],
-            'profileimage': request['profileimage'],
-            'city': request['city'],
-            'id': request['id'],
-          };
-        }));
+      print("================================== RESPONSE ===================================");
+      print(response);
+      // Check if the response is successful
+      if (response['Result'] == 'true') {
+        // Update the list with the received data
+        Getrequests.value = response['Data'];
       } else {
+        // Set error message if the response is not successful
         errorMessage.value = response['ResponseMsg'];
       }
+
+
     } catch (e) {
       errorMessage.value = 'An error occurred: $e';
     } finally {

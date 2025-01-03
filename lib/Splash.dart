@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
 import 'package:love_connection/Onboarding/OnboardingScreen.dart';
 import 'package:love_connection/Screens/bottom_nav/BottomNavbar.dart';
@@ -25,13 +27,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (userId != null && userId.isNotEmpty) {
       // Navigate to BottomNav screen if userId exists
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Bottomnavbar()));
+      // Navigator.push(context, MaterialPageRoute(builder: (context) => Bottomnavbar()));
+      Get.offAll(Bottomnavbar());
     } else {
       // Navigate to Onboarding screen if userId doesn't exist
-      Navigator.push(context, MaterialPageRoute(builder: (context) => OnboardingScreen()));
+      Get.offAll(OnboardingScreen());
+
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,8 +45,8 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Lottie.asset(
               'assets/animations/intro.json',
-              width: 200,
-              height: 200,
+              width: 250,
+              height: 250,
               fit: BoxFit.contain,
             ),
             SizedBox(height: 20), // Space between animation and title

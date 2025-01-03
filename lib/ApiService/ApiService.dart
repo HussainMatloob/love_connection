@@ -237,9 +237,7 @@ class ApiService {
   // Post request to get send connection request data
   Future<Map<String, dynamic>> getSendConRequest({required String userId}) async {
     try {
-      final url = Uri.parse('$_baseUrl/getreceiveconrequestusers.php');
-
-      // Create the request body with the userId
+      final url = Uri.parse('$_baseUrl/getsendconrequest.php');
       final response = await http.post(
         url,
         body: {'userid': userId},
@@ -270,7 +268,7 @@ class ApiService {
         return {
           'ResponseCode': response.statusCode.toString(),
           'Result': 'false',
-          'ResponseMsg': 'Failed to fetch connection requests',
+          'ResponseMsg': 'Failed to fetch send connection requests',
           'Data': [],
         };
       }
@@ -339,7 +337,7 @@ class ApiService {
   // create a method for get pending request
   Future<Map<String, dynamic>> getPendingRequests({required String userid}) async {
     try {
-      final url = Uri.parse('$_baseUrl/getsendconrequest.php');
+      final url = Uri.parse('$_baseUrl/getreceiveconrequestusers.php');
       final response = await http.post(url);
 
       if (response.statusCode == 200) {
