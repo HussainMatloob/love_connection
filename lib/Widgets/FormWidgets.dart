@@ -840,7 +840,6 @@ class FormWidgets {
   Widget buildCompletedTab() {
     final GetConnectionsController connectionsController =
         Get.put(GetConnectionsController(ApiService()));
-    RxString searchQuery = "".obs;
     return Obx(() {
       if (connectionsController.isLoading.value) {
         // Show a loading indicator while fetching data

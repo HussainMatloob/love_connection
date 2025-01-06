@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:lottie/lottie.dart';
 import 'package:love_connection/Controllers/SendConnectionRequest.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Controllers/GetuserController.dart';

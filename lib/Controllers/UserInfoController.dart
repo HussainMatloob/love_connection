@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 
 import '../ApiService/ApiService.dart';
-import '../Widgets/LoaderDialog.dart';
 
 class UserController extends GetxController {
   final ApiService apiService;

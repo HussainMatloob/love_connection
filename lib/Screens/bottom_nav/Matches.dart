@@ -8,8 +8,7 @@ import 'package:love_connection/Controllers/BasicInfoController.dart';
 import 'package:love_connection/Controllers/PendingSendRequests.dart';
 import 'package:love_connection/Widgets/FormWidgets.dart';
 import '../../Controllers/GetConnections.dart';
-import '../BasicInfo.dart';
-import '../Preferences.dart';
+
 
 class Matches extends StatefulWidget {
   const Matches({super.key});

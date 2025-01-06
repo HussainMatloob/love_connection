@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:love_connection/Screens/bottom_nav/BottomNavbar.dart';
-import 'package:love_connection/Widgets/LoaderDialog.dart';
 import '../ApiService/ApiService.dart';
 import 'ProfilePictureController.dart';
 

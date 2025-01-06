@@ -1,14 +1,11 @@
-import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:love_connection/Controllers/AuthController.dart';
-import 'package:love_connection/Controllers/BasicInfoController.dart';
 import 'package:love_connection/Controllers/ProfilePictureController.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
-import 'bottom_nav/BottomNavbar.dart';
 
 class Profilepicture extends StatefulWidget {
   @override

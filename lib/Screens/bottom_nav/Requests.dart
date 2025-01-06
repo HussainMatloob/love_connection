@@ -6,7 +6,6 @@ import 'package:lottie/lottie.dart';
 import 'package:love_connection/ApiService/ApiService.dart';
 import 'package:love_connection/Controllers/AcceptRequestController.dart';
 import 'package:love_connection/Widgets/FormWidgets.dart';
-import 'package:love_connection/Widgets/LoaderDialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Controllers/GetConnectionRequest.dart';
 import '../../Widgets/ProfileCard.dart';

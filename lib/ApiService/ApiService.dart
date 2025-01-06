@@ -82,20 +82,29 @@ class ApiService {
         // Extract the 'userid' and save it
         if (parsedBody['userid'] != null) {
           int userId = int.parse(parsedBody['userid'].toString());
-          print(" Register Successfully User ID: $userId");
+          if (kDebugMode) {
+            print(" Register Successfully User ID: $userId");
+          }
           final prefs = await SharedPreferences.getInstance();
           prefs.setString('userid', userId.toString());
-          print("================================ user succesfully registered user id  : $userId========================================");
+          if (kDebugMode) {
+            print("================================ user succesfully registered user id  : $userId========================================");
+            print('Response: $responseBody');
+
+          }
         }
-        print('Response: $responseBody');
         return {'ResponseCode': '200', 'Result': 'true', 'ResponseMsg': 'Success', 'Data': parsedBody};
       } else {
         final responseBody = await response.stream.bytesToString();
-        print('Error Response: $responseBody');
+        if (kDebugMode) {
+          print('Error Response: $responseBody');
+        }
         return {'ResponseCode': response.statusCode.toString(), 'Result': 'false', 'ResponseMsg': 'Failed'};
       }
     } catch (e) {
-      print('Error occurred: $e');
+      if (kDebugMode) {
+        print('Error occurred: $e');
+      }
       return {'ResponseCode': '500', 'Result': 'false', 'ResponseMsg': e.toString()};
     }
   }
@@ -154,7 +163,9 @@ class ApiService {
   void printFullText(String text) {
     final pattern = RegExp('.{1,800}'); // Breaks the text into chunks of 800 characters
     for (final match in pattern.allMatches(text)) {
-      print(match.group(0)); // Print each chunk
+      if (kDebugMode) {
+        print(match.group(0));
+      } // Print each chunk
     }
   }
   // Post request to get send connection request data
@@ -439,7 +450,9 @@ class ApiService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userid=prefs.getString('userid').toString();
-      print("================================ User id is :$userid  in Get Connections ========================================");
+      if (kDebugMode) {
+        print("================================ User id is :$userid  in Get Connections ========================================");
+      }
 
       final url = Uri.parse('$_baseUrl/getconnections.php');
       final response = await http.post(

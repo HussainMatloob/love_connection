@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:love_connection/Controllers/AuthController.dart';
 
 import '../Controllers/BasicInfoController.dart';
 import '../Widgets/FormWidgets.dart';
