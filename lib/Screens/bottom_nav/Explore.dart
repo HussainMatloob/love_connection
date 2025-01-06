@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
+import 'package:lottie/lottie.dart';
 import 'package:love_connection/Controllers/SendConnectionRequest.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Controllers/GetuserController.dart';
@@ -53,11 +55,11 @@ class Explore extends StatelessWidget {
               top: 60, // Offset to avoid overlapping with the AppBar
               child: Obx(() {
                 if (usersController.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
+                  return  Center(child: Lottie.asset("assets/animations/circularloader.json",height: 150, width: 150));
                 } else if (usersController.users.isEmpty) {
                   return const Center(child: Text('No profiles found.'));
                 } else if(sendConectionController.isLoading.value){
-                  return const Center(child: CircularProgressIndicator());
+                  return    Center(child: Lottie.asset("assets/animations/circularloader.json",height: 150, width: 150));
                 }
                 else {
                   return PageView.builder(

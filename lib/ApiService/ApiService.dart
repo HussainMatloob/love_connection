@@ -1,95 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ApiService {
   final String _baseUrl = 'https://projects.funtashtechnologies.com/gomeetapi';
-  // Register User
-  // Future<Map<String, dynamic>> registerUser({
-  //   required String firstname,
-  //   required String lastname,
-  //   required String gender,
-  //   required String dateofbirth,
-  //   required String height,
-  //   required String maritalstatus,
-  //   required String religion,
-  //   required String religionlookingfor,
-  //   required String nationality,
-  //   required String nationalitylookingfor,
-  //   required String education,
-  //   required String educationlookingfor,
-  //   required String city,
-  //   required String citylookingfor,
-  //   required String cast,
-  //   required String castlookingfor,
-  //   required String subcast,
-  //   required String subcastlookingfor,
-  //   required String sect,
-  //   required String sectlookingfor,
-  //   required String subsect,
-  //   required String subsectlookingfor,
-  //   required String ethnicity,
-  //   required String ethnicitylookingfor,
-  //   required File profileimage,
-  // }) async {
-  //   try {
-  //     // Prepare the request URL
-  //     final Uri  url = Uri.parse('$_baseUrl/registeration.php');
-  //     print("Url : $url");
-  //
-  //     // Create the request body as a Map
-  //     Map<String, dynamic> requestData = {
-  //       'firstname': firstname,
-  //       'lastname': lastname,
-  //       'gender': gender,
-  //       'dateofbirth': dateofbirth,
-  //       'height': height,
-  //       'maritalstatus': maritalstatus,
-  //       'religion': religion,
-  //       'religionlookingfor': religionlookingfor,
-  //       'nationality': nationality,
-  //       'nationalitylookingfor': nationalitylookingfor,
-  //       'education': education,
-  //       'educationlookingfor': educationlookingfor,
-  //       'city': city,
-  //       'citylookingfor': citylookingfor,
-  //       'cast': cast,
-  //       'castlookingfor': castlookingfor,
-  //       'subcast': subcast,
-  //       'subcastlookingfor': subcastlookingfor,
-  //       'sect': sect,
-  //       'sectlookingfor': sectlookingfor,
-  //       'subsect': subsect,
-  //       'subsectlookingfor': subsectlookingfor,
-  //       'ethnicity': ethnicity,
-  //       'ethnicitylookingfor': ethnicitylookingfor,
-  //       'profileimage': profileimage.path,
-  //     };
-  //
-  //     // Send the POST request with JSON content type
-  //     final response = await http.post(url, body: jsonEncode(requestData));
-  //
-  //     print(response.body); // Log the response body
-  //
-  //     // Check the response status code
-  //     if (response.statusCode == 200) {
-  //       final data = jsonDecode(response.body);
-  //       // Check if registration was successful
-  //       if (data['ResponseCode'] == 200) {
-  //         return {'success': 'Registration successful!'};
-  //       } else {
-  //         return {'error': data['ResponseMsg']};
-  //       }
-  //     } else {
-  //       return {'error': 'Failed to reach server, status code: ${response.statusCode}'};
-  //     }
-  //   } catch (e) {
-  //     return {'error': 'Error: $e'};
-  //   }
-  // }
-
   Future<Map<String, dynamic>> registerUser({
     required String firstname,
     required String lastname,
@@ -234,28 +151,64 @@ class ApiService {
     }
   }
 
+  void printFullText(String text) {
+    final pattern = RegExp('.{1,800}'); // Breaks the text into chunks of 800 characters
+    for (final match in pattern.allMatches(text)) {
+      print(match.group(0)); // Print each chunk
+    }
+  }
   // Post request to get send connection request data
-  Future<Map<String, dynamic>> getSendConRequest({required String userId}) async {
+  Future<Map<String, dynamic>> getSendConRequest() async {
     try {
-      final url = Uri.parse('$_baseUrl/getsendconrequest.php');
+      final prefs = await SharedPreferences.getInstance();
+      String? userId = prefs.getString("userid");
+
+      if (userId == null || userId.isEmpty) {
+        return {
+          'ResponseCode': '400',
+          'Result': 'false',
+          'ResponseMsg': 'User ID not found',
+          'Data': [],
+        };
+      }
+
+      final url = Uri.parse('$_baseUrl/getreceiveconrequestusers.php');
+
+      if (kDebugMode) {
+        print('Request body: ${jsonEncode({'userid': userId})}');
+      }
+
       final response = await http.post(
         url,
         body: {'userid': userId},
       );
 
       if (response.statusCode == 200) {
-        final responseBody = json.decode(response.body);
+        final responseBody = jsonDecode(response.body);
+
+        if (kDebugMode) {
+          printFullText('Full response: ${jsonEncode(responseBody)}');
+        }
 
         if (responseBody['ResponseCode'] == '200') {
-          // Return the response if successful, including the Data array
-          return {
-            'ResponseCode': responseBody['ResponseCode'],
-            'Result': responseBody['Result'],
-            'ResponseMsg': responseBody['ResponseMsg'],
-            'Data': responseBody['Data'],
-          };
+          // Ensure `Data` is a list before returning
+          final data = responseBody['Data'];
+          if (data is List) {
+            return {
+              'ResponseCode': responseBody['ResponseCode'],
+              'Result': responseBody['Result'],
+              'ResponseMsg': responseBody['ResponseMsg'],
+              'Data': data,
+            };
+          } else {
+            return {
+              'ResponseCode': responseBody['ResponseCode'],
+              'Result': 'false',
+              'ResponseMsg': 'Invalid data format',
+              'Data': [],
+            };
+          }
         } else {
-          // If response code is not 200, return failure details
           return {
             'ResponseCode': responseBody['ResponseCode'],
             'Result': responseBody['Result'],
@@ -264,16 +217,14 @@ class ApiService {
           };
         }
       } else {
-        // Return failure if status code is not 200
         return {
           'ResponseCode': response.statusCode.toString(),
           'Result': 'false',
-          'ResponseMsg': 'Failed to fetch send connection requests',
+          'ResponseMsg': 'HTTP request failed',
           'Data': [],
         };
       }
     } catch (e) {
-      // Return error response if an exception occurs
       return {
         'ResponseCode': '500',
         'Result': 'false',
@@ -282,6 +233,7 @@ class ApiService {
       };
     }
   }
+
 
   // Method to send a connection request
   Future<Map<String, dynamic>> sendConnectionRequest({
@@ -335,10 +287,13 @@ class ApiService {
   }
 
   // create a method for get pending request
-  Future<Map<String, dynamic>> getPendingRequests({required String userid}) async {
+  Future<Map<String, dynamic>> getPendingRequests() async {
     try {
-      final url = Uri.parse('$_baseUrl/getreceiveconrequestusers.php');
-      final response = await http.post(url);
+      final prefs = await SharedPreferences.getInstance();
+      String userid= prefs.getString("userid").toString();
+      final url = Uri.parse('$_baseUrl/getsendconrequest.php');
+      final response = await http.post(url, body:{          'userid': userid,
+      } );
 
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);

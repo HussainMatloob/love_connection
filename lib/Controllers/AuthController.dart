@@ -1,10 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:love_connection/Screens/bottom_nav/BottomNavbar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:love_connection/Widgets/LoaderDialog.dart';
 import '../ApiService/ApiService.dart';
 import 'ProfilePictureController.dart';
 
@@ -128,9 +127,17 @@ class AuthController extends GetxController {
     return ''; // No errors
   }
 
+
+
+
+
   final ApiService _apiService = ApiService();
 
   Future<void> registerUser() async {
+
+    // Start loading state
+    isLoading(true);
+    errorMessage('');
     // Validate the required fields before submitting
     final validationError = validateFields();
     if (validationError.isNotEmpty) {
@@ -141,6 +148,7 @@ class AuthController extends GetxController {
         backgroundColor: Colors.red.withOpacity(0.8),
         colorText: Colors.white,
       );
+
       return;
     }
 
@@ -155,9 +163,7 @@ class AuthController extends GetxController {
       );
       return;
     }
-    // Start loading state
-    isLoading(true);
-    errorMessage('');
+
 
     try {
       // Send the registration request to the API service
@@ -191,7 +197,6 @@ class AuthController extends GetxController {
 
       // Handle the response from the API service
       if ( response['ResponseCode'] == '200') {
-
         Get.snackbar(
           'Success',
           'Registration successful!',

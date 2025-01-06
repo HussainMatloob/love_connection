@@ -1,9 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:lottie/lottie.dart';
 import '../../ApiService/ApiService.dart';
 import '../../Controllers/UserInfoController.dart';
 import '../../Widgets/FormWidgets.dart';
@@ -17,25 +18,12 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final UserController userController = Get.put(UserController(ApiService()));
-  String  userID = "";
-
-  // create a method to return user id
-  Future<String> getUserID() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    userID = prefs.getInt("userid").toString();
-    return userID;
-  }
 
   @override
   void initState() {
     super.initState();
-    // Fetch user data when the screen initializes
-
-    userController.fetchUserData(); // Pass the user ID dynamically
+    userController.fetchUserData();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +52,9 @@ class _ProfileState extends State<Profile> {
         ),
         body: Obx(() {
           if (userController.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (userController.errorMessage.isNotEmpty) {
-            return Center(child: Text("user data not found"));
+            return Center(
+                child: Lottie.asset("assets/animations/circularloader.json",
+                    height: 150, width: 150));
           }
 
           if (userController.userData.value != null) {
@@ -81,15 +67,22 @@ class _ProfileState extends State<Profile> {
                     // Background Image
                     Container(
                       width: Get.width,
-                      height: Get.height * 0.83,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(_getImageUrl(user['profileimage'] ?? "assets/images/PROFILE.png")),
-                          fit: BoxFit.cover,
+                      height: Get.height * 0.8,
+                      child: CachedNetworkImage(
+                        imageUrl: _getImageUrl(user['profileimage'] ??
+                            "assets/images/PROFILE.png"),
+                        placeholder: (context, url) => Center(
+                          child: Lottie.asset(
+                            'assets/animations/registerloading.json',
+                            // Path to your Lottie file
+                            width: Get.width * 0.4,
+                            height: Get.height * 0.4,
+                            fit: BoxFit.contain,
+                          ),
                         ),
+                        fit: BoxFit.cover,
                       ),
                     ),
-
                     // Profile Details
                     Positioned(
                       bottom: Get.height * 0.05,
@@ -98,7 +91,7 @@ class _ProfileState extends State<Profile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${user['firstname']?? "" }  ${user['lastname'] ?? ""} - ${_formatDate(user['age'] ?? "")}',
+                            '${user['firstname'] ?? ""}  ${user['lastname'] ?? ""} - ${_formatDate(user['dateofbirth'] ?? "")}',
                             style: GoogleFonts.outfit(
                               fontSize: 32,
                               fontWeight: FontWeight.w600,
@@ -106,7 +99,7 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                           Text(
-                            '${user['profession'] ?? "" } , ${user['education'] ?? ""}\n${user['employmentstatus'] ?? ""}, ${user['city'] ?? ""}',
+                            '${user['profession'] ?? ""} , ${user['education'] ?? ""}\n${user['employmentstatus'] ?? ""}, ${user['city'] ?? ""}',
                             style: GoogleFonts.outfit(
                               color: Colors.white,
                               fontSize: 16,
@@ -171,9 +164,11 @@ class _ProfileState extends State<Profile> {
   }
 
   String _getImageUrl(String relativePath) {
-    const baseUrl = 'https://projects.funtashtechnologies.com/gomeetapi/'; // Replace with your base URL
+    const baseUrl =
+        'https://projects.funtashtechnologies.com/gomeetapi/'; // Replace with your base URL
     return baseUrl + relativePath;
   }
+
   String _formatDate(String date) {
     if (date == '00000000' || date.isEmpty || date == 'null') {
       return 'Unknown';
@@ -347,7 +342,8 @@ class _ProfileState extends State<Profile> {
                         const SizedBox(height: 10),
 
                         // Basic Information Data Rows
-                        FormWidgets().buildBasicInfoRow('Name', user['firstname'] + " " + user['lastname']),
+                        FormWidgets().buildBasicInfoRow(
+                            'Name', user['firstname'] + " " + user['lastname']),
                         const SizedBox(height: 10),
                         FormWidgets().buildBasicInfoRow(
                             'Marital Status', user['maritalstatus']),
@@ -356,12 +352,14 @@ class _ProfileState extends State<Profile> {
                         const SizedBox(height: 10),
                         FormWidgets().buildBasicInfoRow('Caste', user['cast']),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow('Height', user['height']),
+                        FormWidgets()
+                            .buildBasicInfoRow('Height', user['height']),
                         const SizedBox(height: 10),
                         FormWidgets().buildBasicInfoRow(
                             'Date of Birth', user['dateofbirth']),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow('Religion', user['religion']),
+                        FormWidgets()
+                            .buildBasicInfoRow('Religion', user['religion']),
                         const SizedBox(height: 10),
                         FormWidgets().buildBasicInfoRow(
                             'Nationality', user['nationality']),
@@ -394,11 +392,11 @@ class _ProfileState extends State<Profile> {
                         FormWidgets().buildBasicInfoRow(
                             'Education', 'Bachelors in Computer Science'),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow(
-                            'Monthly Income', '\$2000'),
+                        FormWidgets()
+                            .buildBasicInfoRow('Monthly Income', '\$2000'),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow(
-                            'Employment Status', 'Employed'),
+                        FormWidgets()
+                            .buildBasicInfoRow('Employment Status', 'Employed'),
                       ],
                     ),
                   ),
@@ -411,5 +409,3 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-
-

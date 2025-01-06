@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:love_connection/ApiService/ApiService.dart';
 import 'package:love_connection/Controllers/AuthController.dart';
 import 'package:love_connection/Controllers/GetConnections.dart';
@@ -585,7 +586,9 @@ class FormWidgets {
                       hint: Text(
                         'Looking for',
                         style: GoogleFonts.outfit(
-                            fontWeight: FontWeight.w400, fontSize: 13),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                            color: Colors.white),
                       ),
                       items: items.map((String item) {
                         return DropdownMenuItem(
@@ -715,15 +718,15 @@ class FormWidgets {
         children: [
           Expanded(
             child: TextField(
-                onChanged: (text) => searchQuery.value = text,
-                decoration: InputDecoration(
-                  hintText: hintText,
-                  border: InputBorder.none,
-                ),
-                style: GoogleFonts.outfit(
-                    fontSize: 22,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w400)),
+              decoration: InputDecoration(
+                hintText: hintText,
+                border: InputBorder.none,
+              ),
+              style: GoogleFonts.outfit(
+                  fontSize: 22,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w400),
+            ),
           ),
           Icon(Icons.search, color: Colors.grey),
         ],
@@ -834,18 +837,21 @@ class FormWidgets {
     ]);
   }
 
-   Widget buildCompletedTab() {
-    final GetConnectionsController connectionsController= Get.put(GetConnectionsController(ApiService()));
+  Widget buildCompletedTab() {
+    final GetConnectionsController connectionsController =
+        Get.put(GetConnectionsController(ApiService()));
     RxString searchQuery = "".obs;
     return Obx(() {
       if (connectionsController.isLoading.value) {
         // Show a loading indicator while fetching data
-        return const Center(child: CircularProgressIndicator());
+        return Center(
+            child: Lottie.asset("assets/animations/circularloader.json",
+                height: 150, width: 150));
       } else if (connectionsController.connections.isEmpty) {
         // Show a message if there are no pending requests
-        return const Center(
+        return Center(
           child: Text(
-            'Completed Requests Are Not Found.',
+            connectionsController.responseMessage.value,
             style: TextStyle(fontSize: 16, color: Colors.black54),
           ),
         );
@@ -857,7 +863,9 @@ class FormWidgets {
             children: [
               SizedBox(height: Get.height * 0.01),
               FormWidgets.buildSearchView(
-                  hintText: "Search", searchQuery: searchQuery),
+                hintText: "Search",
+                searchQuery: connectionsController.searchQuerytext,
+              ),
               SizedBox(height: Get.height * 0.01),
               // Remove Expanded or use a constrained height
               SizedBox(
@@ -867,18 +875,22 @@ class FormWidgets {
                     crossAxisCount: 2, // Two columns
                     crossAxisSpacing: 16, // Horizontal space between cards
                     mainAxisSpacing: 16, // Vertical space between cards
-                    childAspectRatio: 0.65, // Adjust the aspect ratio of the cards
+                    childAspectRatio:
+                        0.65, // Adjust the aspect ratio of the cards
                   ),
-                  itemCount: connectionsController.connections.length, // Adjust based on the number of items you have
+                  itemCount: connectionsController.connections.length,
+                  // Adjust based on the number of items you have
                   itemBuilder: (context, index) {
                     final connections =
-                    connectionsController.connections[index];
+                        connectionsController.connections[index];
                     return ProfileCard(
                       imageUrl: connections['profileimage'] != null
-                          ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['profileimage'] }'
+                          ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['profileimage']}'
                           : 'assets/images/profile.jpg',
-                      name: '${connections['firstname']} ${connections['lastname']} - ${_formatDate(connections['age'] ?? 'N/A')}',
-                      profession: connections['profession'] ?? 'Unknown Profession',
+                      name:
+                          '${connections['firstname']} ${connections['lastname']} - ${_formatDate(connections['dateofbirth'] ?? 'N/A')}',
+                      profession:
+                          connections['education'] ?? 'N/A',
                       ignoreButtonText: 'Call',
                       acceptButtonText: 'Chat',
                       onIgnore: () {
@@ -898,18 +910,6 @@ class FormWidgets {
     });
   }
 
-  // searchQuery.listen((query) {
-  // // Update filtered connections based on the search query
-  // connectionsController.filterConnections(query);
-  // });
-
-  // void filterConnections(String query) {
-  //   var filtered = originalConnectionsList.where((connection) {
-  //     return connection['firstname'].toLowerCase().contains(query.toLowerCase()) ||
-  //         connection['lastname'].toLowerCase().contains(query.toLowerCase());
-  //   }).toList();
-  //   connections.value = filtered;
-  // }
   String _formatDate(String date) {
     if (date == '00000000' || date.isEmpty || date == 'null') {
       return 'Unknown';
@@ -933,12 +933,14 @@ class FormWidgets {
     return Obx(() {
       if (pendingRequestsController.isLoading.value) {
         // Show a loading indicator while fetching data
-        return const Center(child: CircularProgressIndicator());
+        return Center(
+            child: Lottie.asset("assets/animations/circularloader.json",
+                height: 150, width: 150));
       } else if (pendingRequestsController.pendingRequests.isEmpty) {
         // Show a message if there are no pending requests
-        return const Center(
+        return Center(
           child: Text(
-            'No pending requests found.',
+            pendingRequestsController.errorMessage.value,
             style: TextStyle(fontSize: 16, color: Colors.black54),
           ),
         );
@@ -969,9 +971,8 @@ class FormWidgets {
                           ? 'https://projects.funtashtechnologies.com/gomeetapi/${pendingProfile['profileimage']}'
                           : 'assets/images/profile.jpg',
                       name:
-                          '${pendingProfile['firstname']} ${pendingProfile['lastname']} - ${_formatDate(pendingProfile['age'] ?? 'N/A')}',
-                      profession:
-                          pendingProfile['profession'] ?? 'Unknown Profession',
+                          '${pendingProfile['firstname']} ${pendingProfile['lastname']} - ${_formatDate(pendingProfile['dateofbirth'] ?? 'N/A')}',
+                      profession: pendingProfile['city'] ?? 'N/A',
                       onClose: () {
                         // Handle onClose action, e.g., remove from the list
                         pendingRequestsController.pendingRequests

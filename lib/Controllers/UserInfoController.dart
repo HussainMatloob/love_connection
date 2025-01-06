@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import '../ApiService/ApiService.dart';
+import '../Widgets/LoaderDialog.dart';
 
 class UserController extends GetxController {
   final ApiService apiService;
@@ -31,4 +32,8 @@ class UserController extends GetxController {
       isLoading.value = false; // Stop loading
     }
   }
+
+
+
+
 }

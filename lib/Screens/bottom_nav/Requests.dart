@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:love_connection/ApiService/ApiService.dart';
 import 'package:love_connection/Controllers/AcceptRequestController.dart';
 import 'package:love_connection/Widgets/FormWidgets.dart';
+import 'package:love_connection/Widgets/LoaderDialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Controllers/GetConnectionRequest.dart';
 import '../../Widgets/ProfileCard.dart';
@@ -20,6 +22,13 @@ class _RequestsState extends State<Requests> {
   // Controller instance
   final GetReceivedConnectionRequestController _controller = Get.put(GetReceivedConnectionRequestController());
   final AcceptRequestController acceptRequestController = Get.put(AcceptRequestController(ApiService()));
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _controller.fetchReceivedConnectionRequests();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +55,17 @@ class _RequestsState extends State<Requests> {
             children: [
               FormWidgets.buildSearchView(
                 hintText: "Search",
-                searchQuery: _controller.searchQuerytext, // Use the controller's searchQuerytext
+                searchQuery: _controller.searchQuerytext, // Controller's search query
               ),
               SizedBox(height: Get.height * 0.02),
               Expanded(
                 child: Obx(() {
                   if (_controller.isLoading.value) {
                     // Show loading spinner while data is being fetched
-                    return Center(child: CircularProgressIndicator());
+                    return  Center(child: Lottie.asset("assets/animations/circularloader.json",height: 150, width: 150));
                   }
                   else if(acceptRequestController.isLoading.value) {
-                    return Center(child: CircularProgressIndicator());
+                    return   Center(child: Lottie.asset("assets/animations/circularloader.json",height: 150, width: 150));
                   }
                  else if (_controller.errorMessage.isNotEmpty) {
 
@@ -71,13 +80,15 @@ class _RequestsState extends State<Requests> {
                     ),
                     itemCount: _controller.Getrequests.length, // Use the length of sendRequests
                     itemBuilder: (context, index) {
+                      print('Getrequests length: ${_controller.Getrequests.length}');
+
                       final request = _controller.Getrequests[index];
                       final imageUrl = 'https://projects.funtashtechnologies.com/gomeetapi/${request['profileimage']}'; // API URL for image
 
                       return ProfileCard(
                         imageUrl: imageUrl,
-                        name: '${request['firstname']}, ${request['age'] ?? "N/A"}', // Name and age
-                        profession: request['profession'] ?? 'N/A', // Placeholder if profession is not available
+                        name: '${request['firstname']},${request['lastname']} - ${request['age'] ?? "N/A"}', // Name and age
+                        profession: request['city'] ?? 'N/A', // Placeholder if profession is not available
                         ignoreButtonText: 'Ignore',
                         acceptButtonText: 'Accept',
                         onIgnore: () {

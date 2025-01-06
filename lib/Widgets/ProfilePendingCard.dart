@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class ProfilePendingCard extends StatelessWidget {
   final String imageUrl;
@@ -38,10 +40,19 @@ class ProfilePendingCard extends StatelessWidget {
           // Profile Image as the background
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              imageUrl,
-              width: Get.width,
+            child: CachedNetworkImage(
+              imageUrl: imageUrl,
+              width:Get.width ,
               height: Get.height,
+              placeholder: (context, url) => Center(
+                child: Lottie.asset(
+                  'assets/animations/registerloading.json',
+                  // Path to your Lottie file
+                  width: Get.width * 0.3,
+                  height: Get.height * 0.3,
+                  fit: BoxFit.contain,
+                ),
+              ),
               fit: BoxFit.cover,
             ),
           ),

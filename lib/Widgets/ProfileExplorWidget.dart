@@ -1,7 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'BasicinfoBottom.dart';
 
 class ProfileInfoWidget extends StatelessWidget {
@@ -17,7 +18,6 @@ class ProfileInfoWidget extends StatelessWidget {
 
   final VoidCallback onClose;
   final VoidCallback onCheck;
-
 
   // Constructor to accept profile data and bottom sheet data
   ProfileInfoWidget({
@@ -40,8 +40,17 @@ class ProfileInfoWidget extends StatelessWidget {
         Container(
           width: Get.width,
           height: Get.height,
-          child: Image.network(
-            image,
+          child: CachedNetworkImage(
+            imageUrl: image,
+            placeholder: (context, url) => Center(
+              child: Lottie.asset(
+                'assets/animations/registerloading.json',
+                // Path to your Lottie file
+                width: Get.width * 0.4,
+                height: Get.height * 0.4,
+                fit: BoxFit.contain,
+              ),
+            ),
             fit: BoxFit.cover,
           ),
         ),
@@ -49,6 +58,7 @@ class ProfileInfoWidget extends StatelessWidget {
           top: 8,
           right: 5,
           child: Row(
+            spacing: 5,
             children: [
               // Favorite icon with text
               Container(
