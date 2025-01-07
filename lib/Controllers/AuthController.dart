@@ -108,7 +108,6 @@ class AuthController extends GetxController {
   final ethnicityOptions = ['Asian', 'African', 'European', 'Hispanic'];
 
   String validateFields() {
-    // get the image from profilepicturecontroller
     profileImage = profilepictureController.profileImage;
     if (firstName.value.isEmpty) return 'First Name is required.';
     if (lastName.value.isEmpty) return 'Last Name is required.';
