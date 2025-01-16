@@ -10,6 +10,8 @@ class ApiService {
   Future<Map<String, dynamic>> registerUser({
     required String firstname,
     required String lastname,
+    required String email,
+    required String password,
     required String gender,
     required String dateofbirth,
     required String height,
@@ -20,6 +22,8 @@ class ApiService {
     required String nationalitylookingfor,
     required String education,
     required String educationlookingfor,
+    required String employmentstatus,
+    required String monthlyincome,
     required String city,
     required String citylookingfor,
     required String cast,
@@ -32,7 +36,14 @@ class ApiService {
     required String subsectlookingfor,
     required String ethnicity,
     required String ethnicitylookingfor,
+    required String created_at,
     required File profileimage,
+    required File cnic_front,
+    required File cnic_back,
+    required File passport_front,
+    required File passport_back,
+    required File selfieimage,
+    required File gallery,
   }) async {
     try {
       final url = Uri.parse('$_baseUrl/registeration.php');
@@ -41,6 +52,8 @@ class ApiService {
       // Add text fields
       request.fields['firstname'] = firstname;
       request.fields['lastname'] = lastname;
+      request.fields['email'] = email;
+      request.fields['password'] = password;
       request.fields['gender'] = gender;
       request.fields['dateofbirth'] = dateofbirth;
       request.fields['height'] = height;
@@ -51,6 +64,8 @@ class ApiService {
       request.fields['nationalitylookingfor'] = nationalitylookingfor;
       request.fields['education'] = education;
       request.fields['educationlookingfor'] = educationlookingfor;
+      request.fields['employmentstatus'] = employmentstatus;
+      request.fields['monthlyincome'] = monthlyincome;
       request.fields['city'] = city;
       request.fields['citylookingfor'] = citylookingfor;
       request.fields['cast'] = cast;
@@ -63,12 +78,47 @@ class ApiService {
       request.fields['subsectlookingfor'] = subsectlookingfor;
       request.fields['ethnicity'] = ethnicity;
       request.fields['ethnicitylookingfor'] = ethnicitylookingfor;
+      request.fields['created_at'] = created_at;
+
 
       // Add the file field
       request.files.add(
         await http.MultipartFile.fromPath(
           'profileimage', // Key name expected by the server
           profileimage.path,
+        ),
+      );
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'gallery', // Key name expected by the server
+          gallery.path,
+        ),
+      ); request.files.add(
+        await http.MultipartFile.fromPath(
+          'cnic_front', // Key name expected by the server
+          cnic_front.path,
+        ),
+      );
+        request.files.add(
+        await http.MultipartFile.fromPath(
+          'cnic_back', // Key name expected by the server
+          cnic_back.path,
+        ),
+      ); request.files.add(
+        await http.MultipartFile.fromPath(
+          'passport_front', // Key name expected by the server
+          passport_front.path,
+        ),
+      );request.files.add(
+        await http.MultipartFile.fromPath(
+          'passport_back', // Key name expected by the server
+          passport_back.path,
+        ),
+      );request.files.add(
+        await http.MultipartFile.fromPath(
+          'selfieimage', // Key name expected by the server
+          selfieimage
+              .path,
         ),
       );
 
@@ -85,8 +135,8 @@ class ApiService {
           if (kDebugMode) {
             print(" Register Successfully User ID: $userId");
           }
-          final prefs = await SharedPreferences.getInstance();
-          prefs.setString('userid', userId.toString());
+          // final prefs = await SharedPreferences.getInstance();
+          // prefs.setString('userid', userId.toString());
           if (kDebugMode) {
             print("================================ user succesfully registered user id  : $userId========================================");
             print('Response: $responseBody');
@@ -95,6 +145,7 @@ class ApiService {
         }
         return {'ResponseCode': '200', 'Result': 'true', 'ResponseMsg': 'Success', 'Data': parsedBody};
       } else {
+
         final responseBody = await response.stream.bytesToString();
         if (kDebugMode) {
           print('Error Response: $responseBody');
@@ -106,6 +157,29 @@ class ApiService {
         print('Error occurred: $e');
       }
       return {'ResponseCode': '500', 'Result': 'false', 'ResponseMsg': e.toString()};
+    }
+  }
+
+  Future<Map<String, dynamic>> loginUser(String email, String password) async {
+    final url = Uri.parse('${_baseUrl}/login.php'); // Replace with actual login endpoint
+
+    try {
+      final response = await http.post(
+        url,
+        body: {
+          'email': email,
+          'password': password,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print(response.body);
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to load login data');
+      }
+    } catch (e) {
+      throw Exception('Failed to connect to the server');
     }
   }
 

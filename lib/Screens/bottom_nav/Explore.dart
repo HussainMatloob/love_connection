@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:love_connection/Controllers/SendConnectionRequest.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,7 +27,7 @@ class Explore extends StatelessWidget {
               top: 0,
               child: Container(
                 width: Get.width,
-                height: 60,
+                height: 70,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Colors.white, Colors.pink.shade100],
@@ -37,21 +36,15 @@ class Explore extends StatelessWidget {
                   ),
                 ),
                 child: Center(
-                  child: Text(
-                    'Explore',
-                    style: GoogleFonts.outfit(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                    ),
-                  ),
+                  child: Image.asset("assets/images/original.png",fit: BoxFit.fitHeight,)
+
                 ),
               ),
             ),
 
             // PageView for swipeable profiles
             Positioned.fill(
-              top: 60, // Offset to avoid overlapping with the AppBar
+              top: 70, // Offset to avoid overlapping with the AppBar
               child: Obx(() {
                 if (usersController.isLoading.value) {
                   return  Center(child: Lottie.asset("assets/animations/circularloader.json",height: 150, width: 150));

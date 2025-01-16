@@ -27,7 +27,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (userId != null && userId.isNotEmpty) {
       // Navigate to BottomNav screen if userId exists
-      // Navigator.push(context, MaterialPageRoute(builder: (context) => Bottomnavbar()));
       Get.offAll(Bottomnavbar());
     } else {
       // Navigate to Onboarding screen if userId doesn't exist

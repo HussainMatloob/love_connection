@@ -14,11 +14,11 @@ class OnboardingController extends GetxController {
         curve: Curves.easeInOut, // Smooth page transition
       );
     } else {
-      Get.offAllNamed('/BasicInfoScreens'); // Navigate to BasicInfoScreens or another route
+      Get.offAllNamed('/login'); // Navigate to BasicInfoScreens or another route
     }
   }
 
   void skipOnboarding() {
-    Get.offAllNamed('/BasicInfoScreens'); // Navigate to BasicInfoScreens or another route
+    Get.offAllNamed('/login'); // Navigate to BasicInfoScreens or another route
   }
 }

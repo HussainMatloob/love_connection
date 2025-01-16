@@ -1,24 +1,48 @@
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:love_connection/Controllers/image_controller.dart';
+import 'package:love_connection/Controllers/selfie_upload_controller.dart';
+import 'package:love_connection/Screens/auth/Login.dart';
 import 'package:love_connection/Screens/bottom_nav/BottomNavbar.dart';
 import '../ApiService/ApiService.dart';
+import '../Screens/Coaching Service/CoachingServiceProvider.dart';
 import 'ProfilePictureController.dart';
+import 'document_upload_controller.dart';
 
 class AuthController extends GetxController {
 
   final ProfilepictureController profilepictureController =
   Get.put(ProfilepictureController());
+
+  final DocumentUploadController documentUploadController =
+  Get.put(DocumentUploadController());
+
+  final SelfieImageController _selfieImageController =
+  Get.put(SelfieImageController());
+  final ImageController imageController =
+  Get.put(ImageController());
+
   // Observables
   var isLoading = false.obs; // To manage loading state
+  var isLoading1 = false.obs; // To manage loading state
   var errorMessage = ''.obs; // To manage error messages
   var userData = {}.obs; // Store user data if needed (e.g., user profile)
   Rx<File?> profileImage = Rx<File?>(null);
+  Rx<File?> galleryimages = Rx<File?>(null);
+  Rx<File?> selfieimage = Rx<File?>(null);
+  Rx<File?> cninfront = Rx<File?>(null);
+  Rx<File?> cninback = Rx<File?>(null);
+  Rx<File?> passportfront = Rx<File?>(null);
+  Rx<File?> passportback = Rx<File?>(null);
 
   final firstName = ''.obs;
   final lastName = ''.obs;
+  final email = ''.obs;
+  final password = ''.obs;
   final gender = Rxn<String>();
   final dateOfBirth = Rxn<DateTime>();
+  var createdAt = DateTime.now().obs;  // Reactive variable to store created_at
 
   // Second form fields
   final height = Rxn<String>();
@@ -32,7 +56,6 @@ class AuthController extends GetxController {
   void setGender(String? value) => gender.value = value;
   void setDateOfBirth(DateTime? value) => dateOfBirth.value = value;
 
-  // New fields for preferences
   final educationLevel = Rxn<String>();
   final lookingForEducation = Rxn<String>();
   final employmentStatus = Rxn<String>();
@@ -109,6 +132,14 @@ class AuthController extends GetxController {
 
   String validateFields() {
     profileImage = profilepictureController.profileImage;
+    cninfront= documentUploadController.idCardFrontImage;
+    cninback= documentUploadController.idCardBackImage ;
+    passportfront= documentUploadController.passportFrontImage ;
+    passportback= documentUploadController.passportBackImage ;
+    selfieimage= _selfieImageController.selfieImage ;
+    // galleryimages= imageController.images as Rx<File?> ;
+    if (email.value.isEmpty) return 'Email is required.';
+    if (password.value.isEmpty) return 'Password is required.';
     if (firstName.value.isEmpty) return 'First Name is required.';
     if (lastName.value.isEmpty) return 'Last Name is required.';
     if (height.value == null) return 'Height is required.';
@@ -116,11 +147,17 @@ class AuthController extends GetxController {
     if (cityOfResidence.value == null) return 'City of Residence is required.';
     if (dateOfBirth.value == null) return 'Date of Birth is required.';
     if (educationLevel.value == null) return 'Education Level is required.';
+    if (employmentStatus.value == null) return 'Employment status is required.';
+    if (monthlyIncome.value == null) return 'Monthly income is required.';
     if (gender.value == null) return 'Gender is required.';
     if (maritalStatus.value == null) return 'Marital Status is required.';
     if (nationality.value == null) return 'Nationality is required.';
     if (religion.value == null) return 'Religion is required.';
     if (profileImage.value == null) return 'Profile Image is required.';
+    if (cninfront.value == null) return ' CNIC Front Image is required.';
+    if (cninback.value == null) return ' CNIC Back Image is required.';
+    if (passportfront.value == null) return ' Passport Front Image is required.';
+    if (passportback.value == null) return ' Passport Back Image is required.';
     return ''; // No errors
   }
 
@@ -130,10 +167,16 @@ class AuthController extends GetxController {
 
   final ApiService _apiService = ApiService();
 
-  Future<void> registerUser() async {
+  Future<void> registerUser( var key) async {
 
     // Start loading state
-    isLoading(true);
+    if(key == 1){
+      isLoading(true);
+
+    }else{
+      isLoading1(true);
+
+    }
     errorMessage('');
     // Validate the required fields before submitting
     final validationError = validateFields();
@@ -145,21 +188,20 @@ class AuthController extends GetxController {
         backgroundColor: Colors.red.withOpacity(0.8),
         colorText: Colors.white,
       );
-
       return;
     }
 
     // Ensure that the profile image is not null
-    if (profileImage.value == null) {
-      Get.snackbar(
-        'Error',
-        'Please upload a profile image.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
-      );
-      return;
-    }
+    // if (profileImage.value == null) {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Please upload a profile image.',
+    //     snackPosition: SnackPosition.BOTTOM,
+    //     backgroundColor: Colors.red.withOpacity(0.8),
+    //     colorText: Colors.white,
+    //   );
+    //   return;
+    // }
 
 
     try {
@@ -184,16 +226,30 @@ class AuthController extends GetxController {
         maritalstatus: maritalStatus.value.toString(),
         nationality: nationality.value.toString(),
         nationalitylookingfor: lookingForNationality.value.toString(),
-        profileimage:File(profileImage.value!.path), // Send the profile image
         religion: religion.value.toString(),
         religionlookingfor: lookingForReligion.value.toString(),
         sectlookingfor: lookingForSect.value.toString(),
         subcastlookingfor: lookingForCaste.value.toString(),
         subsectlookingfor: lookingForSubSect.value.toString(),
+        email: email.value.toString(),
+        password: password.value.toString(),
+        employmentstatus:employmentStatus.value.toString(),
+        monthlyincome: monthlyIncome.value.toString(),
+        created_at: createdAt.value.toString(),
+        profileimage:File(profileImage.value!.path), // Send the profile image
+        cnic_front: File(cninfront.value!.path),
+        cnic_back: File(cninback.value!.path),
+        passport_front: File(passportfront.value!.path),
+        passport_back: File(passportback.value!.path),
+        selfieimage: File(selfieimage.value!.path),
+        gallery: File(profileImage.value!.path),
       );
+      print("Registration Response Code: ===${response['ResponseMsg'] } ==========");
 
       // Handle the response from the API service
       if ( response['ResponseCode'] == '200') {
+
+        print("Registration Response Code: ===${response['ResponseCode'] == '200'} ==========");
         Get.snackbar(
           'Success',
           'Registration successful!',
@@ -202,9 +258,16 @@ class AuthController extends GetxController {
           colorText: Colors.white,
         );
 
+        if(key == 1){
+          Get.offAll(LoginScreen());
+
+        }
+        else{
+          Get.offAll(LoginScreen());
+        }
         // Navigate to next screen or show confirmation
-        Get.offAll(Bottomnavbar());
       } else {
+
         Get.snackbar(
           'Error',
           response['error'] ?? 'An unknown error occurred',
@@ -225,7 +288,13 @@ class AuthController extends GetxController {
       );
     } finally {
       // Always stop loading state
-      isLoading(false);
+      if(key == 1){
+        isLoading(false);
+
+      }else{
+        isLoading1(false);
+
+      }
     }
   }
 

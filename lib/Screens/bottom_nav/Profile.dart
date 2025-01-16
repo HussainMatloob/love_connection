@@ -99,7 +99,7 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                           Text(
-                            '${user['profession'] ?? ""} , ${user['education'] ?? ""}\n${user['employmentstatus'] ?? ""}, ${user['city'] ?? ""}',
+                            '${user['profession'] ?? ""} , ${user['education'] ?? ""}\n${user['employmentstatus'] ?? ""}, ${user['nationality'] ?? ""}',
                             style: GoogleFonts.outfit(
                               color: Colors.white,
                               fontSize: 16,
@@ -393,10 +393,10 @@ class _ProfileState extends State<Profile> {
                             'Education', 'Bachelors in Computer Science'),
                         const SizedBox(height: 10),
                         FormWidgets()
-                            .buildBasicInfoRow('Monthly Income', '\$2000'),
+                            .buildBasicInfoRow('Monthly Income', user['monthlyincome']),
                         const SizedBox(height: 10),
                         FormWidgets()
-                            .buildBasicInfoRow('Employment Status', 'Employed'),
+                            .buildBasicInfoRow('Employment Status', user['employmentstatus']),
                       ],
                     ),
                   ),

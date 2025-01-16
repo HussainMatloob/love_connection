@@ -85,6 +85,14 @@ class FormWidgets {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildInputField(
+                authController, 'Email', authController.email),
+            SizedBox(height: Get.height * 0.02),
+
+            _buildInputField(
+                authController, 'Password', authController.password),
+            SizedBox(height: Get.height * 0.02),
+
+            _buildInputField(
                 authController, 'First Name', authController.firstName),
             SizedBox(height: Get.height * 0.02),
             _buildInputField(
@@ -311,6 +319,7 @@ class FormWidgets {
                   style: GoogleFonts.outfit(
                     fontWeight: FontWeight.w400,
                     fontSize: 13,
+                    color: Colors.black,
                   ),
                 ),
                 items: items.map((String item) {
@@ -588,7 +597,7 @@ class FormWidgets {
                         style: GoogleFonts.outfit(
                             fontWeight: FontWeight.w400,
                             fontSize: 13,
-                            color: Colors.white),
+                            color: Colors.black),
                       ),
                       items: items.map((String item) {
                         return DropdownMenuItem(
