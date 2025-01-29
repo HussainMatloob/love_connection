@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ApiService/ApiService.dart';
+import '../Screens/SelectService.dart';
 import '../Screens/bottom_nav/BottomNavbar.dart';
 
 class LoginController extends GetxController {
@@ -10,7 +11,7 @@ class LoginController extends GetxController {
 
   final ApiService apiService = ApiService();
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String email, String password, int key) async {
     isLoading.value = true;
     try {
       final response = await apiService.loginUser(email, password);
@@ -21,7 +22,13 @@ class LoginController extends GetxController {
         prefs.setString('userid', userId.toString());
         print("User Login Succecfully and user id is : $userId");
         Get.snackbar('Success', response['ResponseMsg'],snackPosition: SnackPosition.BOTTOM);
-        Get.offAll(Bottomnavbar());
+
+        if(key == 1){
+          Get.offAll(Bottomnavbar());
+        }
+        else{
+          Get.offAll(SelectService());
+        }
       } else {
         Get.snackbar('Error', 'Login failed: ${response['ResponseMsg']}');
       }

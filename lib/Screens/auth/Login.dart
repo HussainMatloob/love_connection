@@ -8,7 +8,8 @@ class LoginScreen extends StatelessWidget {
   final LoginController controller = Get.put(LoginController());
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
+  final int? keyParam;
+  LoginScreen({this.keyParam});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,7 +100,7 @@ class LoginScreen extends StatelessWidget {
                             snackPosition: SnackPosition.BOTTOM,
                           );
                         } else {
-                          controller.login(email, password);
+                          controller.login(email, password, keyParam!);
                         }
                       },
                       child: controller.isLoading.value

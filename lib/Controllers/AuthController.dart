@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:love_connection/Controllers/image_controller.dart';
 import 'package:love_connection/Controllers/selfie_upload_controller.dart';
 import 'package:love_connection/Screens/auth/Login.dart';
-import 'package:love_connection/Screens/bottom_nav/BottomNavbar.dart';
 import '../ApiService/ApiService.dart';
-import '../Screens/Coaching Service/CoachingServiceProvider.dart';
 import 'ProfilePictureController.dart';
 import 'document_upload_controller.dart';
 
@@ -191,18 +189,6 @@ class AuthController extends GetxController {
       return;
     }
 
-    // Ensure that the profile image is not null
-    // if (profileImage.value == null) {
-    //   Get.snackbar(
-    //     'Error',
-    //     'Please upload a profile image.',
-    //     snackPosition: SnackPosition.BOTTOM,
-    //     backgroundColor: Colors.red.withOpacity(0.8),
-    //     colorText: Colors.white,
-    //   );
-    //   return;
-    // }
-
 
     try {
       // Send the registration request to the API service
@@ -259,11 +245,11 @@ class AuthController extends GetxController {
         );
 
         if(key == 1){
-          Get.offAll(LoginScreen());
+          Get.offAll(LoginScreen(keyParam: 1));
 
         }
         else{
-          Get.offAll(LoginScreen());
+          Get.offAll(LoginScreen(keyParam: 2,));
         }
         // Navigate to next screen or show confirmation
       } else {

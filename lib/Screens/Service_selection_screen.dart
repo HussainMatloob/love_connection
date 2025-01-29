@@ -46,85 +46,86 @@ class _ServiceSelectionScreenState extends State<ServiceSelectionScreen> {
                 ),
                 Spacer(),
                 // Main Content Container
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(25),
-                      ),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(25),
                     ),
-                    child: Column(
-                      children: [
-                        // Title Text
-                        Text(
-                          "Please Select Which\nService You Are",
-                          textAlign: TextAlign.center,
+                  ),
+                  child: Column(
+                    children: [
+                      // Title Text
+                      Text(
+                        "Please Select Which\nService You Are",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          text: "Interested ",
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.pinkAccent,
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
-                        ),
-                        RichText(
-                          text: TextSpan(
-                            text: "Interested ",
-                            style: TextStyle(
-                              color: Colors.pinkAccent,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: "In Joining",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 24),
-                        // Selection Buttons
-                        Column(
                           children: [
-                            Obx(
-                              () => authController.isLoading.value
-                                  ? CircularProgressIndicator()
-                                  : GestureDetector(
-                                      onTap: () async {
-                                        setState(() {
-                                          isMatchmakingSelected = true;
-                                        });
-                                        await authController.registerUser(1);
-                                      },
-                                      child: Container(
-                                        width: double.infinity,
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 14),
-                                        decoration: BoxDecoration(
+                            TextSpan(
+                              text: "In Joining",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 24),
+                      // Selection Buttons
+                      Column(
+                        children: [
+                          Obx(
+                            () => authController.isLoading.value
+                                ? CircularProgressIndicator()
+                                : GestureDetector(
+                                    onTap: () async {
+                                      setState(() {
+                                        isMatchmakingSelected = true;
+                                      });
+                                      await authController.registerUser(1);
+                                    },
+                                    child: Container(
+                                      width: double.infinity,
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 14),
+                                      decoration: BoxDecoration(
+                                        color: isMatchmakingSelected
+                                            ? Colors.pinkAccent
+                                            : Colors.white,
+                                        borderRadius: BorderRadius.circular(18),
+                                        border: Border.all(
+                                            color: Colors.pinkAccent),
+                                      ),
+                                      child: Text(
+                                        "Looking For Matchmaking Services",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
                                           color: isMatchmakingSelected
-                                              ? Colors.pinkAccent
-                                              : Colors.white,
-                                          borderRadius: BorderRadius.circular(18),
-                                          border: Border.all(
-                                              color: Colors.pinkAccent),
-                                        ),
-                                        child: Text(
-                                          "Looking For Matchmaking Services",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: isMatchmakingSelected
-                                                ? Colors.white
-                                                : Colors.pinkAccent,
-                                            fontSize: 16,
-                                          ),
+                                              ? Colors.white
+                                              : Colors.pinkAccent,
+                                          fontSize: 16,
                                         ),
                                       ),
                                     ),
-                            ),
-                            SizedBox(height: 16),
-                            Obx(() => authController.isLoading1.value
+                                  ),
+                          ),
+                          SizedBox(height: 16),
+                          Obx(
+                            () => authController.isLoading1.value
                                 ? CircularProgressIndicator()
                                 : GestureDetector(
                                     onTap: () async {
@@ -132,18 +133,18 @@ class _ServiceSelectionScreenState extends State<ServiceSelectionScreen> {
                                         isMatchmakingSelected = false;
                                       });
                                       await authController.registerUser(2);
-
                                     },
                                     child: Container(
                                       width: double.infinity,
-                                      padding: EdgeInsets.symmetric(vertical: 14),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 14),
                                       decoration: BoxDecoration(
                                         color: !isMatchmakingSelected
                                             ? Colors.pinkAccent
                                             : Colors.white,
                                         borderRadius: BorderRadius.circular(18),
-                                        border:
-                                            Border.all(color: Colors.pinkAccent),
+                                        border: Border.all(
+                                            color: Colors.pinkAccent),
                                       ),
                                       child: Text(
                                         "Looking For Coaching Services",
@@ -156,14 +157,14 @@ class _ServiceSelectionScreenState extends State<ServiceSelectionScreen> {
                                         ),
                                       ),
                                     ),
-                                  )),
-                          ],
-                        ),
-                        SizedBox(height: 24),
-                      ],
-                    ),
+                                  ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 24),
+                    ],
                   ),
-
+                ),
               ],
             ),
           ),

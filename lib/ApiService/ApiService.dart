@@ -1,8 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:get/get_connect/connect.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Models/Assisment.dart';
+import '../Models/Questions.dart';
 
 
 class ApiService {
@@ -571,6 +575,43 @@ class ApiService {
         'ResponseMsg': e.toString(),
         'ConnectionsData': [],
       };
+    }
+  }
+
+  // Fetch categories from API
+  Future<List<AssessmentCategory>> fetchAssessmentCategories() async {
+    try {
+      final response = await http.get(Uri.parse("$_baseUrl/getassesmentcategories.php"));
+
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+
+        if (jsonData['ResponseCode'] == "200" && jsonData['Result'] == "true") {
+          List categoriesData = jsonData['Data'];
+          return categoriesData
+              .map((category) => AssessmentCategory.fromJson(category))
+              .toList();
+        } else {
+          return [];
+        }
+      } else {
+        throw Exception("Failed to load categories");
+      }
+    } catch (e) {
+      throw Exception("Error fetching categories: $e");
+    }
+  }
+
+
+  Future<List<Question>> fetchAssessmentQuestions() async {
+    final url = Uri.parse("$_baseUrl/getassesmentquestions.php");
+    final response = await GetConnect().get(url.toString());
+
+    if (response.statusCode == 200 && response.body['Result'] == 'true') {
+      final List<dynamic> data = response.body['Data'];
+      return data.map((json) => Question.fromJson(json)).toList();
+    } else {
+      throw Exception("Failed to load questions");
     }
   }
 

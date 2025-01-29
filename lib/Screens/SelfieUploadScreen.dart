@@ -85,9 +85,7 @@ class SelfieImageScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             SizedBox(height: 20),
-
             PinkButton(text: "Continue", onTap: (){
               Get.to(ServiceSelectionScreen());
             })
