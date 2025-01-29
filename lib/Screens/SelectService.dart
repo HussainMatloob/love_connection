@@ -146,7 +146,6 @@ class _SelectServiceState extends State<SelectService> {
                       ],
                     ),
                   ),
-
               ],
             ),
           ),

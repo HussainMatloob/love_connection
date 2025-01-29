@@ -67,7 +67,7 @@ class _ProfileState extends State<Profile> {
                     // Background Image
                     Container(
                       width: Get.width,
-                      height: Get.height * 0.8,
+                      height: Get.height * 0.83,
                       child: CachedNetworkImage(
                         imageUrl: _getImageUrl(user['profileimage'] ??
                             "assets/images/PROFILE.png"),
@@ -91,7 +91,7 @@ class _ProfileState extends State<Profile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${user['firstname'] ?? ""}  ${user['lastname'] ?? ""} - ${_formatDate(user['dateofbirth'] ?? "")}',
+                            '${user['firstname'] ?? ""}  ${user['lastname'] ?? ""} - ${_getAge(user['dateofbirth'] ?? "")}',
                             style: GoogleFonts.outfit(
                               fontSize: 32,
                               fontWeight: FontWeight.w600,
@@ -99,13 +99,24 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                           Text(
-                            '${user['profession'] ?? ""} , ${user['education'] ?? ""}\n${user['employmentstatus'] ?? ""}, ${user['nationality'] ?? ""}',
+                            '${user['maritalstatus'] ?? ""} , ${user['education'] ?? ""}',
                             style: GoogleFonts.outfit(
                               color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
+                          Text(
+                          '${user['employmentstatus'] ?? ""}',  style: GoogleFonts.outfit(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),),   Text(
+                          '${user['nationality'] ?? ""}',  style: GoogleFonts.outfit(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),),
                         ],
                       ),
                     ),
@@ -168,22 +179,32 @@ class _ProfileState extends State<Profile> {
         'https://projects.funtashtechnologies.com/gomeetapi/'; // Replace with your base URL
     return baseUrl + relativePath;
   }
-
-  String _formatDate(String date) {
+  int _getAge(String date) {
     if (date == '00000000' || date.isEmpty || date == 'null') {
-      return 'Unknown';
+      return 0; // Unknown age
     }
 
     try {
-      // Assuming the date is in 'yyyyMMdd' format
-      final parsedDate = DateTime.parse(
-        '${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(6, 8)}',
-      );
-      return '${parsedDate.day}-${parsedDate.month}-${parsedDate.year}';
+      // Parse the birthdate from the given string format
+      final birthDate = DateTime.parse(date);
+
+      // Get the current date
+      final currentDate = DateTime.now();
+
+      // Calculate the difference in years
+      int age = currentDate.year - birthDate.year;
+
+      // Check if the current date has already passed the birthdate for this year
+      if (currentDate.month < birthDate.month || (currentDate.month == birthDate.month && currentDate.day < birthDate.day)) {
+        age--; // Subtract one if the birthday hasn't occurred yet this year
+      }
+
+      return age;
     } catch (e) {
-      return 'Unknown';
+      return 0; // In case of an error or invalid date format
     }
   }
+
 
   void showCustomDialog(BuildContext context) {
     showDialog(

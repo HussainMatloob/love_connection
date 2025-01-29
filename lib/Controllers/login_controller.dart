@@ -23,6 +23,8 @@ class LoginController extends GetxController {
         print("User Login Succecfully and user id is : $userId");
         Get.snackbar('Success', response['ResponseMsg'],snackPosition: SnackPosition.BOTTOM);
 
+        prefs.setString('registeredkey',key.toString());
+
         if(key == 1){
           Get.offAll(Bottomnavbar());
         }

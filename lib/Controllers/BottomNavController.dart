@@ -28,8 +28,8 @@ class BottomNavControllerLogic extends GetxController {
     Explore(),
     Requests(),
     Matches(),
-    SelectService(),
-    // Profile(),
+    Profile(),
+    // SelectService(),
   ];
 
   // Method to handle bottom navigation item tap

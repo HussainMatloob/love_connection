@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../Controllers/goal_target_controller.dart';
+import 'GoalTargetQuestionScreen.dart';
 
 class GoalTargetScreen extends StatelessWidget {
   final GoalTargetController controller = Get.put(GoalTargetController());
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +37,10 @@ class GoalTargetScreen extends StatelessWidget {
             final category = controller.goalTargets[index];
             return GestureDetector(
               onTap: () {
-                // Get.to(() => AssessmentQuestionScreen(
-                //   categoryName: category.title,
-                // ));
+                Get.to(() => GoalTargetQustionScreen(
+                  categoryName: category.title,
+
+                ));
               },
               child: Container(
                 decoration: BoxDecoration(

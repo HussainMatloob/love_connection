@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Models/Assisment.dart';
 import '../Models/GoalTarget.dart';
+import '../Models/GoaltargetQuestions.dart';
 import '../Models/Questions.dart';
 
 
@@ -630,5 +631,17 @@ class ApiService {
 
     throw Exception("Failed to fetch Goal Targets");
   }
+  Future<List<GoaltargetQuestions>> fetchGoalTargetQuestions() async {
+    final url = Uri.parse("$_baseUrl/getgoaltargetquestions.php");
+    final response = await GetConnect().get(url.toString());
+
+    if (response.statusCode == 200 && response.body['Result'] == 'true') {
+      final List<dynamic> data = response.body['Data'];
+      return data.map((json) => GoaltargetQuestions.fromJson(json)).toList();
+    } else {
+      throw Exception("Failed to load questions");
+    }
+  }
+
 
 }
