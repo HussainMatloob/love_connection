@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Models/Assisment.dart';
+import '../Models/GoalTarget.dart';
 import '../Models/Questions.dart';
 
 
@@ -613,6 +614,21 @@ class ApiService {
     } else {
       throw Exception("Failed to load questions");
     }
+  }
+
+  Future<List<GoalTarget>> fetchGoalTargets() async {
+    final response = await http.get(Uri.parse('$_baseUrl/getgoaltargets.php'));
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      if (jsonResponse['Result'] == "true") {
+        return (jsonResponse['Data'] as List)
+            .map((data) => GoalTarget.fromJson(data))
+            .toList();
+      }
+    }
+
+    throw Exception("Failed to fetch Goal Targets");
   }
 
 }

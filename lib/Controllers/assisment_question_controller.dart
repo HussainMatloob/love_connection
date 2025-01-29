@@ -1,12 +1,11 @@
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import '../ApiService/ApiService.dart';
 import '../Models/Questions.dart';
 
 class AssessmentQuestionController extends GetxController {
   var questions = <Question>[].obs;
   var isLoading = true.obs;
-  var selectedOptions = <String, String>{}.obs; // Key is String, value is selected option
+  var selectedOptions = <String, String>{}.obs;
 
   final ApiService apiService = ApiService();
 
@@ -24,10 +23,8 @@ class AssessmentQuestionController extends GetxController {
     }
   }
 
-  // Update the selected option for a given question
   void selectOption(String questionId, String option) {
     selectedOptions[questionId] = option;
-
-    update();
+    update(); // Notify UI of state change
   }
 }
