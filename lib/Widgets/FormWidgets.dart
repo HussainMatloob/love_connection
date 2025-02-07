@@ -7,6 +7,8 @@ import 'package:love_connection/ApiService/ApiService.dart';
 import 'package:love_connection/Controllers/AuthController.dart';
 import 'package:love_connection/Controllers/GetConnections.dart';
 import 'package:love_connection/Controllers/PendingSendRequests.dart';
+import 'package:love_connection/Controllers/cast_controller.dart';
+import 'package:love_connection/Controllers/city_controller.dart';
 import 'package:love_connection/Controllers/country_controller.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
@@ -324,6 +326,7 @@ class FormWidgets {
                   ),
                 ),
                 items: items.map((String item) {
+                  print('Selected item: $value');
                   return DropdownMenuItem(
                     value: item,
                     child: Text(
@@ -385,6 +388,8 @@ class FormWidgets {
                     value: authController.religion,
                     items: religions,
                   );
+
+                  print('Religions: $religions');
                 }),
               ),
               SizedBox(width: Get.width * 0.02),
@@ -489,29 +494,74 @@ class FormWidgets {
 
   static Widget buildPreferencesForm2(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
+    final CityController cityController = Get.put(CityController());
+    final CastController castController = Get.put(CastController());
+
     return Padding(
       padding: EdgeInsets.all(Get.width * 0.05),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // City of Current Residence
-          buildDropdownPair(
-            label: 'City of Current Residence',
-            value: authController.cityOfResidence,
-            lookingForValue: authController.lookingForCity,
-            items: authController.cityOptions,
-            hinttext: 'Select City',
-          ),
+          Obx(() {
+            // Force a reactive read by accessing the length
+            final cities = cityController.cityOptions;
+            final _ = cities.length;
+
+            // handel loading state
+            if (cityController.isLoading.value) {
+              return Center(child: CircularProgressIndicator());
+            } else if (cityController.cityOptions.isEmpty) {
+              return buildDropdownPair(
+                label: 'City of Current Residence',
+                value: authController.cityOfResidence,
+                lookingForValue: authController.lookingForCity,
+                items: cityController.cityOptions,
+                hinttext: 'No Cities found',
+              );
+            }
+
+            return buildDropdownPair(
+              label: 'City of Current Residence',
+              value: authController.cityOfResidence,
+              lookingForValue: authController.lookingForCity,
+              items: cities,
+              hinttext: 'Select City',
+            );
+          }),
           SizedBox(height: 16),
 
-          // Caste
-          buildDropdownPair(
-            label: 'Caste',
-            value: authController.caste,
-            lookingForValue: authController.lookingForCaste,
-            items: authController.casteOptions,
-            hinttext: 'Select Caste',
-          ),
+          Obx(() {
+
+            final castes = castController.castNames;
+            print('Castes: $castes');
+            print('Castes length: ${castes.length}');
+
+            if (castController.isLoading.value) {
+              return Center(child: CircularProgressIndicator());
+            } else if (castController.castNames.isEmpty) {
+              return buildDropdownPair(
+                label: 'Caste',
+                value: authController.caste,
+                lookingForValue: authController.lookingForCaste,
+                items: castes,
+                hinttext: 'No Cast found',
+              );
+            }
+
+
+            return buildDropdownPair(
+              label: 'Caste',
+              value: authController.caste,
+              lookingForValue: authController.lookingForCaste,
+              items: castes,
+              hinttext: 'Select Caste',
+            );
+          }),
+
+
+
+
           SizedBox(height: 16),
 
           // Sub-Caste (optional)
@@ -550,15 +600,16 @@ class FormWidgets {
               value: authController.ethnicity,
               lookingForValue: authController.lookingForEthnicity,
               items: authController.ethnicityOptions,
-              hinttext: "Select Ethnicity"),
-
+              hinttext: "Select Ethnicity"
+          ),
           SizedBox(height: 16),
 
           PinkButton(
               text: "Next",
               onTap: () {
                 Get.to(Profilepicture());
-              })
+              }
+          )
         ],
       ),
     );

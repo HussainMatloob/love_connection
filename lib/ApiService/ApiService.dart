@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Models/Assisment.dart';
+import '../Models/Casts.dart';
 import '../Models/GoalTarget.dart';
 import '../Models/GoaltargetQuestions.dart';
 import '../Models/Questions.dart';
@@ -684,7 +685,9 @@ class ApiService {
 
   Future<List<String>> fetchCities(String countryName) async {
     try {
-      final url = Uri.parse('${_baseUrl}getcities.php');
+      final url = Uri.parse('${_baseUrl}/getcities.php');
+      print('URL for Request : $url');
+      print('Country Name for Request : $countryName');
       final response = await http.post(
         url,
         body: {'countryname': countryName},
@@ -701,6 +704,57 @@ class ApiService {
       print('Error fetching cities: $e');
       return [];
     }
+  }  Future<List<String>> fetchCasts1(String countryName) async {
+    try {
+      final url = Uri.parse('${_baseUrl}/getcast.php');
+      print('URL for Request : $url');
+      print('Casts Name for Request : $countryName');
+      final response = await http.post(
+        url,
+        body: {'religion': countryName},
+      );
+
+
+      print('Response: ${response.body}');
+      if (response.statusCode == 200) {
+
+        final data = json.decode(response.body);
+        List<String> cities = data['Data'].map<String>((city) => city['cast'].toString()).toList();
+        return cities;
+      } else {
+        throw Exception('Failed to load casts');
+      }
+    } catch (e) {
+      print('Error fetching casts: $e');
+      return [];
+    }
   }
+  Future<List<String>> fetchCast({required String religion}) async {
+    // Create the URL without query parameters.
+    final url = Uri.parse('${_baseUrl}/getcast.php');
+
+    // Send a POST request with the required headers and parameter in the body.
+    final response = await http.post(
+      url,
+
+      body: jsonEncode({'religion': religion.trim().toString()}),
+    );
+    print('Request Url: $url');
+    print('Response: ${response.body}');
+    // Check for success.
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonData = jsonDecode(response.body);
+      if (jsonData["Result"] == "true" && jsonData["Data"] != null) {
+        final List<dynamic> data = jsonData["Data"];
+        return data.map((item) => item["cast"].toString()).toList();
+      } else {
+        throw Exception("API error: ${jsonData["ResponseMsg"]}");
+      }
+    } else {
+      throw Exception("Failed to fetch cast data. Status Code: ${response.statusCode}");
+    }
+  }
+
+
 
 }

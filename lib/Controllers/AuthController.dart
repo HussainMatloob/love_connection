@@ -61,7 +61,6 @@ class AuthController extends GetxController {
   final currentResidence = Rxn<String>();
   final lookingForResidence = Rxn<String>();
 
-  // Method to update the profile image
   void updateProfileImage(File image) {
     profileImage.value = image;
   }

@@ -14,9 +14,9 @@ class CityController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
     // Listen for changes in currentResidence and fetch cities accordingly
     ever(authController.currentResidence, (String? countryName) {
+      print('Country Name from controller: $countryName');
       if (countryName != null && countryName.isNotEmpty) {
         loadCities(countryName);
       }
@@ -27,7 +27,7 @@ class CityController extends GetxController {
   Future<void> loadCities(String countryName) async {
     try {
       isLoading.value = true;
-      print('Country Name: $countryName');
+      print('Country Name ////// : $countryName');
       List<String> cities = await apiService.fetchCities(countryName);
       cityOptions.assignAll(cities); // Update the cityOptions list
     } catch (e) {
