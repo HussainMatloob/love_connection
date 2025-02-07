@@ -643,5 +643,64 @@ class ApiService {
     }
   }
 
+  // Fetch country list from API
+  Future<List<String>> fetchCountries() async {
+    try {
+      final response = await http.get(Uri.parse("$_baseUrl/getcountry.php"));
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+
+        if (jsonData["Result"] == "true") {
+          List<dynamic> data = jsonData["Data"];
+          return data.map((item) => item["country"].toString()).toList();
+        } else {
+          return [];
+        }
+      } else {
+        throw Exception("Failed to load countries");
+      }
+    } catch (e) {
+      print("Error fetching countries: $e");
+      return [];
+    }
+  }
+
+  // Fetch religions
+  Future<List<String>> fetchReligions() async {
+    try {
+      final response = await http.get(Uri.parse("$_baseUrl/getreligion.php"));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['Result'] == "true") {
+          return List<String>.from(data['Data'].map((item) => item['religion']));
+        }
+      }
+    } catch (e) {
+      print("Error fetching religions: $e");
+    }
+    return [];
+  }
+
+  Future<List<String>> fetchCities(String countryName) async {
+    try {
+      final url = Uri.parse('${_baseUrl}getcities.php');
+      final response = await http.post(
+        url,
+        body: {'countryname': countryName},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        List<String> cities = data['Data'].map<String>((city) => city['city'].toString()).toList();
+        return cities;
+      } else {
+        throw Exception('Failed to load cities');
+      }
+    } catch (e) {
+      print('Error fetching cities: $e');
+      return [];
+    }
+  }
 
 }
