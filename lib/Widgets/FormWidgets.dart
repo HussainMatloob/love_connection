@@ -7,11 +7,13 @@ import 'package:love_connection/ApiService/ApiService.dart';
 import 'package:love_connection/Controllers/AuthController.dart';
 import 'package:love_connection/Controllers/GetConnections.dart';
 import 'package:love_connection/Controllers/PendingSendRequests.dart';
+import 'package:love_connection/Controllers/country_controller.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
 import '../Controllers/BasicInfoController.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart'; // Import GoogleFonts
+import '../Controllers/religion_controller.dart';
 import 'PlanOption.dart';
 import 'ProfileCard.dart';
 import 'ProfilePendingCard.dart'; // Ensure this import is added
@@ -84,8 +86,7 @@ class FormWidgets {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildInputField(
-                authController, 'Email', authController.email),
+            _buildInputField(authController, 'Email', authController.email),
             SizedBox(height: Get.height * 0.02),
 
             _buildInputField(
@@ -108,15 +109,15 @@ class FormWidgets {
             SizedBox(height: Get.height * 0.02),
             _buildGenderSelection(authController),
             SizedBox(height: Get.height * 0.03),
-            Text(
-              'Date of Birth',
-              style: GoogleFonts.outfit(
-                color: Colors.grey[600],
-                fontSize: Get.width * 0.04,
-              ),
-            ),
-            SizedBox(height: Get.height * 0.02),
-            _buildDateOfBirth(authController),
+            // Text(
+            //   'Date of Birth',
+            //   style: GoogleFonts.outfit(
+            //     color: Colors.grey[600],
+            //     fontSize: Get.width * 0.04,
+            //   ),
+            // ),
+            // SizedBox(height: Get.height * 0.02),
+            // _buildDateOfBirth(authController),
           ],
         ),
       ),
@@ -341,11 +342,24 @@ class FormWidgets {
   }
 
   Widget buildSecondForm() {
+    final ReligionController religionController = Get.put(ReligionController());
+
     return SingleChildScrollView(
       padding: EdgeInsets.all(Get.width * 0.05),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            'Date of Birth',
+            style: GoogleFonts.outfit(
+              color: Colors.grey[600],
+              fontSize: Get.width * 0.04,
+            ),
+          ),
+          SizedBox(height: Get.height * 0.02),
+          _buildDateOfBirth(authController),
+          SizedBox(height: Get.height * 0.02),
+
           _buildDropdownField(
             label: 'Height',
             value: authController.height,
@@ -361,42 +375,56 @@ class FormWidgets {
           Row(
             children: [
               Expanded(
-                child: _buildDropdownField(
-                  label: 'Religion',
-                  value: authController.religion,
-                  items: authController.religionOptions,
-                ),
+                child: Obx(() {
+                  // Force dependency by reading the length
+                  final religions = religionController.religions;
+                  final _ = religions.length; // This line ensures Obx listens to changes.
+
+                  return _buildDropdownField(
+                    label: 'Religion',
+                    value: authController.religion,
+                    items: religions,
+                  );
+                }),
               ),
               SizedBox(width: Get.width * 0.02),
               Expanded(
-                child: _buildDropdownField(
-                  label: 'Looking for',
-                  value: authController.lookingForReligion,
-                  items: authController.religionOptions,
-                ),
+                child: Obx(() {
+                  final religions = religionController.religions;
+                  final _ = religions.length; // Again, enforce the reactive read.
+
+                  return _buildDropdownField(
+                    label: 'Looking for',
+                    value: authController.lookingForReligion,
+                    items: religions,
+                  );
+                }),
               ),
             ],
           ),
+
+
+
           SizedBox(height: Get.height * 0.02),
-          Row(
-            children: [
-              Expanded(
-                child: _buildDropdownField(
-                  label: 'Nationality',
-                  value: authController.nationality,
-                  items: authController.nationalityOptions,
-                ),
-              ),
-              SizedBox(width: Get.width * 0.02),
-              Expanded(
-                child: _buildDropdownField(
-                  label: 'Looking for',
-                  value: authController.lookingForNationality,
-                  items: authController.nationalityOptions,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: _buildDropdownField(
+          //         label: 'Nationality',
+          //         value: authController.nationality,
+          //         items: authController.nationalityOptions,
+          //       ),
+          //     ),
+          //     SizedBox(width: Get.width * 0.02),
+          //     Expanded(
+          //       child: _buildDropdownField(
+          //         label: 'Looking for',
+          //         value: authController.lookingForNationality,
+          //         items: authController.nationalityOptions,
+          //       ),
+          //     ),
+          //   ],
+          // ),
 
           // add pink button
         ],
@@ -406,6 +434,7 @@ class FormWidgets {
 
   static Widget buildPreferencesForm(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
+    final CountryController countryController = Get.put(CountryController());
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.all(Get.width * 0.05),
@@ -434,14 +463,23 @@ class FormWidgets {
             FormWidgets().buildIncomeSelection(),
             SizedBox(height: 24),
 
-            // Country of Current Residence Dropdown Pair
-            buildDropdownPair(
-              label: 'Country of Current Residence',
-              value: authController.currentResidence,
-              lookingForValue: authController.lookingForResidence,
-              items: authController.countryOptions,
-              hinttext: 'Select Country',
-            ),
+            Obx(() {
+              // Ensure the reactive dependency is used by reading the list length.
+              final countries = countryController.countryList;
+              final _ = countries.length;
+
+              if (countryController.isLoading.value) {
+                return Center(child: CircularProgressIndicator());
+              }
+              return buildDropdownPair(
+                label: 'Country of Current Residence',
+                value: authController.currentResidence,
+                lookingForValue: authController.lookingForResidence,
+                items: countries, // Now using the reactive country list
+                hinttext: 'Select Country',
+              );
+            }),
+
             SizedBox(height: 24),
           ],
         ),
@@ -552,31 +590,37 @@ class FormWidgets {
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Obx(() => DropdownButtonFormField<String>(
-                      value: value.value,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                        border: InputBorder.none,
+                child: Obx(
+                      () => DropdownButtonFormField<String>(
+                    isExpanded: true, // Ensure full width is used
+                    value: value.value,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                      border: InputBorder.none,
+                    ),
+                    hint: Text(
+                      hinttext,
+                      style: GoogleFonts.outfit(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
                       ),
-                      hint: Text(
-                        hinttext,
-                        style: GoogleFonts.outfit(
-                            fontSize: 13, fontWeight: FontWeight.w400),
-                      ),
-                      items: items.map((String item) {
-                        return DropdownMenuItem(
-                          value: item,
-                          child: Text(
-                            item,
-                            style:
-                                GoogleFonts.outfit(fontWeight: FontWeight.w400),
+                    ),
+                    items: items.map((String item) {
+                      return DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.w400,
                           ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        value.value = newValue;
-                      },
-                    )),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      value.value = newValue;
+                    },
+                  ),
+                ),
               ),
             ),
             SizedBox(width: 16),
@@ -586,37 +630,43 @@ class FormWidgets {
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Obx(() => DropdownButtonFormField<String>(
-                      value: lookingForValue.value,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                        border: InputBorder.none,
+                child: Obx(
+                      () => DropdownButtonFormField<String>(
+                    isExpanded: true, // Ensure full width is used
+                    value: lookingForValue.value,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                      border: InputBorder.none,
+                    ),
+                    hint: Text(
+                      'Looking for',
+                      style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                        color: Colors.black,
                       ),
-                      hint: Text(
-                        'Looking for',
-                        style: GoogleFonts.outfit(
+                    ),
+                    items: items.map((String item) {
+                      return DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: GoogleFonts.outfit(
                             fontWeight: FontWeight.w400,
-                            fontSize: 13,
-                            color: Colors.black),
-                      ),
-                      items: items.map((String item) {
-                        return DropdownMenuItem(
-                          value: item,
-                          child: Text(
-                            item,
-                            style:
-                                GoogleFonts.outfit(fontWeight: FontWeight.w400),
                           ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        lookingForValue.value = newValue;
-                      },
-                    )),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      lookingForValue.value = newValue;
+                    },
+                  ),
+                ),
               ),
             ),
           ],
         ),
+
       ],
     );
   }
@@ -897,8 +947,7 @@ class FormWidgets {
                           : 'assets/images/profile.jpg',
                       name:
                           '${connections['firstname']} ${connections['lastname']} - ${_formatDate(connections['dateofbirth'] ?? 'N/A')}',
-                      profession:
-                          connections['education'] ?? 'N/A',
+                      profession: connections['education'] ?? 'N/A',
                       ignoreButtonText: 'Call',
                       acceptButtonText: 'Chat',
                       onIgnore: () {

@@ -165,16 +165,8 @@ class AuthController extends GetxController {
 
   final ApiService _apiService = ApiService();
 
-  Future<void> registerUser( var key) async {
-
-    // Start loading state
-    if(key == 1){
-      isLoading(true);
-
-    }else{
-      isLoading1(true);
-
-    }
+  Future<void> registerUser() async {
+    isLoading(true);
     errorMessage('');
     // Validate the required fields before submitting
     final validationError = validateFields();
@@ -244,16 +236,12 @@ class AuthController extends GetxController {
           colorText: Colors.white,
         );
 
-        if(key == 1){
-          Get.offAll(LoginScreen(keyParam: 1));
 
-        }
-        else{
-          Get.offAll(LoginScreen(keyParam: 2,));
-        }
+        Get.offAll(LoginScreen(keyParam: 1));
+
+
         // Navigate to next screen or show confirmation
       } else {
-
         Get.snackbar(
           'Error',
           response['error'] ?? 'An unknown error occurred',
@@ -274,13 +262,8 @@ class AuthController extends GetxController {
       );
     } finally {
       // Always stop loading state
-      if(key == 1){
-        isLoading(false);
+      isLoading(false);
 
-      }else{
-        isLoading1(false);
-
-      }
     }
   }
 
