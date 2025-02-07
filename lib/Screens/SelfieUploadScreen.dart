@@ -1,12 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
+import '../Controllers/AuthController.dart';
 import '../Controllers/selfie_upload_controller.dart';
 import 'Service_selection_screen.dart';
 
 class SelfieImageScreen extends StatelessWidget {
   final SelfieImageController controller = Get.put(SelfieImageController());
+  final AuthController authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -85,10 +86,18 @@ class SelfieImageScreen extends StatelessWidget {
                 ),
               ),
             ),
+
             SizedBox(height: 20),
-            PinkButton(text: "Continue", onTap: (){
-              Get.to(ServiceSelectionScreen());
-            })
+            Obx(
+              () => authController.isLoading.value
+                  ? CircularProgressIndicator()
+                  : PinkButton(
+                      text: "Continue",
+                      onTap: () async {
+                        await authController.registerUser();
+                      },
+                    ),
+            ),
           ],
         ),
       ),

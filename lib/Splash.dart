@@ -7,6 +7,7 @@ import 'package:love_connection/Screens/bottom_nav/BottomNavbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Screens/SelectService.dart';
+import 'Screens/Service_selection_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -23,20 +24,11 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkUserLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userid');
-    String? registerationkey = prefs.getString('registeredkey');
 
     // Simulate a delay to show the splash screen
     await Future.delayed(Duration(seconds: 5));
     if (userId != null && userId.isNotEmpty  ) {
-      // Navigate to BottomNav screen if userId exists
-      // check if registerationkey is 1 then
-      // navigate to Bottomnavbar else navigate to SelectService
-      if(registerationkey == '1'){
-        Get.offAll(Bottomnavbar());
-      }
-      else{
-        Get.offAll(SelectService());
-      }
+        Get.offAll(ServiceSelectionScreen());
     } else {
       // Navigate to Onboarding screen if userId doesn't exist
       Get.offAll(OnboardingScreen());

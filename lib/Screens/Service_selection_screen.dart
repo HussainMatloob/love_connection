@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:love_connection/Screens/bottom_nav/BottomNavbar.dart';
 import '../Controllers/AuthController.dart';
+import 'SelectService.dart';
 
 class ServiceSelectionScreen extends StatefulWidget {
   @override
@@ -9,7 +11,6 @@ class ServiceSelectionScreen extends StatefulWidget {
 
 class _ServiceSelectionScreenState extends State<ServiceSelectionScreen> {
   bool isMatchmakingSelected = true;
-  final AuthController authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -88,15 +89,12 @@ class _ServiceSelectionScreenState extends State<ServiceSelectionScreen> {
                       // Selection Buttons
                       Column(
                         children: [
-                          Obx(
-                            () => authController.isLoading.value
-                                ? CircularProgressIndicator()
-                                : GestureDetector(
+                          GestureDetector(
                                     onTap: () async {
                                       setState(() {
                                         isMatchmakingSelected = true;
                                       });
-                                      await authController.registerUser(1);
+                                      Get.to(() => Bottomnavbar());
                                     },
                                     child: Container(
                                       width: double.infinity,
@@ -122,17 +120,13 @@ class _ServiceSelectionScreenState extends State<ServiceSelectionScreen> {
                                       ),
                                     ),
                                   ),
-                          ),
                           SizedBox(height: 16),
-                          Obx(
-                            () => authController.isLoading1.value
-                                ? CircularProgressIndicator()
-                                : GestureDetector(
+                          GestureDetector(
                                     onTap: () async {
                                       setState(() {
                                         isMatchmakingSelected = false;
                                       });
-                                      await authController.registerUser(2);
+                                      Get.to(() => SelectService());
                                     },
                                     child: Container(
                                       width: double.infinity,
@@ -158,7 +152,7 @@ class _ServiceSelectionScreenState extends State<ServiceSelectionScreen> {
                                       ),
                                     ),
                                   ),
-                          ),
+
                         ],
                       ),
                       SizedBox(height: 24),
