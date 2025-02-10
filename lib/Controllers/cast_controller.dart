@@ -3,46 +3,39 @@ import 'package:love_connection/Controllers/AuthController.dart';
 import 'package:love_connection/ApiService/ApiService.dart';
 
 class CastController extends GetxController {
-  // Observable list to store cast names.
-  var castNames = <String>[].obs;
-
-  // Observable flag to indicate loading state.
-  var isLoading = false.obs;
-
-  // Instance of the ApiService.
-  final ApiService apiService = ApiService();
-
-  // Obtain the AuthController instance (adjust if needed).
+  final ApiService _apiService = ApiService();
+  final RxList<Map<String, dynamic>> castList = <Map<String, dynamic>>[].obs;
+  final RxBool isLoading = true.obs;
+  final RxString errorMessage = ''.obs;
   final AuthController authController = Get.put(AuthController());
+  final RxString religion1 = ''.obs;
 
   @override
   void onInit() {
-    super.onInit();
-    // Automatically call fetchCasts when the religion changes.
     ever(authController.religion, (String? religion) {
       if (religion != null && religion.isNotEmpty) {
         print('Religion Name from controller: $religion');
-        fetchCasts(religion);
+        fetchCastData(religion);
+        religion1.value = religion;
       }
     });
+    super.onInit();
+    fetchCastData(religion1.value.toString());
+
   }
 
-
-
-  /// Fetches cast names for the given [religion] and updates [castNames].
-  void fetchCasts(String religion) async {
-
-    print('Religion Name ////// : $religion');
+  Future<void> fetchCastData(String religion) async {
     try {
-      isLoading.value = true;
-      // Ensure the [religion] parameter is passed as required.
-      final List<String> fetchedCasts = await apiService.fetchCasts1(religion);
-      // Update the observable list with the fetched cast names.
-      castNames.assignAll(fetchedCasts);
-    } catch (error) {
-      print("Error fetching cast data: $error");
+      isLoading(true);
+      final data = await _apiService.fetchCastData(religion);
+      castList.assignAll(data);
+      castList.refresh();
+
+      errorMessage('');
+    } catch (e) {
+      errorMessage(e.toString());
     } finally {
-      isLoading.value = false;
+      isLoading(false);
     }
   }
 }

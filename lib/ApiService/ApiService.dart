@@ -729,32 +729,54 @@ class ApiService {
       return [];
     }
   }
-  Future<List<String>> fetchCast({required String religion}) async {
-    // Create the URL without query parameters.
-    final url = Uri.parse('${_baseUrl}/getcast.php');
+  Future<List<Map<String, dynamic>>> fetchCastData(String religion) async {
+    final url = Uri.parse('$_baseUrl/getcast.php');
+    final response = await http.post(url, body: {'religion': religion});
 
-    // Send a POST request with the required headers and parameter in the body.
-    final response = await http.post(
-      url,
-
-      body: jsonEncode({'religion': religion.trim().toString()}),
-    );
-    print('Request Url: $url');
-    print('Response: ${response.body}');
-    // Check for success.
     if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonData = jsonDecode(response.body);
-      if (jsonData["Result"] == "true" && jsonData["Data"] != null) {
-        final List<dynamic> data = jsonData["Data"];
-        return data.map((item) => item["cast"].toString()).toList();
+      final jsonResponse = jsonDecode(response.body);
+
+      // Check if the response is successful
+      if (jsonResponse['ResponseCode'] == "200" && jsonResponse['Result'] == "true") {
+        return List<Map<String, dynamic>>.from(jsonResponse['Data']);
       } else {
-        throw Exception("API error: ${jsonData["ResponseMsg"]}");
+        throw Exception('Failed to fetch data: ${jsonResponse['ResponseMsg']}');
       }
     } else {
-      throw Exception("Failed to fetch cast data. Status Code: ${response.statusCode}");
+      throw Exception('Failed to load data: ${response.statusCode}');
     }
   }
 
+  Future<List<String>> fetchSectData({required String religion, required String caste}) async {
+    final url = Uri.parse("$_baseUrl/getsect.php");
+
+    try {
+      final response = await http.post(
+        url,
+        body: {
+          "religion": religion,
+          "cast": caste,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+
+        if (responseData["Result"] == "true") {
+          // Extract sect names as List<String>
+          return (responseData["Data"] as List)
+              .map<String>((sect) => sect["sect"].toString())
+              .toList();
+        } else {
+          throw Exception(responseData["ResponseMsg"]);
+        }
+      } else {
+        throw Exception("Failed to fetch sects. Status Code: ${response.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Error fetching sects: $e");
+    }
+  }
 
 
 }
