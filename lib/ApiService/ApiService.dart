@@ -704,14 +704,14 @@ class ApiService {
       print('Error fetching cities: $e');
       return [];
     }
-  }  Future<List<String>> fetchCasts1(String countryName) async {
+  }  Future<List<String>> fetchCasts1(String religion) async {
     try {
       final url = Uri.parse('${_baseUrl}/getcast.php');
       print('URL for Request : $url');
-      print('Casts Name for Request : $countryName');
+      print('Casts Name for Request : $religion');
       final response = await http.post(
         url,
-        body: {'religion': countryName},
+        body: {'religion': religion},
       );
 
 

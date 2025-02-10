@@ -24,11 +24,10 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Heart Icon Header
-                Icon(
-                  Icons.favorite,
-                  color: Colors.pink.shade300,
-                  size: 100,
+                // add image view for logo here
+                Image.asset(
+                  'assets/images/logoT.png',
+                  height: 200,
                 ),
                 SizedBox(height: 20),
                 // Title

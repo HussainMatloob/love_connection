@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:love_connection/Screens/BasicInfo.dart';
-import 'package:love_connection/Widgets/FormWidgets.dart';
-import 'package:google_fonts/google_fonts.dart'; // Import GoogleFonts
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../Controllers/BasicInfoController.dart';
+import '../BasicInfo.dart';
 import '../Preferences.dart';
+import '../../Widgets/FormWidgets.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -26,33 +25,65 @@ class _HomeState extends State<Home> {
         title: Text(
           'Basic Information',
           style: GoogleFonts.outfit(
-            // Use the Outfit font
             color: Colors.black,
           ),
         ),
         centerTitle: true,
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(Get.width * 0.05),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FormWidgets.buildTabs(controller, 'Basic', 'Preferences'),
-                ],
+        child: SingleChildScrollView( // Wrap in scrollable container
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(Get.width * 0.05),
+                child: FormWidgets.buildHomeTabs(controller, pageController, 'Basic', 'Preferences'),
               ),
-            ),
-            Expanded(
-              child: Obx(() {
-                // Render the screen based on the selected tab
-                return controller.currentPage.value == 0
-                    ? Basicinfo()
-                    : Preferences();
-              }),
-            ),
-          ],
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.7, // Limit height
+                child: PageView(
+                  controller: pageController,
+                  onPageChanged: (index) {
+                    if (index < 2) {
+                      controller.currentPage.value = 0; // Basic
+                    } else {
+                      controller.currentPage.value = 2; // Preferences
+                    }
+                  },
+                  children: [
+                    FormWidgets.buildForm(controller),
+                    FormWidgets().buildSecondForm(),
+                    FormWidgets.buildPreferencesForm(controller),
+                    FormWidgets.buildPreferencesForm2(controller),
+                  ],
+                ),
+
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: SmoothPageIndicator(
+                    controller: pageController,
+                    count: 4,
+                    effect: WormEffect(
+                      dotHeight: 8,
+                      dotWidth: 8,
+                      activeDotColor: Colors.pinkAccent,
+                      dotColor: Colors.grey,
+                    ),
+                    onDotClicked: (index) {
+                      controller.currentPage.value = index;
+                      pageController.animateToPage(
+                        index,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

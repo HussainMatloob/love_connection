@@ -79,6 +79,61 @@ class FormWidgets {
     });
   }
 
+
+  static Widget buildHomeTabs(BasicInfoController controller, PageController pageController, String tab1, String tab2) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(Get.width * 0.02),
+      ),
+      child: Row(
+        children: [
+          _buildTabButton1(controller, pageController, tab1, 0),  // Maps to index 0
+          _buildTabButton1(controller, pageController, tab2, 2),  // Maps to index 2
+        ],
+      ),
+    );
+  }
+
+
+  static Widget _buildTabButton1(BasicInfoController controller, PageController pageController, String text, int mappedIndex) {
+    return Obx(() {
+      final isSelected = (mappedIndex == 0 && controller.currentPage.value < 2) ||
+          (mappedIndex == 2 && controller.currentPage.value >= 2);
+
+      return Expanded(
+        child: GestureDetector(
+          onTap: () {
+            controller.currentPage.value = mappedIndex;
+            pageController.animateToPage(
+              mappedIndex,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.pink[100] : Colors.transparent,
+              borderRadius: BorderRadius.circular(Get.width * 0.02),
+            ),
+            child: Center(
+              child: Text(
+                text,
+                style: GoogleFonts.outfit(
+                  color: isSelected ? Colors.black : Colors.grey,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+
   static Widget buildForm(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
 
@@ -532,7 +587,6 @@ class FormWidgets {
           SizedBox(height: 16),
 
           Obx(() {
-
             final castes = castController.castNames;
             print('Castes: $castes');
             print('Castes length: ${castes.length}');

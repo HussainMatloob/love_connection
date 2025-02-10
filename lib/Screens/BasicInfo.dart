@@ -32,7 +32,7 @@ class _BasicinfoState extends State<Basicinfo> {
             ],
           ),
         ),
-        FormWidgets().buildPageIndicator(),
+        // FormWidgets().buildPageIndicator(),
       ],
     );
   }

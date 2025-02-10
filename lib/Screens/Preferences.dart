@@ -34,7 +34,7 @@ class _PreferencesState extends State<Preferences> {
             ],
           ),
         ),
-        FormWidgets().buildPageIndicator(),
+        // FormWidgets().buildPageIndicator(),
       ],
     );
   }
