@@ -43,7 +43,7 @@ class AssessmentCategoriesScreen extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
-                  Obx(() => Text(  // ✅ Automatically updates when rating changes
+                  Obx(() => Text(
                     "${ratingController.ratingPercentage.value.toStringAsFixed(2)}%",
                     style: TextStyle(
                       fontSize: 18,

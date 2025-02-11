@@ -11,7 +11,10 @@ class RatingController extends GetxController {
   void onInit() {
     super.onInit();
     fetchRating();
+    // Automatically refresh rating every 5 seconds
+    ever(ratingPercentage, (_) => fetchRating());
     startAutoRefresh();
+
   }
 
   void fetchRating() async {

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import '../ApiService/ApiService.dart';
 import '../Models/Questions.dart';
 
@@ -11,18 +9,29 @@ class AssessmentQuestionController extends GetxController {
   var isLoading = true.obs;
   var isSubmitting = false.obs;
   var selectedOptions = <String, String>{}.obs;
-
-  final ApiService apiService = ApiService();
-  final int userId = 1; // Replace with actual user ID
-  final String type = "assessment"; // Define appropriate type
+  var questionRatings = <String, int>{}.obs;
 
   void fetchQuestions(int categoryId) async {
     isLoading(true);
     try {
-      final fetchedQuestions = await apiService.fetchAssessmentQuestions();
+      final prefs = await SharedPreferences.getInstance();
+      final fetchedQuestions = await ApiService.fetchAssessmentQuestions();
+
       questions.assignAll(
         fetchedQuestions.where((q) => q.categoryId == categoryId).toList(),
       );
+
+      for (var question in questions) {
+        String? savedAnswer = prefs.getString("selected_answer_${question.id}");
+        int? savedRating = prefs.getInt("rating_${question.id}");
+
+        if (savedAnswer != null) {
+          selectedOptions[question.id.toString()] = savedAnswer;
+        }
+        if (savedRating != null) {
+          questionRatings[question.id.toString()] = savedRating;
+        }
+      }
     } catch (e) {
       Get.snackbar("Error", "Failed to load questions", snackPosition: SnackPosition.BOTTOM);
     } finally {
@@ -48,39 +57,33 @@ class AssessmentQuestionController extends GetxController {
         return;
       }
 
-      print('User ID     :  =>  $userId');
-      print('Category ID :  =>  $categoryId');
-      print('Question ID :  =>  $questionId');
-      print('Answer      :  =>  $answer');
-
       isSubmitting(true);
 
-      Map<String, dynamic> payload = {
-        "userid": userId,
-        "type": "assessment",
-        "categoryid": categoryId.toString(),
-        "questionid": questionId.toString(),
-        "answer": answer,
-      };
-
-      print("Submitting Answer: $payload");
-
-      final response = await http.post(
-        Uri.parse("https://projects.funtashtechnologies.com/gomeetapi/answerassesmentquestions.php"),
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: payload.map((key, value) => MapEntry(key, value.toString())),
+      final responseData = await ApiService.submitAnswer(
+        userId: userId,
+        categoryId: categoryId,
+        questionId: questionId,
+        answer: answer,
       );
 
-      final responseData = jsonDecode(response.body);
-      print("API Response: $responseData");
-
-      // Ensure Result is correctly interpreted
-      bool isSuccess = response.statusCode == 200 &&
-          (responseData["Result"] == true || responseData["Result"].toString() == "true");
-
-      print("Final isSuccess Check: $isSuccess");
+      bool isSuccess = responseData["Result"] == true || responseData["Result"].toString() == "true";
 
       if (isSuccess) {
+        dynamic rawRating = responseData["Data"]["rating"];
+        int rating = 0;
+
+        if (rawRating is int) {
+          rating = rawRating;
+        } else if (rawRating is String) {
+          rating = int.tryParse(rawRating) ?? 0;
+        }
+
+        await prefs.setString("selected_answer_$questionId", answer);
+        await prefs.setInt("rating_$questionId", rating);
+
+        selectedOptions[questionId] = answer;
+        questionRatings[questionId] = rating;
+
         Get.snackbar("Success", responseData["ResponseMsg"] ?? "Answer submitted successfully!",
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.green,
@@ -100,5 +103,4 @@ class AssessmentQuestionController extends GetxController {
       isSubmitting(false);
     }
   }
-
 }

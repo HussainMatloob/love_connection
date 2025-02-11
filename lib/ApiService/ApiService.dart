@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_connect/connect.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -623,7 +627,7 @@ class ApiService {
     }
   }
 
-  Future<List<Question>> fetchAssessmentQuestions() async {
+ static Future<List<Question>> fetchAssessmentQuestions() async {
     final url = Uri.parse("$_baseUrl/getassesmentquestions.php");
     final response = await GetConnect().get(url.toString());
 
@@ -726,31 +730,7 @@ class ApiService {
     }
   }
 
-  Future<List<String>> fetchCasts1(String religion) async {
-    try {
-      final url = Uri.parse('${_baseUrl}/getcast.php');
-      print('URL for Request : $url');
-      print('Casts Name for Request : $religion');
-      final response = await http.post(
-        url,
-        body: {'religion': religion},
-      );
 
-      print('Response: ${response.body}');
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        List<String> cities = data['Data']
-            .map<String>((city) => city['cast'].toString())
-            .toList();
-        return cities;
-      } else {
-        throw Exception('Failed to load casts');
-      }
-    } catch (e) {
-      print('Error fetching casts: $e');
-      return [];
-    }
-  }
 
   Future<List<Map<String, dynamic>>> fetchCastData(String religion) async {
     final url = Uri.parse('$_baseUrl/getcast.php');
@@ -835,6 +815,36 @@ class ApiService {
 
     return null;
   }
+  static Future<Map<String, dynamic>> submitAnswer({
+    required String userId,
+    required int categoryId,
+    required String questionId,
+    required String answer,
+  }) async {
+    try {
+      Map<String, dynamic> payload = {
+        "userid": userId,
+        "type": "assessment",
+        "categoryid": categoryId.toString(),
+        "questionid": questionId.toString(),
+        "answer": answer,
+      };
 
+      print("Submitting Answer: $payload");
 
+      final response = await http.post(
+        Uri.parse("https://projects.funtashtechnologies.com/gomeetapi/answerassesmentquestions.php"),
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: payload.map((key, value) => MapEntry(key, value.toString())),
+      );
+
+      final responseData = jsonDecode(response.body);
+      print("API Response: $responseData");
+
+      return responseData;
+    } catch (e) {
+      print("API Error: $e");
+      return {"Result": false, "ResponseMsg": "An unexpected error occurred."};
+    }
+  }
 }

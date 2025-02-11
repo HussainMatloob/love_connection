@@ -1,44 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../Controllers/goal_taragtquestion_controller.dart';
 
-class GoalTargetQustionScreen extends StatelessWidget {
+class GoalTargetQuestionScreen extends StatelessWidget {
   final String categoryName;
 
-  GoalTargetQustionScreen({required this.categoryName});
+  GoalTargetQuestionScreen({required this.categoryName});
   final GoalTargetQuestionController controller = Get.put(GoalTargetQuestionController());
-
 
   @override
   Widget build(BuildContext context) {
-    // Fetch questions for the selected goal target
-
-
-    int categoryId;
-    switch (categoryName) {
-      case 'Effective Family Planning':
-        categoryId = 1;
-        break;
-      case 'Sexual Satisfaction':
-        categoryId = 2;
-        break;
-      case 'Develop Positive Habits':
-        categoryId = 3;
-        break;
-      case 'Financial Managements':
-        categoryId = 4;
-        break;
-      case 'Unmet expectations':
-        categoryId = 5;
-        break;
-      case 'Trust & Respect':
-        categoryId = 6;
-        break;
-
-      default:
-        categoryId = 0; // Default case if no match found
-    }
-
+    int categoryId = _getCategoryId(categoryName);
     controller.fetchGoalTargetQuestions(categoryId);
 
     return Scaffold(
@@ -65,11 +38,11 @@ class GoalTargetQustionScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final question = controller.questions[index];
 
-              // Select the first option by default if not already selected
-              if (controller.selectedOptions[question.id.toString()] == null &&
-                  question.options.isNotEmpty) {
-                controller.selectOption(question.id.toString(), question.options[0]);
+              // Restore saved answers
+              if (controller.selectedOptions[question.id.toString()] == null && question.options.isNotEmpty) {
+                controller.selectOption(categoryId, question.id.toString(), question.options[0]);
               }
+
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Card(
@@ -79,24 +52,33 @@ class GoalTargetQustionScreen extends StatelessWidget {
                   ),
                   elevation: 4,
                   child: ExpansionTile(
-                    title: Text(
-                      question.question,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          question.question,
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                        // Obx(() {
+                        //   int rating = controller.questionRatings[question.id.toString()] ?? 0;
+                        //   return Text(
+                        //     'Rating: $rating',
+                        //     style: TextStyle(fontSize: 14, color: Colors.grey),
+                        //   );
+                        // }),
+                      ],
                     ),
                     children: [
                       ...question.options.map((option) {
                         return Obx(
                               () => RadioListTile<String>(
                             value: option,
-                            groupValue:
-                            controller.selectedOptions[question.id.toString()] ?? '',
+                            groupValue: controller.selectedOptions[question.id.toString()] ?? '',
                             activeColor: Colors.pink.shade400,
                             title: Text(option),
                             onChanged: (value) {
                               if (value != null) {
-                                controller.selectOption(question.id.toString(), value);
-                                print(
-                                    "Selected Option for Question ${question.id}: $value");
+                                controller.selectOption(categoryId, question.id.toString(), value);
                               }
                             },
                           ),
@@ -111,5 +93,17 @@ class GoalTargetQustionScreen extends StatelessWidget {
         }
       }),
     );
+  }
+
+  int _getCategoryId(String categoryName) {
+    switch (categoryName) {
+      case 'Effective Family Planning': return 1;
+      case 'Sexual Satisfaction': return 2;
+      case 'Develop Positive Habits': return 3;
+      case 'Financial Managements': return 4;
+      case 'Unmet Expectations': return 5;
+      case 'Trust & Respect': return 6;
+      default: return 0;
+    }
   }
 }

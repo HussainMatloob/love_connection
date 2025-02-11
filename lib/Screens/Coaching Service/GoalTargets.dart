@@ -37,7 +37,7 @@ class GoalTargetScreen extends StatelessWidget {
             final category = controller.goalTargets[index];
             return GestureDetector(
               onTap: () {
-                Get.to(() => GoalTargetQustionScreen(
+                Get.to(() => GoalTargetQuestionScreen(
                   categoryName: category.title,
 
                 ));
