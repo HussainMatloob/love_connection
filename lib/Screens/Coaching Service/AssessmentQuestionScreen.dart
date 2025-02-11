@@ -7,42 +7,28 @@ class AssessmentQuestionScreen extends StatelessWidget {
 
   AssessmentQuestionScreen({required this.categoryName});
 
-  final AssessmentQuestionController controller =
-  Get.put(AssessmentQuestionController());
+  final AssessmentQuestionController controller = Get.put(AssessmentQuestionController());
 
   @override
   Widget build(BuildContext context) {
-    int categoryId;
-    switch (categoryName) {
-      case 'Love Language':
-        categoryId = 2;
-        break;
-      case 'Strength & Weakness':
-        categoryId = 3;
-        break;
-      case 'Communication':
-        categoryId = 4;
-        break;
-      case 'Emotional Needs':
-        categoryId = 5;
-        break;
-      case 'Attachment Style':
-        categoryId = 6;
-        break;
-      case 'Relationship Satisfaction':
-        categoryId = 7;
-        break;
-      case 'Conflict Resolution':
-        categoryId = 8;
-        break;
-      case 'Mindfulness':
-        categoryId = 9;
-        break;
-      default:
-        categoryId = 0;
-    }
+    // Map categoryName to categoryId
+    final Map<String, int> categoryMap = {
+      'Love Language': 2,
+      'Strength & Weakness': 3,
+      'Communication': 4,
+      'Emotional Needs': 5,
+      'Attachment Style': 6,
+      'Relationship Satisfaction': 7,
+      'Conflict Resolution': 8,
+      'Mindfulness': 9,
+    };
 
-    controller.fetchQuestions(categoryId);
+    final int categoryId = categoryMap[categoryName] ?? 0;
+
+    // Fetch questions only once
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.fetchQuestions(categoryId);
+    });
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -64,17 +50,20 @@ class AssessmentQuestionScreen extends StatelessWidget {
         } else {
           return Column(
             children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 18),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child:
+                  Text("Questions*", style: TextStyle(fontSize: 24,color: Colors.black),),
+                ),
+              ),
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: controller.questions.length,
                   itemBuilder: (context, index) {
                     final question = controller.questions[index];
-
-                    if (controller.selectedOptions[question.id.toString()] == null &&
-                        question.options.isNotEmpty) {
-                      controller.selectOption(question.id.toString(), question.options[0]);
-                    }
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -94,15 +83,12 @@ class AssessmentQuestionScreen extends StatelessWidget {
                               return Obx(
                                     () => RadioListTile<String>(
                                   value: option,
-                                  groupValue:
-                                  controller.selectedOptions[question.id.toString()] ?? '',
+                                  groupValue: controller.selectedOptions[question.id.toString()] ?? '',
                                   activeColor: Colors.pink.shade400,
                                   title: Text(option),
                                   onChanged: (value) {
                                     if (value != null) {
-                                      controller.selectOption(question.id.toString(), value);
-                                      print(
-                                          "Selected Option for Question ${question.id}: $value");
+                                      controller.selectOption(categoryId, question.id.toString(), value);
                                     }
                                   },
                                 ),
@@ -116,31 +102,7 @@ class AssessmentQuestionScreen extends StatelessWidget {
                 ),
               ),
               // Submit Button
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Obx(() {
-                  return ElevatedButton(
-                    onPressed: controller.isSubmitting.value
-                        ? null
-                        : () async {
-                      await controller.submitAnswers(categoryId);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.pink.shade400,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: controller.isSubmitting.value
-                        ? CircularProgressIndicator(color: Colors.white)
-                        : Text(
-                      "Submit Answers",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  );
-                }),
-              ),
+
             ],
           );
         }

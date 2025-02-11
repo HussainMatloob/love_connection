@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../ApiService/ApiService.dart';
 import '../Models/Questions.dart';
@@ -12,7 +13,7 @@ class AssessmentQuestionController extends GetxController {
   var selectedOptions = <String, String>{}.obs;
 
   final ApiService apiService = ApiService();
-  final int userId = 1; // Replace with actual user ID (can be from AuthController)
+  final int userId = 1; // Replace with actual user ID
   final String type = "assessment"; // Define appropriate type
 
   void fetchQuestions(int categoryId) async {
@@ -29,54 +30,75 @@ class AssessmentQuestionController extends GetxController {
     }
   }
 
-  void selectOption(String questionId, String option) {
+  void selectOption(int categoryId, String questionId, String option) async {
     selectedOptions[questionId] = option;
+    await submitAnswer(categoryId, questionId, option);
   }
 
-  Future<void> submitAnswers(int categoryId) async {
-    if (selectedOptions.isEmpty) {
-      Get.snackbar("Error", "Please answer at least one question before submitting",
-          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
-      return;
-    }
-
+  Future<void> submitAnswer(int categoryId, String questionId, String answer) async {
     try {
-      isSubmitting(true);
+      final prefs = await SharedPreferences.getInstance();
+      final String? userId = prefs.getString('userid');
 
-      List<Map<String, dynamic>> answers = selectedOptions.entries
-          .map((entry) => {
-        "userid": userId,
-        "type": type,
-        "categoryid": categoryId,
-        "questionid": entry.key,
-        "answer": entry.value,
-      })
-          .toList();
-
-      for (var answer in answers) {
-        final response = await http.post(
-          Uri.parse("https://projects.funtashtechnologies.com/gomeetapi/answerassesmentquestions.php"),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(answer),
-        );
-
-        final responseData = jsonDecode(response.body);
-        if (response.statusCode != 200 || responseData["status"] != "success") {
-          throw Exception(responseData["message"] ?? "Failed to submit some answers");
-        }
+      if (userId == null || userId.isEmpty) {
+        Get.snackbar("Error", "User ID not found. Please log in again.",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
+        return;
       }
 
-      Get.snackbar("Success", "All answers submitted successfully!",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white);
+      print('User ID     :  =>  $userId');
+      print('Category ID :  =>  $categoryId');
+      print('Question ID :  =>  $questionId');
+      print('Answer      :  =>  $answer');
 
-      selectedOptions.clear(); // Reset selected answers after submission
+      isSubmitting(true);
+
+      Map<String, dynamic> payload = {
+        "userid": userId,
+        "type": "assessment",
+        "categoryid": categoryId.toString(),
+        "questionid": questionId.toString(),
+        "answer": answer,
+      };
+
+      print("Submitting Answer: $payload");
+
+      final response = await http.post(
+        Uri.parse("https://projects.funtashtechnologies.com/gomeetapi/answerassesmentquestions.php"),
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: payload.map((key, value) => MapEntry(key, value.toString())),
+      );
+
+      final responseData = jsonDecode(response.body);
+      print("API Response: $responseData");
+
+      // Ensure Result is correctly interpreted
+      bool isSuccess = response.statusCode == 200 &&
+          (responseData["Result"] == true || responseData["Result"].toString() == "true");
+
+      print("Final isSuccess Check: $isSuccess");
+
+      if (isSuccess) {
+        Get.snackbar("Success", responseData["ResponseMsg"] ?? "Answer submitted successfully!",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white);
+      } else {
+        Get.snackbar("Error", responseData["ResponseMsg"] ?? "Failed to submit answer",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
+      }
     } catch (e) {
-      Get.snackbar("Error", e.toString(),
-          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar("Error", "An unexpected error occurred: ${e.toString()}",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
     } finally {
       isSubmitting(false);
     }
   }
+
 }

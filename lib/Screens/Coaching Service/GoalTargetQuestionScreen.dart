@@ -70,7 +70,6 @@ class GoalTargetQustionScreen extends StatelessWidget {
                   question.options.isNotEmpty) {
                 controller.selectOption(question.id.toString(), question.options[0]);
               }
-
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Card(

@@ -11,9 +11,8 @@ import '../Models/GoalTarget.dart';
 import '../Models/GoaltargetQuestions.dart';
 import '../Models/Questions.dart';
 
-
 class ApiService {
-  final String _baseUrl = 'https://projects.funtashtechnologies.com/gomeetapi';
+  static const String _baseUrl = "https://projects.funtashtechnologies.com/gomeetapi";
 
   Future<Map<String, dynamic>> registerUser({
     required String firstname,
@@ -88,7 +87,6 @@ class ApiService {
       request.fields['ethnicitylookingfor'] = ethnicitylookingfor;
       request.fields['created_at'] = created_at;
 
-
       // Add the file field
       request.files.add(
         await http.MultipartFile.fromPath(
@@ -129,8 +127,7 @@ class ApiService {
       request.files.add(
         await http.MultipartFile.fromPath(
           'selfieimage', // Key name expected by the server
-          selfieimage
-              .path,
+          selfieimage.path,
         ),
       );
 
@@ -224,7 +221,6 @@ class ApiService {
 
         final jsonData = json.decode(response.body);
 
-
         if (jsonData['ResponseCode'] == '200') {
           // Return full response including `Data` array
           return {
@@ -260,8 +256,8 @@ class ApiService {
   }
 
   void printFullText(String text) {
-    final pattern = RegExp(
-        '.{1,800}'); // Breaks the text into chunks of 800 characters
+    final pattern =
+        RegExp('.{1,800}'); // Breaks the text into chunks of 800 characters
     for (final match in pattern.allMatches(text)) {
       if (kDebugMode) {
         print(match.group(0));
@@ -346,7 +342,6 @@ class ApiService {
     }
   }
 
-
   // Method to send a connection request
   Future<Map<String, dynamic>> sendConnectionRequest({
     required String userId,
@@ -404,7 +399,8 @@ class ApiService {
       final prefs = await SharedPreferences.getInstance();
       String userid = prefs.getString("userid").toString();
       final url = Uri.parse('$_baseUrl/getsendconrequest.php');
-      final response = await http.post(url, body: { 'userid': userid,
+      final response = await http.post(url, body: {
+        'userid': userid,
       });
 
       if (response.statusCode == 200) {
@@ -447,7 +443,7 @@ class ApiService {
     }
   }
 
-  // Get user data by user id 
+  // Get user data by user id
   Future<Map<String, dynamic>> GetUserInfo() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -605,8 +601,8 @@ class ApiService {
   // Fetch categories from API
   Future<List<AssessmentCategory>> fetchAssessmentCategories() async {
     try {
-      final response = await http.get(
-          Uri.parse("$_baseUrl/getassesmentcategories.php"));
+      final response =
+          await http.get(Uri.parse("$_baseUrl/getassesmentcategories.php"));
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
@@ -626,7 +622,6 @@ class ApiService {
       throw Exception("Error fetching categories: $e");
     }
   }
-
 
   Future<List<Question>> fetchAssessmentQuestions() async {
     final url = Uri.parse("$_baseUrl/getassesmentquestions.php");
@@ -690,7 +685,6 @@ class ApiService {
     }
   }
 
-  // Fetch religions
   Future<List<String>> fetchReligions() async {
     try {
       final response = await http.get(Uri.parse("$_baseUrl/getreligion.php"));
@@ -719,8 +713,9 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        List<String> cities = data['Data'].map<String>((city) =>
-            city['city'].toString()).toList();
+        List<String> cities = data['Data']
+            .map<String>((city) => city['city'].toString())
+            .toList();
         return cities;
       } else {
         throw Exception('Failed to load cities');
@@ -741,12 +736,12 @@ class ApiService {
         body: {'religion': religion},
       );
 
-
       print('Response: ${response.body}');
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        List<String> cities = data['Data'].map<String>((city) =>
-            city['cast'].toString()).toList();
+        List<String> cities = data['Data']
+            .map<String>((city) => city['cast'].toString())
+            .toList();
         return cities;
       } else {
         throw Exception('Failed to load casts');
@@ -764,7 +759,6 @@ class ApiService {
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
 
-      // Check if the response is successful
       if (jsonResponse['ResponseCode'] == "200" &&
           jsonResponse['Result'] == "true") {
         return List<Map<String, dynamic>>.from(jsonResponse['Data']);
@@ -793,7 +787,7 @@ class ApiService {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         if (responseData["Result"] == "true") {
-          // Extract sect names as List<String>
+
           return (responseData["Data"] as List)
               .map<String>((sect) => sect["sect"].toString())
               .toList();
@@ -807,6 +801,39 @@ class ApiService {
     } catch (e) {
       throw Exception("Error fetching sects: $e");
     }
+  }
+
+  // Fetch Rating Percentage
+
+ static Future<double?> fetchRatingPercentage() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getString('userid');
+
+      print("User in to get rating: $userId");
+
+      if (userId == null || userId.isEmpty) {
+        print("Error: User ID is null or empty!");
+        return null;
+      }
+
+      final response = await http.post(
+        Uri.parse("https://projects.funtashtechnologies.com/gomeetapi/getratings.php"),
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: {"userid": userId},
+      );
+
+      final responseData = jsonDecode(response.body);
+      print("Rating API Response: $responseData");
+
+      if (response.statusCode == 200 && responseData["Result"] == "true") {
+        return double.tryParse(responseData["RatingPercentage"].toString());
+      }
+    } catch (e) {
+      print("Error fetching rating percentage: $e");
+    }
+
+    return null;
   }
 
 

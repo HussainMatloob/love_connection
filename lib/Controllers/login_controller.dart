@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:love_connection/Screens/Service_selection_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ApiService/ApiService.dart';
 import '../Screens/SelectService.dart';
@@ -25,7 +26,7 @@ class LoginController extends GetxController {
 
 
 
-          Get.offAll(SelectService());
+          Get.offAll(ServiceSelectionScreen());
 
       } else {
         Get.snackbar('Error', 'Login failed: ${response['ResponseMsg']}');
