@@ -6,7 +6,7 @@ import 'AuthController.dart';
 
 class CityController extends GetxController {
   var cityOptions = <String>[].obs;
-  var isLoading = true.obs;
+  var isLoading = false.obs;
   final ApiService apiService = ApiService();
 
   final AuthController authController = Get.put(AuthController());

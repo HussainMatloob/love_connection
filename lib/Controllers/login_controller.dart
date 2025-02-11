@@ -11,7 +11,7 @@ class LoginController extends GetxController {
 
   final ApiService apiService = ApiService();
 
-  Future<void> login(String email, String password, int key) async {
+  Future<void> login(String email, String password,) async {
     isLoading.value = true;
     try {
       final response = await apiService.loginUser(email, password);
@@ -23,14 +23,10 @@ class LoginController extends GetxController {
         print("User Login Succecfully and user id is : $userId");
         Get.snackbar('Success', response['ResponseMsg'],snackPosition: SnackPosition.BOTTOM);
 
-        prefs.setString('registeredkey',key.toString());
 
-        if(key == 1){
-          Get.offAll(Bottomnavbar());
-        }
-        else{
+
           Get.offAll(SelectService());
-        }
+
       } else {
         Get.snackbar('Error', 'Login failed: ${response['ResponseMsg']}');
       }

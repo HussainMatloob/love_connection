@@ -14,6 +14,7 @@ import '../Models/Questions.dart';
 
 class ApiService {
   final String _baseUrl = 'https://projects.funtashtechnologies.com/gomeetapi';
+
   Future<Map<String, dynamic>> registerUser({
     required String firstname,
     required String lastname,
@@ -100,28 +101,32 @@ class ApiService {
           'gallery', // Key name expected by the server
           gallery.path,
         ),
-      ); request.files.add(
+      );
+      request.files.add(
         await http.MultipartFile.fromPath(
           'cnic_front', // Key name expected by the server
           cnic_front.path,
         ),
       );
-        request.files.add(
+      request.files.add(
         await http.MultipartFile.fromPath(
           'cnic_back', // Key name expected by the server
           cnic_back.path,
         ),
-      ); request.files.add(
+      );
+      request.files.add(
         await http.MultipartFile.fromPath(
           'passport_front', // Key name expected by the server
           passport_front.path,
         ),
-      );request.files.add(
+      );
+      request.files.add(
         await http.MultipartFile.fromPath(
           'passport_back', // Key name expected by the server
           passport_back.path,
         ),
-      );request.files.add(
+      );
+      request.files.add(
         await http.MultipartFile.fromPath(
           'selfieimage', // Key name expected by the server
           selfieimage
@@ -145,30 +150,43 @@ class ApiService {
           // final prefs = await SharedPreferences.getInstance();
           // prefs.setString('userid', userId.toString());
           if (kDebugMode) {
-            print("================================ user succesfully registered user id  : $userId========================================");
+            print(
+                "================================ user succesfully registered user id  : $userId========================================");
             print('Response: $responseBody');
-
           }
         }
-        return {'ResponseCode': '200', 'Result': 'true', 'ResponseMsg': 'Success', 'Data': parsedBody};
+        return {
+          'ResponseCode': '200',
+          'Result': 'true',
+          'ResponseMsg': 'Success',
+          'Data': parsedBody
+        };
       } else {
-
         final responseBody = await response.stream.bytesToString();
         if (kDebugMode) {
           print('Error Response: $responseBody');
         }
-        return {'ResponseCode': response.statusCode.toString(), 'Result': 'false', 'ResponseMsg': 'Failed'};
+        return {
+          'ResponseCode': response.statusCode.toString(),
+          'Result': 'false',
+          'ResponseMsg': 'Failed'
+        };
       }
     } catch (e) {
       if (kDebugMode) {
         print('Error occurred: $e');
       }
-      return {'ResponseCode': '500', 'Result': 'false', 'ResponseMsg': e.toString()};
+      return {
+        'ResponseCode': '500',
+        'Result': 'false',
+        'ResponseMsg': e.toString()
+      };
     }
   }
 
   Future<Map<String, dynamic>> loginUser(String email, String password) async {
-    final url = Uri.parse('${_baseUrl}/login.php'); // Replace with actual login endpoint
+    final url = Uri.parse(
+        '${_baseUrl}/login.php'); // Replace with actual login endpoint
 
     try {
       final response = await http.post(
@@ -242,13 +260,15 @@ class ApiService {
   }
 
   void printFullText(String text) {
-    final pattern = RegExp('.{1,800}'); // Breaks the text into chunks of 800 characters
+    final pattern = RegExp(
+        '.{1,800}'); // Breaks the text into chunks of 800 characters
     for (final match in pattern.allMatches(text)) {
       if (kDebugMode) {
         print(match.group(0));
       } // Print each chunk
     }
   }
+
   // Post request to get send connection request data
   Future<Map<String, dynamic>> getSendConRequest() async {
     try {
@@ -382,10 +402,10 @@ class ApiService {
   Future<Map<String, dynamic>> getPendingRequests() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      String userid= prefs.getString("userid").toString();
+      String userid = prefs.getString("userid").toString();
       final url = Uri.parse('$_baseUrl/getsendconrequest.php');
-      final response = await http.post(url, body:{          'userid': userid,
-      } );
+      final response = await http.post(url, body: { 'userid': userid,
+      });
 
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
@@ -426,14 +446,14 @@ class ApiService {
       };
     }
   }
-  
+
   // Get user data by user id 
   Future<Map<String, dynamic>> GetUserInfo() async {
     try {
-
       final prefs = await SharedPreferences.getInstance();
-      final userid=prefs.getString('userid').toString();
-      print("================================ User id is :$userid  in Get User Info ========================================");
+      final userid = prefs.getString('userid').toString();
+      print(
+          "================================ User id is :$userid  in Get User Info ========================================");
       final url = Uri.parse('$_baseUrl/getprofiledata.php');
       final response = await http.post(url, body: {'userId': userid});
 
@@ -530,9 +550,10 @@ class ApiService {
   Future<Map<String, dynamic>> getConnections() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final userid=prefs.getString('userid').toString();
+      final userid = prefs.getString('userid').toString();
       if (kDebugMode) {
-        print("================================ User id is :$userid  in Get Connections ========================================");
+        print(
+            "================================ User id is :$userid  in Get Connections ========================================");
       }
 
       final url = Uri.parse('$_baseUrl/getconnections.php');
@@ -584,7 +605,8 @@ class ApiService {
   // Fetch categories from API
   Future<List<AssessmentCategory>> fetchAssessmentCategories() async {
     try {
-      final response = await http.get(Uri.parse("$_baseUrl/getassesmentcategories.php"));
+      final response = await http.get(
+          Uri.parse("$_baseUrl/getassesmentcategories.php"));
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
@@ -632,6 +654,7 @@ class ApiService {
 
     throw Exception("Failed to fetch Goal Targets");
   }
+
   Future<List<GoaltargetQuestions>> fetchGoalTargetQuestions() async {
     final url = Uri.parse("$_baseUrl/getgoaltargetquestions.php");
     final response = await GetConnect().get(url.toString());
@@ -674,7 +697,8 @@ class ApiService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['Result'] == "true") {
-          return List<String>.from(data['Data'].map((item) => item['religion']));
+          return List<String>.from(
+              data['Data'].map((item) => item['religion']));
         }
       }
     } catch (e) {
@@ -695,7 +719,8 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        List<String> cities = data['Data'].map<String>((city) => city['city'].toString()).toList();
+        List<String> cities = data['Data'].map<String>((city) =>
+            city['city'].toString()).toList();
         return cities;
       } else {
         throw Exception('Failed to load cities');
@@ -704,7 +729,9 @@ class ApiService {
       print('Error fetching cities: $e');
       return [];
     }
-  }  Future<List<String>> fetchCasts1(String religion) async {
+  }
+
+  Future<List<String>> fetchCasts1(String religion) async {
     try {
       final url = Uri.parse('${_baseUrl}/getcast.php');
       print('URL for Request : $url');
@@ -717,9 +744,9 @@ class ApiService {
 
       print('Response: ${response.body}');
       if (response.statusCode == 200) {
-
         final data = json.decode(response.body);
-        List<String> cities = data['Data'].map<String>((city) => city['cast'].toString()).toList();
+        List<String> cities = data['Data'].map<String>((city) =>
+            city['cast'].toString()).toList();
         return cities;
       } else {
         throw Exception('Failed to load casts');
@@ -729,6 +756,7 @@ class ApiService {
       return [];
     }
   }
+
   Future<List<Map<String, dynamic>>> fetchCastData(String religion) async {
     final url = Uri.parse('$_baseUrl/getcast.php');
     final response = await http.post(url, body: {'religion': religion});
@@ -737,7 +765,8 @@ class ApiService {
       final jsonResponse = jsonDecode(response.body);
 
       // Check if the response is successful
-      if (jsonResponse['ResponseCode'] == "200" && jsonResponse['Result'] == "true") {
+      if (jsonResponse['ResponseCode'] == "200" &&
+          jsonResponse['Result'] == "true") {
         return List<Map<String, dynamic>>.from(jsonResponse['Data']);
       } else {
         throw Exception('Failed to fetch data: ${jsonResponse['ResponseMsg']}');
@@ -747,7 +776,8 @@ class ApiService {
     }
   }
 
-  Future<List<String>> fetchSectData({required String religion, required String caste}) async {
+  Future<List<String>> fetchSectData(
+      {required String religion, required String caste}) async {
     final url = Uri.parse("$_baseUrl/getsect.php");
 
     try {
@@ -771,7 +801,8 @@ class ApiService {
           throw Exception(responseData["ResponseMsg"]);
         }
       } else {
-        throw Exception("Failed to fetch sects. Status Code: ${response.statusCode}");
+        throw Exception(
+            "Failed to fetch sects. Status Code: ${response.statusCode}");
       }
     } catch (e) {
       throw Exception("Error fetching sects: $e");

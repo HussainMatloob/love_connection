@@ -11,6 +11,24 @@ class SectController extends GetxController {
 
 
 
+  @override
+  void onInit() {
+    super.onInit();
+
+    // Listen for changes in religion or caste and fetch sect data
+    everAll([authController.religion, authController.caste], (_) {
+      print('Religion: ${authController.religion.value}, Caste: ${authController.caste.value}');
+
+      if (authController.religion.value!.isNotEmpty || authController.caste.value!.isNotEmpty) {
+        fetchSectData(
+            religion: authController.religion.value.toString(),
+            caste: authController.caste.toString()
+        );
+      }
+    });
+  }
+
+
 
   Future<void> fetchSectData({required String religion, required String caste}) async {
     try {

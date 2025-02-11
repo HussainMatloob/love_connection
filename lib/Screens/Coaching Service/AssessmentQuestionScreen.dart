@@ -7,11 +7,11 @@ class AssessmentQuestionScreen extends StatelessWidget {
 
   AssessmentQuestionScreen({required this.categoryName});
 
-  final AssessmentQuestionController controller = Get.put(AssessmentQuestionController());
+  final AssessmentQuestionController controller =
+  Get.put(AssessmentQuestionController());
 
   @override
   Widget build(BuildContext context) {
-    // Determine the categoryId based on categoryName
     int categoryId;
     switch (categoryName) {
       case 'Love Language':
@@ -39,10 +39,9 @@ class AssessmentQuestionScreen extends StatelessWidget {
         categoryId = 9;
         break;
       default:
-        categoryId = 0; // Default case if no match found
+        categoryId = 0;
     }
 
-    // Fetch questions for the selected category
     controller.fetchQuestions(categoryId);
 
     return Scaffold(
@@ -63,54 +62,86 @@ class AssessmentQuestionScreen extends StatelessWidget {
             ),
           );
         } else {
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: controller.questions.length,
-            itemBuilder: (context, index) {
-              final question = controller.questions[index];
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: controller.questions.length,
+                  itemBuilder: (context, index) {
+                    final question = controller.questions[index];
 
-              // Select the first option by default if not already selected
-              if (controller.selectedOptions[question.id.toString()] == null &&
-                  question.options.isNotEmpty) {
-                controller.selectOption(question.id.toString(), question.options[0]);
-              }
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Card(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 4,
-                  child: ExpansionTile(
-                    title: Text(
-                      question.question,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                    children: [
-                      ...question.options.map((option) {
-                        return Obx(
-                              () => RadioListTile<String>(
-                            value: option,
-                            groupValue:
-                            controller.selectedOptions[question.id.toString()] ?? '',
-                            activeColor: Colors.pink.shade400,
-                            title: Text(option),
-                            onChanged: (value) {
-                              if (value != null) {
-                                controller.selectOption(question.id.toString(), value);
-                                print(
-                                    "Selected Option for Question ${question.id}: $value");
-                              }
-                            },
+                    if (controller.selectedOptions[question.id.toString()] == null &&
+                        question.options.isNotEmpty) {
+                      controller.selectOption(question.id.toString(), question.options[0]);
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Card(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 4,
+                        child: ExpansionTile(
+                          title: Text(
+                            question.question,
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                           ),
-                        );
-                      }).toList(),
-                    ],
-                  ),
+                          children: [
+                            ...question.options.map((option) {
+                              return Obx(
+                                    () => RadioListTile<String>(
+                                  value: option,
+                                  groupValue:
+                                  controller.selectedOptions[question.id.toString()] ?? '',
+                                  activeColor: Colors.pink.shade400,
+                                  title: Text(option),
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      controller.selectOption(question.id.toString(), value);
+                                      print(
+                                          "Selected Option for Question ${question.id}: $value");
+                                    }
+                                  },
+                                ),
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
+              ),
+              // Submit Button
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Obx(() {
+                  return ElevatedButton(
+                    onPressed: controller.isSubmitting.value
+                        ? null
+                        : () async {
+                      await controller.submitAnswers(categoryId);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.pink.shade400,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: controller.isSubmitting.value
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                      "Submit Answers",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  );
+                }),
+              ),
+            ],
           );
         }
       }),

@@ -410,29 +410,7 @@ class FormWidgets {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Date of Birth',
-            style: GoogleFonts.outfit(
-              color: Colors.grey[600],
-              fontSize: Get.width * 0.04,
-            ),
-          ),
-          SizedBox(height: Get.height * 0.02),
-          _buildDateOfBirth(authController),
-          SizedBox(height: Get.height * 0.02),
 
-          _buildDropdownField(
-            label: 'Height',
-            value: authController.height,
-            items: authController.heightOptions,
-          ),
-          SizedBox(height: Get.height * 0.02),
-          _buildDropdownField(
-            label: 'Marital Status',
-            value: authController.maritalStatus,
-            items: authController.maritalStatusOptions,
-          ),
-          SizedBox(height: Get.height * 0.02),
           Row(
             children: [
               Expanded(
@@ -488,6 +466,33 @@ class FormWidgets {
           //     ),
           //   ],
           // ),
+          // SizedBox(height: Get.height * 0.02),
+
+
+
+          _buildDropdownField(
+            label: 'Height',
+            value: authController.height,
+            items: authController.heightOptions,
+          ),
+          SizedBox(height: Get.height * 0.02),
+          _buildDropdownField(
+            label: 'Marital Status',
+            value: authController.maritalStatus,
+            items: authController.maritalStatusOptions,
+          ),
+          SizedBox(height: Get.height * 0.02),
+
+          Text(
+            'Date of Birth',
+            style: GoogleFonts.outfit(
+              color: Colors.grey[600],
+              fontSize: Get.width * 0.04,
+            ),
+          ),
+          SizedBox(height: Get.height * 0.02),
+          _buildDateOfBirth(authController),
+          SizedBox(height: Get.height * 0.02),
 
           // add pink button
         ],
@@ -514,18 +519,6 @@ class FormWidgets {
             ),
             SizedBox(height: 24),
 
-            // Employment Status Dropdown
-            FormWidgets().buildSingleDropdown(
-              label: 'Employment Status',
-              value: authController.employmentStatus,
-              items: authController.employmentOptions,
-            ),
-            SizedBox(height: 24),
-
-            // Income Selection Widget
-            FormWidgets().buildIncomeSelection(),
-            SizedBox(height: 24),
-
             Obx(() {
               // Ensure the reactive dependency is used by reading the list length.
               final countries = countryController.countryList;
@@ -545,6 +538,18 @@ class FormWidgets {
             }),
 
             SizedBox(height: 24),
+            // Employment Status Dropdown
+            FormWidgets().buildSingleDropdown(
+              label: 'Employment Status',
+              value: authController.employmentStatus,
+              items: authController.employmentOptions,
+            ),
+            SizedBox(height: 24),
+
+            // Income Selection Widget
+            FormWidgets().buildIncomeSelection(),
+            SizedBox(height: 24),
+
           ],
         ),
       ),
@@ -557,6 +562,7 @@ class FormWidgets {
     final CastController castController = Get.put(CastController());
     final SectController sectController = Get.put(SectController());
 
+
     return Padding(
       padding: EdgeInsets.all(Get.width * 0.05),
       child: Column(
@@ -567,6 +573,7 @@ class FormWidgets {
             // Force a reactive read by accessing the length
             final cities = cityController.cityOptions;
             final _ = cities.length;
+            print(cities.toString());
 
             // handel loading state
             if (cityController.isLoading.value) {
@@ -636,16 +643,6 @@ class FormWidgets {
           // Sect
           Obx(() {
 
-            // get the cast and religion from the auth controller
-            final String religion = authController.religion.value.toString();
-            final String caste = authController.caste.value.toString();
-
-            print('Religion: ++++++++++  $religion, Caste: ++++++++++  $caste');
-            // fetch the sect data
-            sectController.fetchSectData(religion: religion, caste: caste);
-
-
-
             if (sectController.isLoading.value) {
               return Center(child: CircularProgressIndicator());
             }
@@ -667,6 +664,7 @@ class FormWidgets {
               hinttext: sectController.sectList.isEmpty ? 'No Sect found' : 'Select Sect',
             );
           }),
+
 
           SizedBox(height: 8),
 

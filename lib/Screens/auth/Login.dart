@@ -102,7 +102,7 @@ class LoginScreen extends StatelessWidget {
                             snackPosition: SnackPosition.BOTTOM,
                           );
                         } else {
-                          controller.login(email, password, keyParam!);
+                          controller.login(email, password);
                         }
                       },
                       child: controller.isLoading.value
