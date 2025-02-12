@@ -18,12 +18,13 @@ class GoalTargetQuestionController extends GetxController {
     try {
       final prefs = await SharedPreferences.getInstance();
       final fetchedQuestions = await apiService.fetchGoalTargetQuestions();
-      final filteredQuestions = fetchedQuestions.where((q) => q.categoryId == categoryId).toList();
+      final filteredQuestions = fetchedQuestions.where((q) =>
+      q.categoryId == categoryId).toList();
       questions.assignAll(filteredQuestions);
 
-      // Restore saved answers and ratings from SharedPreferences
       for (var question in questions) {
-        String? savedAnswer = prefs.getString("goal_selected_answer_${question.id}");
+        String? savedAnswer = prefs.getString(
+            "goal_selected_answer_${question.id}");
         int? savedRating = prefs.getInt("goal_rating_${question.id}");
 
         if (savedAnswer != null) {
@@ -34,25 +35,31 @@ class GoalTargetQuestionController extends GetxController {
         }
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to load goal target questions", snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar("Error", "Failed to load goal target questions",
+          snackPosition: SnackPosition.BOTTOM);
     } finally {
       isLoading(false);
     }
   }
 
-  void selectOption(int categoryId, String questionId, String option) async {
-    selectedOptions[questionId] = option;
-    await submitAnswer(categoryId, questionId, option);
+  void selectOption(int categoryId, String questionId,
+      String selectedOption) async {
+    selectedOptions[questionId] = selectedOption;
+    selectedOptions.refresh(); // 🔥 Ensures UI updates properly
+    await submitAnswer(categoryId, questionId, selectedOption.trim());
   }
 
-  Future<void> submitAnswer(int categoryId, String questionId, String answer) async {
+  Future<void> submitAnswer(int categoryId, String questionId,
+      String answer) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final String? userId = prefs.getString('userid');
 
       if (userId == null || userId.isEmpty) {
         Get.snackbar("Error", "User ID not found. Please log in again.",
-            snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
         return;
       }
 
@@ -66,9 +73,8 @@ class GoalTargetQuestionController extends GetxController {
         answer: answer,
       );
 
-
-
-      bool isSuccess = responseData["Result"] == true || responseData["Result"].toString() == "true";
+      bool isSuccess = responseData["Result"] == true ||
+          responseData["Result"].toString() == "true";
 
       if (isSuccess) {
         dynamic rawRating = responseData["Data"]["rating"];
@@ -85,31 +91,41 @@ class GoalTargetQuestionController extends GetxController {
 
         selectedOptions[questionId] = answer;
         questionRatings[questionId] = rating;
+        selectedOptions.refresh(); // 🔥 Ensures UI updates correctly
 
-        Get.snackbar("Success", responseData["ResponseMsg"] ?? "Answer submitted successfully!",
-            snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white);
+        Get.snackbar("Success",
+            responseData["ResponseMsg"] ?? "Answer submitted successfully!",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white);
       } else {
-        Get.snackbar("Error",responseData["ResponseMsg"] ??   "Failed to submit answer",
-            snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+        Get.snackbar(
+            "Error", responseData["ResponseMsg"] ?? "Failed to submit answer",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
       }
     } catch (e) {
       Get.snackbar("Error", "An unexpected error occurred: ${e.toString()}",
-          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
     } finally {
       isSubmitting(false);
     }
   }
 
-  /// **Get total rating sum**
+  /// Calculate Total Rating
   int getTotalRating() {
     return questionRatings.values.fold(0, (sum, rating) => sum + rating);
   }
 
-  /// **Get average rating (scaled to 100)**
+  /// Calculate Average Rating (Percentage)
   double getAverageRating() {
     if (questionRatings.isEmpty) return 0;
     int total = getTotalRating();
     int count = questionRatings.length;
-    return (total / (count * 5)) * 100; // Assuming max rating is 5 per question
+    return (total / (count * 5)) * 100;
   }
+
 }

@@ -55,70 +55,69 @@ class GoalTargetQuestionScreen extends StatelessWidget {
               ),
               // List of Questions
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: controller.questions.length,
-                  itemBuilder: (context, index) {
-                    final question = controller.questions[index];
+                child: Obx(() {
+                  if (controller.isLoading.value) {
+                    return Center(child: CircularProgressIndicator());
+                  }
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Card(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 4,
-                        child: Obx(() => ExpansionTile(
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: controller.questions.length,
+                    itemBuilder: (context, index) {
+                      final question = controller.questions[index];
+                      final questionId = question.id.toString();
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Card(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 4,
+                          child: ExpansionTile(
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  question.question,
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                ),
+                                SizedBox(height: 8),
+                                Obx(() {
+                                  final rating = controller.questionRatings[questionId] ?? 0;
+                                  return Text(
+                                    "Rating: $rating",
+                                    style: TextStyle(fontSize: 14, color: Colors.pinkAccent),
+                                  );
+                                }),
+                              ],
+                            ),
                             children: [
-                              Text(
-                                question.question,
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                              ),
-                              Text(
-                                'Rating: ${controller.questionRatings[question.id.toString()] ?? 0}',
-                                style: TextStyle(fontSize: 14, color: Colors.pinkAccent),
-                              ),
+                              ...question.options.map((option) {
+                                return Obx(
+                                      () => RadioListTile<String>(
+                                    value: option,
+                                    groupValue: controller.selectedOptions[questionId] ?? '',
+                                    activeColor: Colors.pink.shade400,
+                                    title: Text(option),
+                                    onChanged: (value) {
+                                      if (value != null) {
+                                        controller.selectOption(categoryId, questionId, value);
+                                      }
+                                    },
+                                  ),
+                                );
+                              }).toList(),
                             ],
                           ),
-                          onExpansionChanged: (expanded) {
-                            if (expanded) {
-                              String questionId = question.id.toString();
-                              if (!controller.selectedOptions.containsKey(questionId) &&
-                                  !shownSnackbars.contains(questionId)) {
-                                Get.snackbar("Reminder", "Please select an answer before proceeding.",
-                                    snackPosition: SnackPosition.BOTTOM,
-                                    backgroundColor: Colors.red,
-                                    colorText: Colors.white);
-                                shownSnackbars.add(questionId);
-                              }
-                            }
-                          },
-                          children: [
-                            ...question.options.map((option) {
-                              return Obx(
-                                    () => RadioListTile<String>(
-                                  value: option,
-                                  groupValue: controller.selectedOptions[question.id.toString()] ?? '',
-                                  activeColor: Colors.pink.shade400,
-                                  title: Text(option),
-                                  onChanged: (value) {
-                                    if (value != null) {
-                                      controller.selectOption(categoryId, question.id.toString(), value);
-                                    }
-                                  },
-                                ),
-                              );
-                            }).toList(),
-                          ],
-                        )),
-                      ),
-                    );
-                  },
-                ),
+                        ),
+                      );
+                    },
+                  );
+                }),
               ),
+
             ],
           );
         }
