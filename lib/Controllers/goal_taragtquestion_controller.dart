@@ -9,6 +9,7 @@ class GoalTargetQuestionController extends GetxController {
   var isLoading = true.obs;
   var isSubmitting = false.obs;
   var selectedOptions = <String, String>{}.obs;
+  var questionRatings = <String, int>{}.obs;
 
   final ApiService apiService = ApiService();
 
@@ -20,11 +21,16 @@ class GoalTargetQuestionController extends GetxController {
       final filteredQuestions = fetchedQuestions.where((q) => q.categoryId == categoryId).toList();
       questions.assignAll(filteredQuestions);
 
-      // Restore saved answers from SharedPreferences
+      // Restore saved answers and ratings from SharedPreferences
       for (var question in questions) {
         String? savedAnswer = prefs.getString("goal_selected_answer_${question.id}");
+        int? savedRating = prefs.getInt("goal_rating_${question.id}");
+
         if (savedAnswer != null) {
           selectedOptions[question.id.toString()] = savedAnswer;
+        }
+        if (savedRating != null) {
+          questionRatings[question.id.toString()] = savedRating;
         }
       }
     } catch (e) {
@@ -56,19 +62,34 @@ class GoalTargetQuestionController extends GetxController {
         userId: userId,
         categoryId: categoryId,
         questionId: questionId,
+        type: "goals",
         answer: answer,
       );
+
+
 
       bool isSuccess = responseData["Result"] == true || responseData["Result"].toString() == "true";
 
       if (isSuccess) {
+        dynamic rawRating = responseData["Data"]["rating"];
+        int rating = 0;
+
+        if (rawRating is int) {
+          rating = rawRating;
+        } else if (rawRating is String) {
+          rating = int.tryParse(rawRating) ?? 0;
+        }
+
         await prefs.setString("goal_selected_answer_$questionId", answer);
+        await prefs.setInt("goal_rating_$questionId", rating);
+
         selectedOptions[questionId] = answer;
+        questionRatings[questionId] = rating;
 
         Get.snackbar("Success", responseData["ResponseMsg"] ?? "Answer submitted successfully!",
             snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white);
       } else {
-        Get.snackbar("Error", responseData["ResponseMsg"] ?? "Failed to submit answer",
+        Get.snackbar("Error",responseData["ResponseMsg"] ??   "Failed to submit answer",
             snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
       }
     } catch (e) {
@@ -77,5 +98,18 @@ class GoalTargetQuestionController extends GetxController {
     } finally {
       isSubmitting(false);
     }
+  }
+
+  /// **Get total rating sum**
+  int getTotalRating() {
+    return questionRatings.values.fold(0, (sum, rating) => sum + rating);
+  }
+
+  /// **Get average rating (scaled to 100)**
+  double getAverageRating() {
+    if (questionRatings.isEmpty) return 0;
+    int total = getTotalRating();
+    int count = questionRatings.length;
+    return (total / (count * 5)) * 100; // Assuming max rating is 5 per question
   }
 }

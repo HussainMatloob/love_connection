@@ -63,6 +63,7 @@ class AssessmentQuestionController extends GetxController {
         userId: userId,
         categoryId: categoryId,
         questionId: questionId,
+        type: "assesment",
         answer: answer,
       );
 

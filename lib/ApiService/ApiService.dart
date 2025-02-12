@@ -16,7 +16,8 @@ import '../Models/GoaltargetQuestions.dart';
 import '../Models/Questions.dart';
 
 class ApiService {
-  static const String _baseUrl = "https://projects.funtashtechnologies.com/gomeetapi";
+  static const String _baseUrl =
+      "https://projects.funtashtechnologies.com/gomeetapi";
 
   Future<Map<String, dynamic>> registerUser({
     required String firstname,
@@ -627,7 +628,7 @@ class ApiService {
     }
   }
 
- static Future<List<Question>> fetchAssessmentQuestions() async {
+  static Future<List<Question>> fetchAssessmentQuestions() async {
     final url = Uri.parse("$_baseUrl/getassesmentquestions.php");
     final response = await GetConnect().get(url.toString());
 
@@ -730,8 +731,6 @@ class ApiService {
     }
   }
 
-
-
   Future<List<Map<String, dynamic>>> fetchCastData(String religion) async {
     final url = Uri.parse('$_baseUrl/getcast.php');
     final response = await http.post(url, body: {'religion': religion});
@@ -767,7 +766,6 @@ class ApiService {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         if (responseData["Result"] == "true") {
-
           return (responseData["Data"] as List)
               .map<String>((sect) => sect["sect"].toString())
               .toList();
@@ -785,7 +783,7 @@ class ApiService {
 
   // Fetch Rating Percentage
 
- static Future<double?> fetchRatingPercentage() async {
+  static Future<double?> fetchRatingPercentage() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getString('userid');
@@ -798,7 +796,8 @@ class ApiService {
       }
 
       final response = await http.post(
-        Uri.parse("https://projects.funtashtechnologies.com/gomeetapi/getratings.php"),
+        Uri.parse(
+            "https://projects.funtashtechnologies.com/gomeetapi/getratings.php"),
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
         body: {"userid": userId},
       );
@@ -815,25 +814,30 @@ class ApiService {
 
     return null;
   }
+
   static Future<Map<String, dynamic>> submitAnswer({
     required String userId,
     required int categoryId,
     required String questionId,
+    required String type,
     required String answer,
   }) async {
     try {
       Map<String, dynamic> payload = {
         "userid": userId,
-        "type": "assessment",
+        "type": type,
         "categoryid": categoryId.toString(),
         "questionid": questionId.toString(),
         "answer": answer,
       };
 
-      print("Submitting Answer: $payload");
+      if (kDebugMode) {
+        print("Submitting Answer: $payload");
+      }
 
       final response = await http.post(
-        Uri.parse("https://projects.funtashtechnologies.com/gomeetapi/answerassesmentquestions.php"),
+        Uri.parse(
+            "https://projects.funtashtechnologies.com/gomeetapi/answerassesmentquestions.php"),
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
         body: payload.map((key, value) => MapEntry(key, value.toString())),
       );

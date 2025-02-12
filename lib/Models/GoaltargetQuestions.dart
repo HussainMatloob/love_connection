@@ -16,7 +16,7 @@ class GoaltargetQuestions {
       id: json['id'],
       categoryId: int.parse(json['categoryid']),
       question: json['question'],
-      options: json['options'].split("/"),
+      options: json['options'].split("-"),
     );
   }
 }
