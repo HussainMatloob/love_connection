@@ -8,7 +8,8 @@ import 'package:love_connection/Controllers/AcceptRequestController.dart';
 import 'package:love_connection/Widgets/FormWidgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Controllers/GetConnectionRequest.dart';
-import '../../Widgets/ProfileCard.dart';
+import '../../Widgets/ProfileCard.dart';import 'package:animate_do/animate_do.dart';
+import 'package:lottie/lottie.dart';
 
 class Requests extends StatefulWidget {
   const Requests({super.key});
@@ -66,10 +67,69 @@ class _RequestsState extends State<Requests> {
                   else if(acceptRequestController.isLoading.value) {
                     return   Center(child: Lottie.asset("assets/animations/circularloader.json",height: 150, width: 150));
                   }
-                 else if (_controller.errorMessage.isNotEmpty) {
-
-                    return Center(child: Text(_controller.errorMessage.value));
+                  else if (_controller.errorMessage.isNotEmpty) {
+                    return Center(
+                      child: FadeIn(
+                        duration: Duration(milliseconds: 500),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Lottie.asset(
+                              'assets/animations/snackbarloading.json', // Add a nice love-themed animation
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.cover,
+                              repeat: false
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              "No Love Requests Yet! 💔",
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.pinkAccent,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 24),
+                              child: Text(
+                                "Your love connection requests will appear here. Send a request or wait for someone special to find you! 💕",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                 // Reload love requests
+                                _controller.fetchReceivedConnectionRequests();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.pinkAccent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                                elevation: 5,
+                                shadowColor: Colors.pinkAccent.withOpacity(0.3),
+                              ),
+                              icon: Icon(Icons.favorite, color: Colors.white),
+                              label: Text(
+                                "Find Your Match 💖",
+                                style: TextStyle(color: Colors.white, fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
                   }
+
                   return GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, // Two columns

@@ -28,12 +28,56 @@ class GoalTargetQuestionScreen extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         } else if (controller.questions.isEmpty) {
           return Center(
-            child: Text(
-              'No questions available for this goal target.',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.sentiment_dissatisfied,
+                  color: Colors.pinkAccent,
+                  size: 60,
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Oops! No questions available.',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Please check back later or try a different category.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    // You can add a refresh function or navigation here
+                    controller.fetchGoalTargetQuestions(categoryId);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pinkAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                  child: Text(
+                    "Refresh",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
             ),
           );
-        } else {
+        }
+        else {
           return Column(
             children: [
               // Total Rating & Average Rating Row
@@ -75,7 +119,7 @@ class GoalTargetQuestionScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           elevation: 4,
-                          child: ExpansionTile(
+                          child: Obx(() => ExpansionTile(
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -84,39 +128,37 @@ class GoalTargetQuestionScreen extends StatelessWidget {
                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                                 ),
                                 SizedBox(height: 8),
-                                Obx(() {
-                                  final rating = controller.questionRatings[questionId] ?? 0;
-                                  return Text(
-                                    "Rating: $rating",
-                                    style: TextStyle(fontSize: 14, color: Colors.pinkAccent),
-                                  );
-                                }),
+                                Text(
+                                  "Rating: ${controller.questionRatings[questionId] ?? 0}",
+                                  style: TextStyle(fontSize: 14, color: Colors.pinkAccent),
+                                ),
                               ],
                             ),
                             children: [
                               ...question.options.map((option) {
-                                return Obx(
-                                      () => RadioListTile<String>(
-                                    value: option,
-                                    groupValue: controller.selectedOptions[questionId] ?? '',
+                                return Obx(() {
+                                  return RadioListTile<String>(
+                                    value: option.trim(), // Trim before assigning
+                                    groupValue: controller.selectedOptions[questionId]?.trim() ?? '',
                                     activeColor: Colors.pink.shade400,
                                     title: Text(option),
                                     onChanged: (value) {
                                       if (value != null) {
-                                        controller.selectOption(categoryId, questionId, value);
+                                        controller.selectOption(categoryId, questionId, value.trim());
                                       }
                                     },
-                                  ),
-                                );
+                                  );
+                                });
                               }).toList(),
                             ],
-                          ),
+                          )),
                         ),
                       );
                     },
                   );
                 }),
               ),
+
 
             ],
           );

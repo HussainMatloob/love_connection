@@ -11,15 +11,19 @@ import 'package:love_connection/Controllers/cast_controller.dart';
 import 'package:love_connection/Controllers/city_controller.dart';
 import 'package:love_connection/Controllers/country_controller.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
+import 'package:love_connection/Screens/bottom_nav/Explore.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
 import '../Controllers/BasicInfoController.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart'; // Import GoogleFonts
 import '../Controllers/religion_controller.dart';
 import '../Controllers/sect_controller.dart';
+import '../Screens/bottom_nav/BottomNavbar.dart';
 import 'PlanOption.dart';
 import 'ProfileCard.dart';
 import 'ProfilePendingCard.dart'; // Ensure this import is added
+import 'package:animate_do/animate_do.dart';
+import 'package:lottie/lottie.dart';
 
 class FormWidgets {
   final BasicInfoController controller = Get.put(BasicInfoController());
@@ -410,7 +414,6 @@ class FormWidgets {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Row(
             children: [
               Expanded(
@@ -467,8 +470,6 @@ class FormWidgets {
           //   ],
           // ),
           // SizedBox(height: Get.height * 0.02),
-
-
 
           _buildDropdownField(
             label: 'Height',
@@ -549,7 +550,6 @@ class FormWidgets {
             // Income Selection Widget
             FormWidgets().buildIncomeSelection(),
             SizedBox(height: 24),
-
           ],
         ),
       ),
@@ -561,7 +561,6 @@ class FormWidgets {
     final CityController cityController = Get.put(CityController());
     final CastController castController = Get.put(CastController());
     final SectController sectController = Get.put(SectController());
-
 
     return Padding(
       padding: EdgeInsets.all(Get.width * 0.05),
@@ -599,7 +598,6 @@ class FormWidgets {
           SizedBox(height: 8),
 
           Obx(() {
-
             if (castController.isLoading.value) {
               return Center(child: CircularProgressIndicator());
             }
@@ -642,7 +640,6 @@ class FormWidgets {
 
           // Sect
           Obx(() {
-
             if (sectController.isLoading.value) {
               return Center(child: CircularProgressIndicator());
             }
@@ -661,10 +658,11 @@ class FormWidgets {
               value: authController.sect,
               lookingForValue: authController.lookingForSect,
               items: sectController.sectList,
-              hinttext: sectController.sectList.isEmpty ? 'No Sect found' : 'Select Sect',
+              hinttext: sectController.sectList.isEmpty
+                  ? 'No Sect found'
+                  : 'Select Sect',
             );
           }),
-
 
           SizedBox(height: 8),
 
@@ -1040,11 +1038,63 @@ class FormWidgets {
             child: Lottie.asset("assets/animations/circularloader.json",
                 height: 150, width: 150));
       } else if (connectionsController.connections.isEmpty) {
-        // Show a message if there are no pending requests
         return Center(
-          child: Text(
-            connectionsController.responseMessage.value,
-            style: TextStyle(fontSize: 16, color: Colors.black54),
+          child: FadeIn(
+            duration: Duration(milliseconds: 500),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Lottie.asset('assets/animations/snackbarloading.json',
+                    // Add a nice animation for empty state
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.cover,
+                    repeat: false),
+                SizedBox(height: 8),
+                Text(
+                  "No Love Connections Yet! 💕",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.pinkAccent,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    "Looks like no one has completed a connection yet. Start connecting with people and accept requests to build your love story! ❤️",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    connectionsController
+                        .getconnections(); // Reload connections
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pinkAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    elevation: 5,
+                    shadowColor: Colors.pinkAccent.withOpacity(0.3),
+                  ),
+                  icon: Icon(Icons.favorite, color: Colors.white),
+                  label: Text(
+                    "Find Your Soulmate 💖",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       } else {
@@ -1128,11 +1178,64 @@ class FormWidgets {
             child: Lottie.asset("assets/animations/circularloader.json",
                 height: 150, width: 150));
       } else if (pendingRequestsController.pendingRequests.isEmpty) {
-        // Show a message if there are no pending requests
         return Center(
-          child: Text(
-            pendingRequestsController.errorMessage.value,
-            style: TextStyle(fontSize: 16, color: Colors.black54),
+          child: FadeIn(
+            duration: Duration(milliseconds: 500),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Lottie.asset(
+                  'assets/animations/snackbarloading.json',
+                  // Add a heart-themed animation
+                  width: 200,
+                  height: 200,
+                  fit: BoxFit.cover,
+                  repeat: false
+                ),
+                SizedBox(height: 16),
+                Text(
+                  "No Pending Requests Sent! 💌",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.pinkAccent,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    "You haven’t sent any connection requests yet. Start reaching out and make new love connections today! 💖",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    pendingRequestsController.fetchPendingRequests();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pinkAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    elevation: 5,
+                    shadowColor: Colors.pinkAccent.withOpacity(0.3),
+                  ),
+                  icon: Icon(Icons.favorite_border, color: Colors.white),
+                  label: Text(
+                    "Send a Love Request 💕",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       } else {

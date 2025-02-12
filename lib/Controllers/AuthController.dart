@@ -148,7 +148,7 @@ class AuthController extends GetxController {
     if (monthlyIncome.value == null) return 'Monthly income is required.';
     if (gender.value == null) return 'Gender is required.';
     if (maritalStatus.value == null) return 'Marital Status is required.';
-    if (nationality.value == null) return 'Nationality is required.';
+    // if (nationality.value == null) return 'Nationality is required.';
     if (religion.value == null) return 'Religion is required.';
     if (profileImage.value == null) return 'Profile Image is required.';
     if (cninfront.value == null) return ' CNIC Front Image is required.';
@@ -177,6 +177,7 @@ class AuthController extends GetxController {
         backgroundColor: Colors.red.withOpacity(0.8),
         colorText: Colors.white,
       );
+      isLoading(false);
       return;
     }
 
@@ -201,7 +202,7 @@ class AuthController extends GetxController {
         ethnicitylookingfor: lookingForEthnicity.value.toString(),
         gender: gender.value.toString(),
         maritalstatus: maritalStatus.value.toString(),
-        nationality: nationality.value.toString(),
+        nationality: "  ",
         nationalitylookingfor: lookingForNationality.value.toString(),
         religion: religion.value.toString(),
         religionlookingfor: lookingForReligion.value.toString(),

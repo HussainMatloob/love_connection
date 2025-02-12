@@ -36,7 +36,7 @@ class Explore extends StatelessWidget {
                   ),
                 ),
                 child: Center(
-                  child: Image.asset("assets/images/original.png",fit: BoxFit.fitHeight,)
+                  child: Image.asset('assets/images/logoT.png',fit: BoxFit.fitHeight,)
 
                 ),
               ),

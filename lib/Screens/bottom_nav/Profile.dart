@@ -5,6 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:love_connection/Screens/auth/Login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../ApiService/ApiService.dart';
 import '../../Controllers/UserInfoController.dart';
 import '../../Widgets/FormWidgets.dart';
@@ -230,11 +232,15 @@ class _ProfileState extends State<Profile> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                buildMenuItem(Icons.person_outline, 'Saved Profiles'),
-                buildMenuItem(Icons.settings_outlined, 'Settings'),
-                buildMenuItem(Icons.share_outlined, 'Share App'),
+                buildMenuItem( icon:  Icons.person_outline,title:  'Saved Profiles',onTap: (){}),
+                buildMenuItem( icon:  Icons.settings_outlined, title: 'Settings',onTap: (){}),
+                buildMenuItem(icon:  Icons.share_outlined, title: 'Share App',onTap: (){}),
                 const Divider(),
-                buildMenuItem(Icons.logout, 'Logout'),
+                buildMenuItem(icon: Icons.logout,title:  'Logout', onTap: () async {
+                  final prefs= await SharedPreferences.getInstance();
+                  prefs.setString("userid", "");
+                  Get.offAll(LoginScreen(keyParam: 1,));
+                }),
               ],
             ),
           ),
@@ -243,7 +249,11 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  ListTile buildMenuItem(IconData icon, String title) {
+  ListTile buildMenuItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
     return ListTile(
       leading: CircleAvatar(
         radius: 20,
@@ -252,12 +262,10 @@ class _ProfileState extends State<Profile> {
       ),
       title: Text(
         title,
-        style: GoogleFonts.outfit(fontWeight: FontWeight.w300, fontSize: 12),
+        style: GoogleFonts.outfit(fontWeight: FontWeight.w500, fontSize: 14),
       ),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () {
-        // Handle tap
-      },
+      onTap: onTap, // ✅ Executes the provided function when tapped
     );
   }
 

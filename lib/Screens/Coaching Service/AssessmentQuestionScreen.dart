@@ -40,9 +40,52 @@ class AssessmentQuestionScreen extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         } else if (controller.questions.isEmpty) {
           return Center(
-            child: Text(
-              'No questions available for this category.',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.sentiment_dissatisfied,
+                  color: Colors.pinkAccent,
+                  size: 60,
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Oops! No questions available.',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Please check back later or try a different category.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    // You can add a refresh function or navigation here
+                    controller.fetchQuestions(categoryId);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pinkAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                  child: Text(
+                    "Refresh",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
             ),
           );
         } else {
