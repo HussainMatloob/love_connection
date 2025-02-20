@@ -159,9 +159,6 @@ class AuthController extends GetxController {
   }
 
 
-
-
-
   final ApiService _apiService = ApiService();
 
   Future<void> registerUser() async {

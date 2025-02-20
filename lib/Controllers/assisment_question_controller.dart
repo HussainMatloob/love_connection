@@ -104,4 +104,4 @@ class AssessmentQuestionController extends GetxController {
       isSubmitting(false);
     }
   }
-}
+} //this is the controller update it with new ui code only dont remove other code

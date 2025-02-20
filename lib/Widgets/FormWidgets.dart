@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -11,19 +10,16 @@ import 'package:love_connection/Controllers/cast_controller.dart';
 import 'package:love_connection/Controllers/city_controller.dart';
 import 'package:love_connection/Controllers/country_controller.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
-import 'package:love_connection/Screens/bottom_nav/Explore.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
 import '../Controllers/BasicInfoController.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart'; // Import GoogleFonts
 import '../Controllers/religion_controller.dart';
 import '../Controllers/sect_controller.dart';
-import '../Screens/bottom_nav/BottomNavbar.dart';
 import 'PlanOption.dart';
 import 'ProfileCard.dart';
 import 'ProfilePendingCard.dart'; // Ensure this import is added
 import 'package:animate_do/animate_do.dart';
-import 'package:lottie/lottie.dart';
 
 class FormWidgets {
   final BasicInfoController controller = Get.put(BasicInfoController());
@@ -240,7 +236,6 @@ class FormWidgets {
     );
   }
 
-  // Method to build gender option
   static Widget _buildGenderOption(AuthController controller, String label,
       String value, IconData icon, Color color) {
     return Obx(() {
@@ -275,7 +270,6 @@ class FormWidgets {
     });
   }
 
-  // Method to build date of birth picker
   static Widget _buildDateOfBirth(AuthController controller) {
     return GestureDetector(
       onTap: () async {

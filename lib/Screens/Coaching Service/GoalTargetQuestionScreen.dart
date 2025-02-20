@@ -22,7 +22,51 @@ class GoalTargetQuestionScreen extends StatelessWidget {
         title: Text(categoryName),
         centerTitle: true,
         backgroundColor: Colors.white,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Image.asset(
+                    'assets/images/bage1.png', // replace with your image path
+                    height: 30,
+                    width: 30,
+                  ),
+                  onPressed: () {
+                    // Your onPressed action here
+                  },
+                ),
+                Obx(
+                      () => Container(
+                    margin: const EdgeInsets.only(left: 4),
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(
+                      controller.badgePoints.value.toString(), // dynamic badge value
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
+
+
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(child: CircularProgressIndicator());
@@ -81,22 +125,22 @@ class GoalTargetQuestionScreen extends StatelessWidget {
           return Column(
             children: [
               // Total Rating & Average Rating Row
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Obx(() => Text(
-                      "Total Rating: ${controller.getTotalRating()}",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
-                    )),
-                    Obx(() => Text(
-                      "Avg Rating: ${controller.getAverageRating().toStringAsFixed(2)} / 100",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
-                    )),
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(16.0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Obx(() => Text(
+              //         "Total Rating: ${controller.getTotalRating()}",
+              //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
+              //       )),
+              //       Obx(() => Text(
+              //         "Avg Rating: ${controller.getAverageRating().toStringAsFixed(2)} / 100",
+              //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
+              //       )),
+              //     ],
+              //   ),
+              // ),
               // List of Questions
               Expanded(
                 child: Obx(() {
@@ -137,14 +181,18 @@ class GoalTargetQuestionScreen extends StatelessWidget {
                             children: [
                               ...question.options.map((option) {
                                 return Obx(() {
-                                  return RadioListTile<String>(
-                                    value: option.trim(), // Trim before assigning
-                                    groupValue: controller.selectedOptions[questionId]?.trim() ?? '',
+                                  // Retrieve the current list of selected options for this question.
+                                  final List<String> selectedList = controller.selectedOptions[questionId] ?? <String>[];
+                                  final isSelected = selectedList.contains(option.trim());
+                                  return CheckboxListTile(
+                                    value: isSelected,
                                     activeColor: Colors.pink.shade400,
                                     title: Text(option),
-                                    onChanged: (value) {
-                                      if (value != null) {
-                                        controller.selectOption(categoryId, questionId, value.trim());
+                                    onChanged: (bool? value) {
+                                      if (value == true) {
+                                        controller.addOption(categoryId, questionId, option.trim());
+                                      } else {
+                                        controller.removeOption(categoryId, questionId, option.trim());
                                       }
                                     },
                                   );
@@ -156,6 +204,7 @@ class GoalTargetQuestionScreen extends StatelessWidget {
                       );
                     },
                   );
+
                 }),
               ),
 

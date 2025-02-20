@@ -12,7 +12,10 @@ class LoginController extends GetxController {
 
   final ApiService apiService = ApiService();
 
-  Future<void> login(String email, String password,) async {
+  Future<void> login(
+    String email,
+    String password,
+  ) async {
     isLoading.value = true;
     try {
       final response = await apiService.loginUser(email, password);
@@ -22,12 +25,9 @@ class LoginController extends GetxController {
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('userid', userId.toString());
         print("User Login Succecfully and user id is : $userId");
-        Get.snackbar('Success', response['ResponseMsg'],snackPosition: SnackPosition.BOTTOM);
-
-
-
-          Get.offAll(ServiceSelectionScreen());
-
+        Get.snackbar('Success', response['ResponseMsg'],
+            snackPosition: SnackPosition.BOTTOM);
+        Get.offAll(ServiceSelectionScreen());
       } else {
         Get.snackbar('Error', 'Login failed: ${response['ResponseMsg']}');
       }

@@ -23,6 +23,7 @@ class AssessmentQuestionScreen extends StatelessWidget {
     };
 
     final int categoryId = categoryMap[categoryName] ?? 0;
+    print("Category id is :$categoryId");
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.fetchQuestions(categoryId);
@@ -146,6 +147,7 @@ class AssessmentQuestionScreen extends StatelessWidget {
                         ),
                       ),
                     );
+
                   },
                 ),
               ),
