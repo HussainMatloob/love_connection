@@ -139,8 +139,6 @@ class GoalTargetQuestionScreen extends StatelessWidget {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                           ),
-
-
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black38,
