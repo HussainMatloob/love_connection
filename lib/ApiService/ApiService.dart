@@ -851,4 +851,27 @@ class ApiService {
       return {"Result": false, "ResponseMsg": "An unexpected error occurred."};
     }
   }
+
+  /// New method to fetch goal rating for goals
+  static Future<Map<String, dynamic>> getGoalRatingForGoals({
+    required String userId,
+    required int categoryId,
+  }) async {
+    final url = Uri.parse("$_baseUrl/getratingsforgoals.php");
+
+    final response = await http.post(url, body: {
+      "userid": userId,
+      "categoryid": categoryId.toString(),
+    });
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      return {
+        "ResponseCode": response.statusCode.toString(),
+        "Result": "false",
+        "ResponseMsg": "Failed to get rating for goals.",
+      };
+    }
+  }
 }

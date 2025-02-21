@@ -9,42 +9,51 @@ class GoalTargetQuestionController extends GetxController {
   var questions = <GoaltargetQuestions>[].obs;
   var isLoading = true.obs;
   var isSubmitting = false.obs;
-
-  // Store multiple selections per question.
+  // For multiple selections per question.
   var selectedOptions = <String, List<String>>{}.obs;
   var questionRatings = <String, int>{}.obs;
 
-  // Reactive variable to hold badge points.
+  // Reactive variables for badge information.
+  // badgePoints: if -1, then incomplete.
   var badgePoints = 0.obs;
+  var badgeTitle = "".obs;
+  var badgeDescription = "".obs;
+  var badgeImageUrl = "".obs;
+  // Flag to determine whether to show the badge overlay.
+  var badgeChecked = false.obs;
 
   final ApiService apiservice = ApiService();
 
-  void fetchGoalTargetQuestions(int categoryId) async {
+  Future<void> fetchGoalTargetQuestions(int categoryId) async {
     isLoading(true);
     try {
       final prefs = await SharedPreferences.getInstance();
       final fetchedQuestions = await apiservice.fetchGoalTargetQuestions();
       final filteredQuestions =
-          fetchedQuestions.where((q) => q.categoryId == categoryId).toList();
+      fetchedQuestions.where((q) => q.categoryId == categoryId).toList();
 
-      // If no questions are found for this category, clear everything.
+      // If no questions exist, clear data and badge info.
       if (filteredQuestions.isEmpty) {
         questions.assignAll([]);
         badgePoints.value = 0;
+        badgeTitle.value = "";
+        badgeDescription.value = "";
+        badgeImageUrl.value = "";
+        badgeChecked.value = false;
         await prefs.remove("badgePoints_category_$categoryId");
+        print("No questions found for category $categoryId; badge cleared.");
         isLoading(false);
         return;
       }
 
       questions.assignAll(filteredQuestions);
+      print("Fetched ${questions.length} questions for category $categoryId.");
 
+      // Load any saved answers/ratings.
       for (var question in questions) {
-        String? savedAnswer =
-            prefs.getString("goal_selected_answer_${question.id}");
+        String? savedAnswer = prefs.getString("goal_selected_answer_${question.id}");
         int? savedRating = prefs.getInt("goal_rating_${question.id}");
-
         if (savedAnswer != null) {
-          // Split the stored answer by '-' to create a list.
           selectedOptions[question.id.toString()] =
               savedAnswer.split('-').map((e) => e.trim()).toList();
         }
@@ -52,16 +61,10 @@ class GoalTargetQuestionController extends GetxController {
           questionRatings[question.id.toString()] = savedRating;
         }
       }
-
-      // Load stored badge points for this category, if available.
-      String key = "badgePoints_category_$categoryId";
-      int? storedBadgePoints = prefs.getInt(key);
-      if (storedBadgePoints != null) {
-        badgePoints.value = storedBadgePoints;
-      } else {
-        await checkAndAwardBadgePoints(categoryId);
-      }
+      // Do NOT automatically check the badge on screen load.
+      // The badge info will be refreshed only when the user presses the refresh button.
     } catch (e) {
+      print("Error fetching questions: $e");
       Get.snackbar("Error", "Failed to load goal target questions",
           snackPosition: SnackPosition.BOTTOM);
     } finally {
@@ -69,28 +72,73 @@ class GoalTargetQuestionController extends GetxController {
     }
   }
 
-  Future<void> checkAndAwardBadgePoints(int categoryId) async {
-    // If no questions, then reset badge points.
-    if (questions.isEmpty) {
-      badgePoints.value = 0;
+  /// Calls the API to check badge validity.
+  /// If the backend ResponseMsg equals "Please complete the tasks",
+  /// then badgePoints is set to -1 (indicating incomplete tasks).
+  /// Otherwise, badge details are stored.
+  Future<void> checkGoalRatingForGoals(int categoryId) async {
+    try {
       final prefs = await SharedPreferences.getInstance();
-      String key = "badgePoints_category_$categoryId";
-      await prefs.remove(key);
-      return;
-    }
-    bool allAnswered = questions.every((question) {
-      String qId = question.id.toString();
-      return selectedOptions[qId] != null && selectedOptions[qId]!.isNotEmpty;
-    });
-    final prefs = await SharedPreferences.getInstance();
-    String key = "badgePoints_category_$categoryId";
-    if (allAnswered) {
-      int points = Random().nextInt(16) + 5; // Random between 5 and 20
-      badgePoints.value = points;
-      await prefs.setInt(key, points);
-    } else {
-      badgePoints.value = 0;
-      await prefs.remove(key);
+      final String? userId = prefs.getString('userid');
+      if (userId == null || userId.isEmpty) {
+        print("checkGoalRatingForGoals: userId not found");
+        return;
+      }
+
+      print("Calling getGoalRatingForGoals API with userId: $userId, categoryId: $categoryId");
+      final responseData = await ApiService.getGoalRatingForGoals(
+        userId: userId,
+        categoryId: categoryId,
+      );
+      print("Response from getGoalRatingForGoals: $responseData");
+
+      bool isSuccess = responseData["Result"] == true ||
+          responseData["Result"].toString() == "true";
+
+      // Check the response message.
+      if (responseData["BadgeMessage"] == "Please complete the tasks") {
+        badgePoints.value = -1;
+        badgeTitle.value = "";
+        badgeDescription.value = "";
+        badgeImageUrl.value = "";
+        print("API indicates incomplete tasks. Badge set to -1.");
+      } else if (isSuccess) {
+        // Parse counts from API response.
+        final int total = int.tryParse(
+            responseData["OneRatingsCountFromGoaltargetQuestions"]?.toString() ?? "0") ?? 0;
+        final int answers = int.tryParse(
+            responseData["OneRatingsCountFromAssesmentAnswers"]?.toString() ?? "0") ?? 0;
+        print("Answers: $answers, Total: $total");
+
+        if (total > 0 && (answers / total) >= 0.5) {
+          // Use the backend's BadgePoints if available; here we use a default value (e.g., 10) if not.
+          final int points = int.tryParse(responseData["BadgePoints"]?.toString() ?? "10") ?? 10;
+          badgePoints.value = points;
+          badgeTitle.value = responseData["BadgeTitle"] ?? "Congratulations!";
+          badgeDescription.value = responseData["BadgeMessage"] ?? "You have unlocked your badge.";
+          badgeImageUrl.value = responseData["BadgeImageUrl"] ?? 'assets/images/VarifyBadge.png';
+          print("Badge awarded: ${badgePoints.value} points, Title: ${badgeTitle.value}");
+        } else {
+          badgePoints.value = -1;
+          badgeTitle.value = "";
+          badgeDescription.value = "";
+          badgeImageUrl.value = "";
+          print("Not enough answered questions. Badge set to -1.");
+        }
+      } else {
+        badgePoints.value = -1;
+        print("API returned unsuccessful result. Badge set to -1.");
+      }
+      // Mark that badge checking has been performed.
+      badgeChecked.value = true;
+      // Automatically hide the badge overlay after 5 seconds.
+      Future.delayed(Duration(seconds: 5), () {
+        badgeChecked.value = false;
+      });
+    } catch (e) {
+      print("Error in checkGoalRatingForGoals: $e");
+      Get.snackbar("Error", "Failed to get rating from server: $e",
+          snackPosition: SnackPosition.BOTTOM);
     }
   }
 
@@ -100,10 +148,10 @@ class GoalTargetQuestionController extends GetxController {
     if (!options.contains(option)) {
       options.add(option);
       selectedOptions[questionId] = options;
-      // Join options with ' - ' before submitting.
       String joinedAnswer = options.join(' - ');
+      print("Submitting answer for question $questionId: $joinedAnswer");
       await submitAnswer(categoryId, questionId, joinedAnswer);
-      await checkAndAwardBadgePoints(categoryId);
+      // await checkGoalRatingForGoals(categoryId);
     }
   }
 
@@ -114,18 +162,18 @@ class GoalTargetQuestionController extends GetxController {
       options.remove(option);
       selectedOptions[questionId] = options;
       String joinedAnswer = options.join(' - ');
+      print("Submitting answer for question $questionId after removal: $joinedAnswer");
       await submitAnswer(categoryId, questionId, joinedAnswer);
-      await checkAndAwardBadgePoints(categoryId);
+      // await checkGoalRatingForGoals(categoryId);
     }
   }
 
-  Future<void> submitAnswer(
-      int categoryId, String questionId, String answer) async {
+  Future<void> submitAnswer(int categoryId, String questionId, String answer) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final String? userId = prefs.getString('userid');
-
       if (userId == null || userId.isEmpty) {
+        print("submitAnswer: userId not found");
         Get.snackbar("Error", "User ID not found. Please log in again.",
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
@@ -134,8 +182,8 @@ class GoalTargetQuestionController extends GetxController {
       }
 
       isSubmitting(true);
-      update(); // Update UI before API call
-
+      update();
+      print("Submitting answer to API for question $questionId: $answer");
       final responseData = await ApiService.submitAnswer(
         userId: userId,
         categoryId: categoryId,
@@ -143,6 +191,7 @@ class GoalTargetQuestionController extends GetxController {
         type: "goals",
         answer: answer.trim(),
       );
+      print("Response from submitAnswer API for question $questionId: $responseData");
 
       bool isSuccess = responseData["Result"] == true ||
           responseData["Result"].toString() == "true";
@@ -152,46 +201,41 @@ class GoalTargetQuestionController extends GetxController {
             ? responseData["Data"]["rating"]
             : int.tryParse(responseData["Data"]["rating"].toString()) ?? 0;
 
-        await prefs.setString(
-            "goal_selected_answer_$questionId", answer.trim());
+        await prefs.setString("goal_selected_answer_$questionId", answer.trim());
         await prefs.setInt("goal_rating_$questionId", rating);
 
-        // Update stored answer by splitting the joined answer back into a list.
         selectedOptions[questionId] = answer.trim().isNotEmpty
             ? answer.trim().split('-').map((e) => e.trim()).toList()
             : <String>[];
         questionRatings[questionId] = rating;
-        update(); // Refresh UI after API response
+        update();
 
-        Get.snackbar("Success",
-            responseData["ResponseMsg"] ?? "Answer submitted successfully!",
+        Get.snackbar("Success", responseData["ResponseMsg"] ?? "Answer submitted successfully!",
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.green,
             colorText: Colors.white);
       } else {
-        Get.snackbar(
-            "Error", responseData["ResponseMsg"] ?? "Failed to submit answer",
+        Get.snackbar("Error", responseData["ResponseMsg"] ?? "Failed to submit answer",
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
             colorText: Colors.white);
       }
     } catch (e) {
+      print("Error in submitAnswer: $e");
       Get.snackbar("Error", "An unexpected error occurred: ${e.toString()}",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white);
     } finally {
       isSubmitting(false);
-      update(); // Refresh UI after submission
+      update();
     }
   }
 
-  /// Calculate Total Rating
   int getTotalRating() {
     return questionRatings.values.fold(0, (sum, rating) => sum + rating);
   }
 
-  /// Calculate Average Rating (Percentage)
   double getAverageRating() {
     if (questionRatings.isEmpty) return 0;
     int total = getTotalRating();
