@@ -9,6 +9,7 @@ class GoalTargetQuestionController extends GetxController {
   var questions = <GoaltargetQuestions>[].obs;
   var isLoading = true.obs;
   var isSubmitting = false.obs;
+
   // Store multiple selections per question.
   var selectedOptions = <String, List<String>>{}.obs;
   var questionRatings = <String, int>{}.obs;
@@ -24,7 +25,7 @@ class GoalTargetQuestionController extends GetxController {
       final prefs = await SharedPreferences.getInstance();
       final fetchedQuestions = await apiservice.fetchGoalTargetQuestions();
       final filteredQuestions =
-      fetchedQuestions.where((q) => q.categoryId == categoryId).toList();
+          fetchedQuestions.where((q) => q.categoryId == categoryId).toList();
 
       // If no questions are found for this category, clear everything.
       if (filteredQuestions.isEmpty) {
@@ -38,7 +39,8 @@ class GoalTargetQuestionController extends GetxController {
       questions.assignAll(filteredQuestions);
 
       for (var question in questions) {
-        String? savedAnswer = prefs.getString("goal_selected_answer_${question.id}");
+        String? savedAnswer =
+            prefs.getString("goal_selected_answer_${question.id}");
         int? savedRating = prefs.getInt("goal_rating_${question.id}");
 
         if (savedAnswer != null) {
@@ -117,7 +119,8 @@ class GoalTargetQuestionController extends GetxController {
     }
   }
 
-  Future<void> submitAnswer(int categoryId, String questionId, String answer) async {
+  Future<void> submitAnswer(
+      int categoryId, String questionId, String answer) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final String? userId = prefs.getString('userid');
@@ -149,7 +152,8 @@ class GoalTargetQuestionController extends GetxController {
             ? responseData["Data"]["rating"]
             : int.tryParse(responseData["Data"]["rating"].toString()) ?? 0;
 
-        await prefs.setString("goal_selected_answer_$questionId", answer.trim());
+        await prefs.setString(
+            "goal_selected_answer_$questionId", answer.trim());
         await prefs.setInt("goal_rating_$questionId", rating);
 
         // Update stored answer by splitting the joined answer back into a list.
@@ -159,12 +163,14 @@ class GoalTargetQuestionController extends GetxController {
         questionRatings[questionId] = rating;
         update(); // Refresh UI after API response
 
-        Get.snackbar("Success", responseData["ResponseMsg"] ?? "Answer submitted successfully!",
+        Get.snackbar("Success",
+            responseData["ResponseMsg"] ?? "Answer submitted successfully!",
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.green,
             colorText: Colors.white);
       } else {
-        Get.snackbar("Error", responseData["ResponseMsg"] ?? "Failed to submit answer",
+        Get.snackbar(
+            "Error", responseData["ResponseMsg"] ?? "Failed to submit answer",
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
             colorText: Colors.white);

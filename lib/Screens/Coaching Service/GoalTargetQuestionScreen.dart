@@ -4,7 +4,8 @@ import '../../Controllers/goal_taragtquestion_controller.dart';
 
 class GoalTargetQuestionScreen extends StatelessWidget {
   final String categoryName;
-  final GoalTargetQuestionController controller = Get.put(GoalTargetQuestionController());
+  final GoalTargetQuestionController controller =
+      Get.put(GoalTargetQuestionController());
 
   // Track which questions have already shown a snackbar
   final Set<String> shownSnackbars = {};
@@ -39,7 +40,7 @@ class GoalTargetQuestionScreen extends StatelessWidget {
                   },
                 ),
                 Obx(
-                      () => Container(
+                  () => Container(
                     margin: const EdgeInsets.only(left: 4),
                     padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
@@ -51,7 +52,8 @@ class GoalTargetQuestionScreen extends StatelessWidget {
                       minHeight: 16,
                     ),
                     child: Text(
-                      controller.badgePoints.value.toString(), // dynamic badge value
+                      controller.badgePoints.value.toString(),
+                      // dynamic badge value
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 10,
@@ -65,8 +67,6 @@ class GoalTargetQuestionScreen extends StatelessWidget {
           ),
         ],
       ),
-
-
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(child: CircularProgressIndicator());
@@ -108,7 +108,7 @@ class GoalTargetQuestionScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.pinkAccent,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(18),
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   ),
@@ -120,28 +120,9 @@ class GoalTargetQuestionScreen extends StatelessWidget {
               ],
             ),
           );
-        }
-        else {
+        } else {
           return Column(
             children: [
-              // Total Rating & Average Rating Row
-              // Padding(
-              //   padding: const EdgeInsets.all(16.0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Obx(() => Text(
-              //         "Total Rating: ${controller.getTotalRating()}",
-              //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
-              //       )),
-              //       Obx(() => Text(
-              //         "Avg Rating: ${controller.getAverageRating().toStringAsFixed(2)} / 100",
-              //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
-              //       )),
-              //     ],
-              //   ),
-              // ),
-              // List of Questions
               Expanded(
                 child: Obx(() {
                   if (controller.isLoading.value) {
@@ -164,51 +145,58 @@ class GoalTargetQuestionScreen extends StatelessWidget {
                           ),
                           elevation: 4,
                           child: Obx(() => ExpansionTile(
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  question.question,
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      question.question,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      "Rating: ${controller.questionRatings[questionId] ?? 0}",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.pinkAccent),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(height: 8),
-                                Text(
-                                  "Rating: ${controller.questionRatings[questionId] ?? 0}",
-                                  style: TextStyle(fontSize: 14, color: Colors.pinkAccent),
-                                ),
-                              ],
-                            ),
-                            children: [
-                              ...question.options.map((option) {
-                                return Obx(() {
-                                  // Retrieve the current list of selected options for this question.
-                                  final List<String> selectedList = controller.selectedOptions[questionId] ?? <String>[];
-                                  final isSelected = selectedList.contains(option.trim());
-                                  return CheckboxListTile(
-                                    value: isSelected,
-                                    activeColor: Colors.pink.shade400,
-                                    title: Text(option),
-                                    onChanged: (bool? value) {
-                                      if (value == true) {
-                                        controller.addOption(categoryId, questionId, option.trim());
-                                      } else {
-                                        controller.removeOption(categoryId, questionId, option.trim());
-                                      }
-                                    },
-                                  );
-                                });
-                              }).toList(),
-                            ],
-                          )),
+                                children: [
+                                  ...question.options.map((option) {
+                                    return Obx(() {
+                                      // Retrieve the current list of selected options for this question.
+                                      final List<String> selectedList =
+                                          controller.selectedOptions[
+                                                  questionId] ??
+                                              <String>[];
+                                      final isSelected =
+                                          selectedList.contains(option.trim());
+                                      return CheckboxListTile(
+                                        value: isSelected,
+                                        activeColor: Colors.pink.shade400,
+                                        title: Text(option),
+                                        onChanged: (bool? value) {
+                                          if (value == true) {
+                                            controller.addOption(categoryId,
+                                                questionId, option.trim());
+                                          } else {
+                                            controller.removeOption(categoryId,
+                                                questionId, option.trim());
+                                          }
+                                        },
+                                      );
+                                    });
+                                  }).toList(),
+                                ],
+                              )),
                         ),
                       );
                     },
                   );
-
                 }),
               ),
-
-
             ],
           );
         }
