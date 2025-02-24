@@ -40,12 +40,12 @@ class ApiService {
     required String citylookingfor,
     required String cast,
     required String castlookingfor,
-    required String subcast,
-    required String subcastlookingfor,
+    // required String subcast,
+    // required String subcastlookingfor,
     required String sect,
     required String sectlookingfor,
-    required String subsect,
-    required String subsectlookingfor,
+    // required String subsect,
+    // required String subsectlookingfor,
     required String ethnicity,
     required String ethnicitylookingfor,
     required String created_at,
@@ -82,12 +82,12 @@ class ApiService {
       request.fields['citylookingfor'] = citylookingfor;
       request.fields['cast'] = cast;
       request.fields['castlookingfor'] = castlookingfor;
-      request.fields['subcast'] = subcast;
-      request.fields['subcastlookingfor'] = subcastlookingfor;
+      // request.fields['subcast'] = subcast;
+      // request.fields['subcastlookingfor'] = subcastlookingfor;
       request.fields['sect'] = sect;
       request.fields['sectlookingfor'] = sectlookingfor;
-      request.fields['subsect'] = subsect;
-      request.fields['subsectlookingfor'] = subsectlookingfor;
+      // request.fields['subsect'] = subsect;
+      // request.fields['subsectlookingfor'] = subsectlookingfor;
       request.fields['ethnicity'] = ethnicity;
       request.fields['ethnicitylookingfor'] = ethnicitylookingfor;
       request.fields['created_at'] = created_at;

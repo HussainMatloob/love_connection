@@ -52,7 +52,7 @@ class FormWidgets {
       return Expanded(
         child: GestureDetector(
           onTap: () {
-            controller.currentPage.value = index;
+            // controller.currentPage.value = index;
             // Update the selected tab
           },
           child: Container(
@@ -100,42 +100,37 @@ class FormWidgets {
 
   static Widget _buildTabButton1(BasicInfoController controller,
       PageController pageController, String text, int mappedIndex) {
-    return Obx(() {
-      final isSelected =
-          (mappedIndex == 0 && controller.currentPage.value < 2) ||
-              (mappedIndex == 2 && controller.currentPage.value >= 2);
-
-      return Expanded(
-        child: GestureDetector(
-          onTap: () {
-            controller.currentPage.value = mappedIndex;
-            pageController.animateToPage(
-              mappedIndex,
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
-            decoration: BoxDecoration(
-              color: isSelected ? Colors.pink[100] : Colors.transparent,
-              borderRadius: BorderRadius.circular(Get.width * 0.02),
-            ),
-            child: Center(
-              child: Text(
-                text,
-                style: GoogleFonts.outfit(
-                  color: isSelected ? Colors.black : Colors.grey,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  fontSize: 16,
-                ),
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          controller.currentPage.value = mappedIndex;
+          pageController.animateToPage(
+            mappedIndex,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
+          decoration: BoxDecoration(
+            color: mappedIndex == 0 ? Colors.pink[100] : Colors.transparent,
+            borderRadius: BorderRadius.circular(Get.width * 0.02),
+          ),
+          child: Center(
+            child: Text(
+              text,
+              style: GoogleFonts.outfit(
+                color: mappedIndex == 0 ? Colors.black : Colors.grey,
+                fontWeight: mappedIndex == 0 ? FontWeight.bold : FontWeight.normal,
+                fontSize: 16,
               ),
             ),
           ),
         ),
-      );
-    });
+      ),
+    );
   }
+
 
   static Widget buildForm(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
@@ -146,18 +141,13 @@ class FormWidgets {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildInputField(authController, 'Email', authController.email),
+            _buildInputField('Email', authController.emailController),
             SizedBox(height: Get.height * 0.02),
-
-            _buildInputField(
-                authController, 'Password', authController.password),
+            _buildInputField('Password', authController.passwordController),
             SizedBox(height: Get.height * 0.02),
-
-            _buildInputField(
-                authController, 'First Name', authController.firstName),
+            _buildInputField('First Name', authController.firstNameController),
             SizedBox(height: Get.height * 0.02),
-            _buildInputField(
-                authController, 'Last Name', authController.lastName),
+            _buildInputField('Last Name', authController.lastNameController),
             SizedBox(height: Get.height * 0.03),
             Text(
               'Gender',
@@ -169,15 +159,6 @@ class FormWidgets {
             SizedBox(height: Get.height * 0.02),
             _buildGenderSelection(authController),
             SizedBox(height: Get.height * 0.03),
-            // Text(
-            //   'Date of Birth',
-            //   style: GoogleFonts.outfit(
-            //     color: Colors.grey[600],
-            //     fontSize: Get.width * 0.04,
-            //   ),
-            // ),
-            // SizedBox(height: Get.height * 0.02),
-            // _buildDateOfBirth(authController),
           ],
         ),
       ),
@@ -186,7 +167,7 @@ class FormWidgets {
 
   // Method to build input field
   static Widget _buildInputField(
-      AuthController controller, String label, RxString value) {
+      String label, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -205,7 +186,7 @@ class FormWidgets {
             borderRadius: BorderRadius.circular(Get.width * 0.02),
           ),
           child: TextField(
-            onChanged: (text) => value.value = text,
+            controller: controller, // Assign controller
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(
@@ -516,7 +497,7 @@ class FormWidgets {
 
             Obx(() {
               // Ensure the reactive dependency is used by reading the list length.
-              final countries = countryController.countryList;
+              final countries = [...countryController.countryList, "Any"];
               final _ = countries.length;
 
               if (countryController.isLoading.value) {
@@ -527,10 +508,11 @@ class FormWidgets {
                 value: authController.currentResidence,
                 lookingForValue: authController.lookingForResidence,
                 items: countries,
-                // Now using the reactive country list
+                // Now using the reactive country list with "Any" appended
                 hinttext: 'Select Country',
               );
             }),
+
 
             SizedBox(height: 24),
             // Employment Status Dropdown
@@ -564,10 +546,10 @@ class FormWidgets {
           // City of Current Residence
           Obx(() {
             // Force a reactive read by accessing the length
-            final cities = cityController.cityOptions;
+            final cities = [...cityController.cityOptions, "Any"];
             final _ = cities.length;
-            print(cities.toString());
 
+            print(cities.toString());
             // handel loading state
             if (cityController.isLoading.value) {
               return Center(child: CircularProgressIndicator());
@@ -622,15 +604,6 @@ class FormWidgets {
           }),
 
           SizedBox(height: 8),
-          // Sub-Caste (optional)
-          buildDropdownPair(
-            label: 'Sub-Caste (optional)',
-            value: authController.subCaste,
-            lookingForValue: authController.lookingForSubCaste,
-            items: authController.subCasteOptions,
-            hinttext: 'Select Sub-Caste',
-          ),
-          SizedBox(height: 8),
 
           // Sect
           Obx(() {
@@ -660,16 +633,6 @@ class FormWidgets {
 
           SizedBox(height: 8),
 
-          // Sub-Sect (optional)
-          buildDropdownPair(
-            label: 'Sub-Sect (optional)',
-            value: authController.subSect,
-            lookingForValue: authController.lookingForSubSect,
-            items: authController.subSectOptions,
-            hinttext: 'Select Sub-Sect',
-          ),
-          SizedBox(height: 8),
-
           // Ethnicity
           buildDropdownPair(
               label: 'Ethnicity',
@@ -677,13 +640,33 @@ class FormWidgets {
               lookingForValue: authController.lookingForEthnicity,
               items: authController.ethnicityOptions,
               hinttext: "Select Ethnicity"),
-          SizedBox(height: 8),
+          SizedBox(height: 20),
 
           PinkButton(
               text: "Next",
               onTap: () {
-                Get.to(Profilepicture());
-              })
+                if (authController.cityOfResidence.value == null ||
+                    authController.lookingForCity.value == null ||
+                    authController.caste.value == null ||
+                    authController.lookingForCaste.value == null ||
+                    authController.sect.value == null ||
+                    authController.lookingForSect.value == null ||
+                    authController.ethnicity.value == null ||
+                    authController.lookingForEthnicity.value == null) {
+                  {
+                    Get.snackbar(
+                      'Error',
+                      'Please fill in all required education and residence details.',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.red.withOpacity(0.8),
+                      colorText: Colors.white,
+                    );
+                    return; // Stop navigation
+                  }
+                } else {
+                  Get.to(Profilepicture());
+                }
+              }),
         ],
       ),
     );
@@ -874,7 +857,7 @@ class FormWidgets {
                       fontWeight: FontWeight.w400, fontSize: 13),
                 ),
                 value: option,
-                groupValue: authController.monthlyIncome.value,
+                groupValue: authController.employmentStatus.value,
                 onChanged: (value) =>
                     authController.monthlyIncome.value = value,
                 contentPadding: EdgeInsets.zero,
@@ -1179,14 +1162,12 @@ class FormWidgets {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Lottie.asset(
-                  'assets/animations/snackbarloading.json',
-                  // Add a heart-themed animation
-                  width: 200,
-                  height: 200,
-                  fit: BoxFit.cover,
-                  repeat: false
-                ),
+                Lottie.asset('assets/animations/snackbarloading.json',
+                    // Add a heart-themed animation
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.cover,
+                    repeat: false),
                 SizedBox(height: 16),
                 Text(
                   "No Pending Requests Sent! 💌",

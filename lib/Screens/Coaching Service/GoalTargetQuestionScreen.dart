@@ -93,8 +93,12 @@ class GoalTargetQuestionScreen extends StatelessWidget {
                         children: [
                           ...question.options.map((option) {
                             return Obx(() {
-                              final List<String> selectedList = controller.selectedOptions[questionId] ?? <String>[];
-                              final isSelected = selectedList.contains(option.trim());
+                              // Ensure options are unchecked by default
+                              final List<String> selectedList =
+                                  controller.selectedOptions[questionId] ?? [];
+
+                              final bool isSelected = selectedList.contains(option.trim());
+
                               return CheckboxListTile(
                                 value: isSelected,
                                 activeColor: Colors.pink.shade400,
@@ -115,6 +119,7 @@ class GoalTargetQuestionScreen extends StatelessWidget {
                   );
                 },
               );
+
             }
           }),
           // Full-screen overlay with pink blurred background for the badge popup.

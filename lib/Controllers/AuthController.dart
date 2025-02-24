@@ -21,6 +21,21 @@ class AuthController extends GetxController {
   final ImageController imageController =
   Get.put(ImageController());
 
+  // Instead of RxString, use TextEditingController
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void onClose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.onClose();
+  }
+
   // Observables
   var isLoading = false.obs; // To manage loading state
   var isLoading1 = false.obs; // To manage loading state
@@ -34,10 +49,10 @@ class AuthController extends GetxController {
   Rx<File?> passportfront = Rx<File?>(null);
   Rx<File?> passportback = Rx<File?>(null);
 
-  final firstName = ''.obs;
-  final lastName = ''.obs;
-  final email = ''.obs;
-  final password = ''.obs;
+  // final firstName = 'Enter first name'.obs;
+  // final lastName = 'Enter last name'.obs;
+  // final email = 'Enter email'.obs;
+  // final password = 'Enter password'.obs;
   final gender = Rxn<String>();
   final dateOfBirth = Rxn<DateTime>();
   var createdAt = DateTime.now().obs;  // Reactive variable to store created_at
@@ -122,9 +137,9 @@ class AuthController extends GetxController {
   // Dropdown options
   final cityOptions = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'];
   final casteOptions = ['Brahmin', 'Kshatriya', 'Vaishya', 'Shudra'];
-  final subCasteOptions = ['Sub-Caste 1', 'Sub-Caste 2', 'Sub-Caste 3'];
+  // final subCasteOptions = ['Sub-Caste 1', 'Sub-Caste 2', 'Sub-Caste 3'];
   final sectOptions = ['Sunni', 'Shia', 'Ahmadiyya', 'Ibadi'];
-  final subSectOptions = ['Sub-Sect 1', 'Sub-Sect 2', 'Sub-Sect 3'];
+  // final subSectOptions = ['Sub-Sect 1', 'Sub-Sect 2', 'Sub-Sect 3'];
   final ethnicityOptions = ['Asian', 'African', 'European', 'Hispanic'];
 
   String validateFields() {
@@ -135,10 +150,10 @@ class AuthController extends GetxController {
     passportback= documentUploadController.passportBackImage ;
     selfieimage= _selfieImageController.selfieImage ;
     // galleryimages= imageController.images as Rx<File?> ;
-    if (email.value.isEmpty) return 'Email is required.';
-    if (password.value.isEmpty) return 'Password is required.';
-    if (firstName.value.isEmpty) return 'First Name is required.';
-    if (lastName.value.isEmpty) return 'Last Name is required.';
+    if (emailController.text.isEmpty) return 'Email is required.';
+    if (passwordController.text.isEmpty) return 'Password is required.';
+    if (firstNameController.text.isEmpty) return 'First Name is required.';
+    if (lastNameController.text.isEmpty) return 'Last Name is required.';
     if (height.value == null) return 'Height is required.';
     if (caste.value == null) return 'Caste is required.';
     if (cityOfResidence.value == null) return 'City of Residence is required.';
@@ -182,13 +197,13 @@ class AuthController extends GetxController {
     try {
       // Send the registration request to the API service
       final response = await _apiService.registerUser(
-        firstname: firstName.value.toString(),
-        lastname: lastName.value.toString(),
+        firstname: firstNameController.value.toString(),
+        lastname: lastNameController.value.toString(),
         height: height.value.toString(),
         cast: caste.value.toString(),
-        subcast: subCaste.value.toString(),
+        // subcast: subCaste.value.toString(),
         sect: sect.value.toString(),
-        subsect: subSect.value.toString(),
+        // subsect: subSect.value.toString(),
         castlookingfor: lookingForCaste.value.toString(),
         city: cityOfResidence.value.toString(),
         citylookingfor: lookingForCity.value.toString(),
@@ -204,10 +219,10 @@ class AuthController extends GetxController {
         religion: religion.value.toString(),
         religionlookingfor: lookingForReligion.value.toString(),
         sectlookingfor: lookingForSect.value.toString(),
-        subcastlookingfor: lookingForCaste.value.toString(),
-        subsectlookingfor: lookingForSubSect.value.toString(),
-        email: email.value.toString(),
-        password: password.value.toString(),
+        // subcastlookingfor: lookingForCaste.value.toString(),
+        // subsectlookingfor: lookingForSubSect.value.toString(),
+        email: emailController.value.toString(),
+        password: passwordController.value.toString(),
         employmentstatus:employmentStatus.value.toString(),
         monthlyincome: monthlyIncome.value.toString(),
         created_at: createdAt.value.toString(),

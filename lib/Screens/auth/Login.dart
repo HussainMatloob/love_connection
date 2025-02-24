@@ -9,8 +9,7 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final int? keyParam;
-
-
+  bool _obscureText = true;
   LoginScreen({this.keyParam});
 
   @override
@@ -63,11 +62,22 @@ class LoginScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 // Password Field
-                TextField(
-                  controller: passwordController,
-                  obscureText: true,
+                Obx(() => TextField(
+                  controller:passwordController,
+                  obscureText: controller.isPasswordHidden.value,
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.lock, color: Colors.pink.shade300),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.isPasswordHidden.value
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: Colors.pink.shade300,
+                      ),
+                      onPressed: () {
+                        controller.togglePasswordVisibility();
+                      },
+                    ),
                     labelText: "Password",
                     filled: true,
                     fillColor: Colors.white,
@@ -75,7 +85,8 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                ),
+                )),
+
                 SizedBox(height: 30),
                 // Login Button
                 Obx(() {

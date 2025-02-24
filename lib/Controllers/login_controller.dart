@@ -10,6 +10,12 @@ class LoginController extends GetxController {
   var isLoggedIn = false.obs;
   var userId = ''.obs;
 
+  var isPasswordHidden = true.obs;
+
+  void togglePasswordVisibility() {
+    isPasswordHidden.value = !isPasswordHidden.value;
+  }
+
   final ApiService apiService = ApiService();
 
   Future<void> login(
