@@ -27,7 +27,8 @@ class GoalTargetQuestionController extends GetxController {
     try {
       final prefs = await SharedPreferences.getInstance();
       final fetchedQuestions = await apiservice.fetchGoalTargetQuestions();
-      final filteredQuestions = fetchedQuestions.where((q) => q.categoryId == categoryId).toList();
+      final filteredQuestions =
+          fetchedQuestions.where((q) => q.categoryId == categoryId).toList();
 
       if (filteredQuestions.isEmpty) {
         questions.clear();
@@ -49,13 +50,16 @@ class GoalTargetQuestionController extends GetxController {
       questionRatings.clear();
 
       for (var question in questions) {
-        String? savedAnswer = prefs.getString("goal_selected_answer_${question.id}");
+        String? savedAnswer =
+            prefs.getString("goal_selected_answer_${question.id}");
         int? savedRating = prefs.getInt("goal_rating_${question.id}");
 
         if (savedAnswer != null) {
-          selectedOptions[question.id.toString()] = savedAnswer.split('-').map((e) => e.trim()).toList();
+          selectedOptions[question.id.toString()] =
+              savedAnswer.split('-').map((e) => e.trim()).toList();
         } else {
-          selectedOptions[question.id.toString()] = []; // **Unchecked by default**
+          selectedOptions[question.id.toString()] =
+              []; // **Unchecked by default**
         }
 
         if (savedRating != null) {
@@ -81,7 +85,8 @@ class GoalTargetQuestionController extends GetxController {
         return;
       }
 
-      print("Calling getGoalRatingForGoals API with userId: $userId, categoryId: $categoryId");
+      print(
+          "Calling getGoalRatingForGoals API with userId: $userId, categoryId: $categoryId");
       final responseData = await ApiService.getGoalRatingForGoals(
         userId: userId,
         categoryId: categoryId,
@@ -99,18 +104,29 @@ class GoalTargetQuestionController extends GetxController {
         print("API indicates incomplete tasks. Badge set to -1.");
       } else if (isSuccess) {
         final int total = int.tryParse(
-            responseData["OneRatingsCountFromGoaltargetQuestions"]?.toString() ?? "0") ?? 0;
+                responseData["OneRatingsCountFromGoaltargetQuestions"]
+                        ?.toString() ??
+                    "0") ??
+            0;
         final int answers = int.tryParse(
-            responseData["OneRatingsCountFromAssesmentAnswers"]?.toString() ?? "0") ?? 0;
+                responseData["OneRatingsCountFromAssesmentAnswers"]
+                        ?.toString() ??
+                    "0") ??
+            0;
         print("Answers: $answers, Total: $total");
 
         if (total > 0 && (answers / total) >= 0.5) {
-          final int points = int.tryParse(responseData["BadgePoints"]?.toString() ?? "10") ?? 10;
+          final int points =
+              int.tryParse(responseData["BadgePoints"]?.toString() ?? "10") ??
+                  10;
           badgePoints.value = points;
           badgeTitle.value = responseData["BadgeTitle"] ?? "Congratulations!";
-          badgeDescription.value = responseData["BadgeMessage"] ?? "You have unlocked your badge.";
-          badgeImageUrl.value = responseData["BadgeImageUrl"] ?? 'assets/images/VarifyBadge.png';
-          print("Badge awarded: ${badgePoints.value} points, Title: ${badgeTitle.value}");
+          badgeDescription.value =
+              responseData["BadgeMessage"] ?? "You have unlocked your badge.";
+          badgeImageUrl.value =
+              responseData["BadgeImageUrl"] ?? 'assets/images/VarifyBadge.png';
+          print(
+              "Badge awarded: ${badgePoints.value} points, Title: ${badgeTitle.value}");
         } else {
           badgePoints.value = -1;
           badgeTitle.value = "";
@@ -149,7 +165,8 @@ class GoalTargetQuestionController extends GetxController {
     }
   }
 
-  Future<void> submitAnswer(int categoryId, String questionId, String answer) async {
+  Future<void> submitAnswer(
+      int categoryId, String questionId, String answer) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final String? userId = prefs.getString('userid');
@@ -169,14 +186,19 @@ class GoalTargetQuestionController extends GetxController {
         answer: answer.trim(),
       );
 
-      bool isSuccess = responseData["Result"] == true || responseData["Result"].toString() == "true";
+      bool isSuccess = responseData["Result"] == true ||
+          responseData["Result"].toString() == "true";
 
       if (isSuccess) {
-        int rating = int.tryParse(responseData["Data"]["rating"].toString()) ?? 0;
-        await prefs.setString("goal_selected_answer_$questionId", answer.trim());
+        int rating =
+            int.tryParse(responseData["Data"]["rating"].toString()) ?? 0;
+        await prefs.setString(
+            "goal_selected_answer_$questionId", answer.trim());
         await prefs.setInt("goal_rating_$questionId", rating);
 
-        selectedOptions[questionId] = answer.isNotEmpty ? answer.split('-').map((e) => e.trim()).toList() : [];
+        selectedOptions[questionId] = answer.isNotEmpty
+            ? answer.split('-').map((e) => e.trim()).toList()
+            : [];
         questionRatings[questionId] = rating;
 
         update();

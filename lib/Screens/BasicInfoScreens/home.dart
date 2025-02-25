@@ -117,7 +117,8 @@ class _HomeState extends State<Home> {
           children: [
             Padding(
               padding: EdgeInsets.all(Get.width * 0.05),
-              child: FormWidgets.buildHomeTabs(controller, pageController, 'Basic', 'Preferences'),
+              child: FormWidgets.buildHomeTabs(
+                  controller, pageController, 'Basic', 'Preferences'),
             ),
             Expanded(
               child: PageView(

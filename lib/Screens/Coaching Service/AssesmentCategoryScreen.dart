@@ -6,11 +6,10 @@ import 'AssessmentQuestionScreen.dart';
 
 class AssessmentCategoriesScreen extends StatelessWidget {
   final AssessmentController controller = Get.put(AssessmentController());
-  final RatingController ratingController= Get.put(RatingController());
+  final RatingController ratingController = Get.put(RatingController());
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -29,7 +28,6 @@ class AssessmentCategoriesScreen extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             SizedBox(height: 16), // Add spacing between rating and GridView
 
             // GridView for Categories

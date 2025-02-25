@@ -9,17 +9,15 @@ import 'ProfilePictureController.dart';
 import 'document_upload_controller.dart';
 
 class AuthController extends GetxController {
-
   final ProfilepictureController profilepictureController =
-  Get.put(ProfilepictureController());
+      Get.put(ProfilepictureController());
 
   final DocumentUploadController documentUploadController =
-  Get.put(DocumentUploadController());
+      Get.put(DocumentUploadController());
 
   final SelfieImageController _selfieImageController =
-  Get.put(SelfieImageController());
-  final ImageController imageController =
-  Get.put(ImageController());
+      Get.put(SelfieImageController());
+  final ImageController imageController = Get.put(ImageController());
 
   // Instead of RxString, use TextEditingController
   final TextEditingController firstNameController = TextEditingController();
@@ -55,7 +53,7 @@ class AuthController extends GetxController {
   // final password = 'Enter password'.obs;
   final gender = Rxn<String>();
   final dateOfBirth = Rxn<DateTime>();
-  var createdAt = DateTime.now().obs;  // Reactive variable to store created_at
+  var createdAt = DateTime.now().obs; // Reactive variable to store created_at
 
   // Second form fields
   final height = Rxn<String>();
@@ -67,6 +65,7 @@ class AuthController extends GetxController {
 
   // Page control
   void setGender(String? value) => gender.value = value;
+
   void setDateOfBirth(DateTime? value) => dateOfBirth.value = value;
 
   final educationLevel = Rxn<String>();
@@ -80,7 +79,7 @@ class AuthController extends GetxController {
     profileImage.value = image;
   }
 
-  Rx<File?> getprofileimage(){
+  Rx<File?> getprofileimage() {
     return profilepictureController.profileImage;
   }
 
@@ -115,10 +114,60 @@ class AuthController extends GetxController {
   ];
 
   // Dropdown options
-  final List<String> heightOptions = [ '4\'8"', '4\'9"', '4\'10"', '4\'11"', '5\'0"', '5\'1"', '5\'2"', '5\'3"', '5\'4"', '5\'5"', '5\'6"', '5\'7"', '5\'8"', '5\'9"', '5\'10"', '5\'11"', '6\'0"', '6\'1"', '6\'2"', '6\'3"', '6\'4"', '6\'5"', '6\'6"', '6\'7"', '6\'8"', '6\'9"', '6\'10"', '6\'11"', '7\'0"'];
-  final List<String> maritalStatusOptions = ['Single', 'Divorced', 'Widowed', 'Separated'];
-  final List<String> religionOptions = ['Islam', 'Christianity', 'Judaism', 'Hinduism', 'Buddhism', 'Other'];
-  final List<String> nationalityOptions = ['American', 'British', 'Canadian', 'Australian', 'Indian', 'Pakistani', 'Other'];
+  final List<String> heightOptions = [
+    '4\'8"',
+    '4\'9"',
+    '4\'10"',
+    '4\'11"',
+    '5\'0"',
+    '5\'1"',
+    '5\'2"',
+    '5\'3"',
+    '5\'4"',
+    '5\'5"',
+    '5\'6"',
+    '5\'7"',
+    '5\'8"',
+    '5\'9"',
+    '5\'10"',
+    '5\'11"',
+    '6\'0"',
+    '6\'1"',
+    '6\'2"',
+    '6\'3"',
+    '6\'4"',
+    '6\'5"',
+    '6\'6"',
+    '6\'7"',
+    '6\'8"',
+    '6\'9"',
+    '6\'10"',
+    '6\'11"',
+    '7\'0"'
+  ];
+  final List<String> maritalStatusOptions = [
+    'Single',
+    'Divorced',
+    'Widowed',
+    'Separated'
+  ];
+  final List<String> religionOptions = [
+    'Islam',
+    'Christianity',
+    'Judaism',
+    'Hinduism',
+    'Buddhism',
+    'Other'
+  ];
+  final List<String> nationalityOptions = [
+    'American',
+    'British',
+    'Canadian',
+    'Australian',
+    'Indian',
+    'Pakistani',
+    'Other'
+  ];
 
   // Preferences fields
   final cityOfResidence = Rxn<String>();
@@ -135,20 +184,28 @@ class AuthController extends GetxController {
   final lookingForEthnicity = Rxn<String>();
 
   // Dropdown options
-  final cityOptions = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'];
+  final cityOptions = [
+    'New York',
+    'Los Angeles',
+    'Chicago',
+    'Houston',
+    'Phoenix'
+  ];
   final casteOptions = ['Brahmin', 'Kshatriya', 'Vaishya', 'Shudra'];
+
   // final subCasteOptions = ['Sub-Caste 1', 'Sub-Caste 2', 'Sub-Caste 3'];
   final sectOptions = ['Sunni', 'Shia', 'Ahmadiyya', 'Ibadi'];
+
   // final subSectOptions = ['Sub-Sect 1', 'Sub-Sect 2', 'Sub-Sect 3'];
   final ethnicityOptions = ['Asian', 'African', 'European', 'Hispanic'];
 
   String validateFields() {
     profileImage = profilepictureController.profileImage;
-    cninfront= documentUploadController.idCardFrontImage;
-    cninback= documentUploadController.idCardBackImage ;
-    passportfront= documentUploadController.passportFrontImage ;
-    passportback= documentUploadController.passportBackImage ;
-    selfieimage= _selfieImageController.selfieImage ;
+    cninfront = documentUploadController.idCardFrontImage;
+    cninback = documentUploadController.idCardBackImage;
+    passportfront = documentUploadController.passportFrontImage;
+    passportback = documentUploadController.passportBackImage;
+    selfieimage = _selfieImageController.selfieImage;
     // galleryimages= imageController.images as Rx<File?> ;
     if (emailController.text.isEmpty) return 'Email is required.';
     if (passwordController.text.isEmpty) return 'Password is required.';
@@ -168,11 +225,11 @@ class AuthController extends GetxController {
     if (profileImage.value == null) return 'Profile Image is required.';
     if (cninfront.value == null) return ' CNIC Front Image is required.';
     if (cninback.value == null) return ' CNIC Back Image is required.';
-    if (passportfront.value == null) return ' Passport Front Image is required.';
+    if (passportfront.value == null)
+      return ' Passport Front Image is required.';
     if (passportback.value == null) return ' Passport Back Image is required.';
     return ''; // No errors
   }
-
 
   final ApiService _apiService = ApiService();
 
@@ -192,7 +249,6 @@ class AuthController extends GetxController {
       isLoading(false);
       return;
     }
-
 
     try {
       // Send the registration request to the API service
@@ -223,10 +279,11 @@ class AuthController extends GetxController {
         // subsectlookingfor: lookingForSubSect.value.toString(),
         email: emailController.value.toString(),
         password: passwordController.value.toString(),
-        employmentstatus:employmentStatus.value.toString(),
+        employmentstatus: employmentStatus.value.toString(),
         monthlyincome: monthlyIncome.value.toString(),
         created_at: createdAt.value.toString(),
-        profileimage:File(profileImage.value!.path), // Send the profile image
+        profileimage: File(profileImage.value!.path),
+        // Send the profile image
         cnic_front: File(cninfront.value!.path),
         cnic_back: File(cninback.value!.path),
         passport_front: File(passportfront.value!.path),
@@ -234,12 +291,13 @@ class AuthController extends GetxController {
         selfieimage: File(selfieimage.value!.path),
         gallery: File(profileImage.value!.path),
       );
-      print("Registration Response Code: ===${response['ResponseMsg'] } ==========");
+      print(
+          "Registration Response Code: ===${response['ResponseMsg']} ==========");
 
       // Handle the response from the API service
-      if ( response['ResponseCode'] == '200') {
-
-        print("Registration Response Code: ===${response['ResponseCode'] == '200'} ==========");
+      if (response['ResponseCode'] == '200') {
+        print(
+            "Registration Response Code: ===${response['ResponseCode'] == '200'} ==========");
         Get.snackbar(
           'Success',
           'Registration successful!',
@@ -248,9 +306,7 @@ class AuthController extends GetxController {
           colorText: Colors.white,
         );
 
-
         Get.offAll(LoginScreen(keyParam: 1));
-
 
         // Navigate to next screen or show confirmation
       } else {
@@ -275,7 +331,6 @@ class AuthController extends GetxController {
     } finally {
       // Always stop loading state
       isLoading(false);
-
     }
   }
 

@@ -9,7 +9,7 @@ class AssessmentQuestionScreen extends StatelessWidget {
   AssessmentQuestionScreen({required this.categoryName});
 
   final AssessmentQuestionController controller =
-  Get.put(AssessmentQuestionController());
+      Get.put(AssessmentQuestionController());
   final RatingController ratingController = Get.put(RatingController());
 
   @override
@@ -94,12 +94,11 @@ class AssessmentQuestionScreen extends StatelessWidget {
         } else {
           return Column(
             children: [
-
               // add a text widget to display the 'Questions' text with full style in left side
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 18,top: 16),
+                  padding: const EdgeInsets.only(left: 18, top: 16),
                   child: Text(
                     "Questions*",
                     style: TextStyle(
@@ -150,11 +149,11 @@ class AssessmentQuestionScreen extends StatelessWidget {
                           children: [
                             ...question.options.map((option) {
                               return Obx(
-                                    () => RadioListTile<String>(
+                                () => RadioListTile<String>(
                                   value: option,
                                   groupValue:
-                                  controller.selectedOptions[questionId] ??
-                                      '',
+                                      controller.selectedOptions[questionId] ??
+                                          '',
                                   activeColor: Colors.pink.shade400,
                                   title: Text(option),
                                   onChanged: (value) {
@@ -207,7 +206,7 @@ class AssessmentQuestionScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       padding:
-                      EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                     ),
                     child: Center(
                       child: Text(
