@@ -29,32 +29,6 @@ class AssessmentCategoriesScreen extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Overall Rating Section
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end, // Align to the right
-                children: [
-                  Text(
-                    "Overall Rating: ",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Obx(() => Text(
-                    "${ratingController.ratingPercentage.value.toStringAsFixed(2)}%",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  ),
-                ],
-              ),
-            ),
 
             SizedBox(height: 16), // Add spacing between rating and GridView
 

@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../Controllers/BottomNavController.dart';
@@ -14,8 +12,8 @@ class Bottomnavbar extends StatefulWidget {
 }
 
 class _BottomnavbarState extends State<Bottomnavbar> {
-  final BottomNavControllerLogic controller = Get.put(BottomNavControllerLogic());
 
+  final BottomNavControllerLogic controller = Get.put(BottomNavControllerLogic());
   @override
   Widget build(BuildContext context) {
     return Scaffold(

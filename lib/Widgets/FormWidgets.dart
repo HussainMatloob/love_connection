@@ -497,7 +497,7 @@ class FormWidgets {
 
             Obx(() {
               // Ensure the reactive dependency is used by reading the list length.
-              final countries = [...countryController.countryList, "Any"];
+              final countries =  ["Any", ...countryController.countryList];
               final _ = countries.length;
 
               if (countryController.isLoading.value) {
@@ -533,6 +533,7 @@ class FormWidgets {
   }
 
   static Widget buildPreferencesForm2(BasicInfoController controller) {
+
     final AuthController authController = Get.put(AuthController());
     final CityController cityController = Get.put(CityController());
     final CastController castController = Get.put(CastController());
@@ -546,7 +547,7 @@ class FormWidgets {
           // City of Current Residence
           Obx(() {
             // Force a reactive read by accessing the length
-            final cities = [...cityController.cityOptions, "Any"];
+            final cities = [ "Any", ...cityController.cityOptions];
             final _ = cities.length;
 
             print(cities.toString());
