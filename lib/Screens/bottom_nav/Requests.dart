@@ -34,7 +34,6 @@ class _RequestsState extends State<Requests> {
   Widget build(BuildContext context) {
     // Fetch the data when the screen is loaded
     _controller.fetchReceivedConnectionRequests();
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

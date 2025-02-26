@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:love_connection/Controllers/SendConnectionRequest.dart';
+import 'package:love_connection/Widgets/ProfileCard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Controllers/GetuserController.dart';
+import '../../Widgets/NoprofileFound.dart';
 import '../../Widgets/ProfileExplorWidget.dart';
 
 class Explore extends StatelessWidget {
@@ -11,7 +13,8 @@ class Explore extends StatelessWidget {
 
   // Reference to GetUsersController
   final GetUsersController usersController = Get.put(GetUsersController());
-  final SendConectionController sendConectionController = Get.put(SendConectionController());
+  final SendConectionController sendConectionController = Get.put(
+      SendConectionController());
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +39,10 @@ class Explore extends StatelessWidget {
                   ),
                 ),
                 child: Center(
-                  child: Image.asset('assets/images/logoT.png',fit: BoxFit.fitHeight,)
-
+                    child: Image.asset(
+                      'assets/images/LClogo2.png', fit: BoxFit.fitHeight,
+                      color: Colors.pink.shade300,
+                    )
                 ),
               ),
             ),
@@ -46,13 +51,22 @@ class Explore extends StatelessWidget {
             Positioned.fill(
               top: 70, // Offset to avoid overlapping with the AppBar
               child: Obx(() {
+                // Inside your Widget Tree
                 if (usersController.isLoading.value) {
-                  return  Center(child: Lottie.asset("assets/animations/circularloader.json",height: 150, width: 150));
+                  return Center(
+                    child: Lottie.asset(
+                      "assets/animations/circularloader.json",
+                      height: 150,
+                      width: 150,
+                    ),
+                  );
                 } else if (usersController.users.isEmpty) {
-                  return const Center(child: Text('No profiles found.'));
-                } else if(sendConectionController.isLoading.value){
-                  return    Center(child: Lottie.asset("assets/animations/circularloader.json",height: 150, width: 150));
+                  // 📌 Show NoProfilesScreen when no profiles are found
+                  return NoProfilesScreen(onRefresh: () {
+                    usersController.fetchUsers(); // Reload profiles when clicked
+                  });
                 }
+
                 else {
                   return PageView.builder(
                     itemCount: usersController.users.length,
@@ -66,27 +80,32 @@ class Explore extends StatelessWidget {
                         details: '${profile['education']} from ${profile['city']}',
                         location: profile['city'] ?? '',
                         image: _getImageUrl(profile["profileimage"] ?? ''),
-                        onClose: (){},
+                        onClose: () {},
                         onCheck: () async {
                           final prefs = await SharedPreferences.getInstance();
                           final userID = prefs.getString("userid").toString();
-                            sendConectionController.sendConnectionRequest(userID,profile['id']);
-                            usersController.users.removeAt(index);
+                          sendConectionController.sendConnectionRequest(
+                              userID, profile['id']);
+                          usersController.users.removeAt(index);
                         },
                         personalInfo: {
                           'name': '${profile['firstname']} ${profile['lastname']}',
-                          'maritalStatus': profile['maritalstatus'] ?? 'Unknown',
+                          'maritalStatus': profile['maritalstatus'] ??
+                              'Unknown',
                           'sect': profile['sect'] ?? 'Unknown',
                           'caste': profile['cast'] ?? 'Unknown',
                           'height': profile['height'] ?? 'Unknown',
-                          'dob': _formatDate(profile['dateofbirth'] ?? 'Unknown'),
+                          'dob': _formatDate(
+                              profile['dateofbirth'] ?? 'Unknown'),
                           'religion': profile['religion'] ?? 'Unknown',
                           'nationality': profile['nationality'] ?? 'Unknown',
                         },
                         educationInfo: {
                           'education': profile['education'] ?? 'Unknown',
-                          'monthlyIncome': profile['monthlyincome'] ?? 'Unknown',
-                          'employmentStatus': profile['employmentstatus'] ?? 'Unknown',
+                          'monthlyIncome': profile['monthlyincome'] ??
+                              'Unknown',
+                          'employmentStatus': profile['employmentstatus'] ??
+                              'Unknown',
                         },
                       );
                     },
@@ -107,7 +126,8 @@ class Explore extends StatelessWidget {
     if (dob == null) return 'Unknown';
     final currentDate = DateTime.now();
     int age = currentDate.year - dob.year;
-    if (currentDate.month < dob.month || (currentDate.month == dob.month && currentDate.day < dob.day)) {
+    if (currentDate.month < dob.month ||
+        (currentDate.month == dob.month && currentDate.day < dob.day)) {
       age--;
     }
     return age.toString();
@@ -118,6 +138,7 @@ class Explore extends StatelessWidget {
     const baseUrl = 'https://projects.funtashtechnologies.com/gomeetapi/'; // Replace with your base URL
     return baseUrl + relativePath;
   }
+
   String _formatDate(String date) {
     if (date == '00000000' || date.isEmpty || date == 'null') {
       return 'Unknown';
@@ -126,7 +147,8 @@ class Explore extends StatelessWidget {
     try {
       // Assuming the date is in 'yyyyMMdd' format
       final parsedDate = DateTime.parse(
-        '${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(6, 8)}',
+        '${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(
+            6, 8)}',
       );
       return '${parsedDate.day}-${parsedDate.month}-${parsedDate.year}';
     } catch (e) {

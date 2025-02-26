@@ -79,60 +79,40 @@ class GoalTargetQuestionScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Card(
                       color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       elevation: 4,
-                      child: Obx(() => ExpansionTile(
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  question.question,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  "Rating: ${controller.questionRatings[questionId] ?? 0}",
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.pinkAccent),
-                                ),
-                              ],
-                            ),
-                            children: [
-                              ...question.options.map((option) {
-                                return Obx(() {
-                                  // Ensure options are unchecked by default
-                                  final List<String> selectedList =
-                                      controller.selectedOptions[questionId] ??
-                                          [];
+                      child: ExpansionTile(
+                        title: Text(
+                          question.question,
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                        children: question.options.map((option) {
+                          return Obx(() {
+                            final List<String> selectedList =
+                                controller.selectedOptions[questionId] ?? [];
+                            final bool isSelected = selectedList.contains(option.trim());
 
-                                  final bool isSelected =
-                                      selectedList.contains(option.trim());
-
-                                  return CheckboxListTile(
-                                    value: isSelected,
-                                    activeColor: Colors.pink.shade400,
-                                    title: Text(option),
-                                    onChanged: (bool? value) {
-                                      if (value == true) {
-                                        controller.addOption(categoryId,
-                                            questionId, option.trim());
-                                      } else {
-                                        controller.removeOption(categoryId,
-                                            questionId, option.trim());
-                                      }
-                                    },
-                                  );
-                                });
-                              }).toList(),
-                            ],
-                          )),
+                            return CheckboxListTile(
+                              value: isSelected,
+                              activeColor: Colors.pink.shade400,
+                              title: Text(option),
+                              onChanged: (bool? value) {
+                                if (value == true) {
+                                  controller.addOption(categoryId, questionId, option.trim());
+                                } else {
+                                  controller.removeOption(
+                                      categoryId, questionId, option.trim());
+                                }
+                              },
+                            );
+                          });
+                        }).toList(),
+                      ),
                     ),
                   );
                 },
               );
+
             }
           }),
           // Full-screen overlay with pink blurred background for the badge popup.

@@ -48,12 +48,14 @@ class FormWidgets {
   static Widget _buildTabButton(
       BasicInfoController controller, String text, int index) {
     return Obx(() {
-      final isSelected = controller.currentPage.value == index;
+      final isSelected = controller.Rcurrentpage.value == index;
       return Expanded(
         child: GestureDetector(
           onTap: () {
-            // controller.currentPage.value = index;
+            controller.Rcurrentpage.value = index;
             // Update the selected tab
+
+
           },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
@@ -80,6 +82,7 @@ class FormWidgets {
     });
   }
 
+
   static Widget buildHomeTabs(BasicInfoController controller,
       PageController pageController, String tab1, String tab2) {
     return Container(
@@ -103,12 +106,13 @@ class FormWidgets {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          controller.currentPage.value = mappedIndex;
-          pageController.animateToPage(
-            mappedIndex,
-            duration: Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
+          // pageController.animateToPage(
+          //   mappedIndex,
+          //   duration: Duration(milliseconds: 300),
+          //   curve: Curves.easeInOut,
+          // );
+          // controller.currentPage.value = mappedIndex;
+          //
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
@@ -121,7 +125,8 @@ class FormWidgets {
               text,
               style: GoogleFonts.outfit(
                 color: mappedIndex == 0 ? Colors.black : Colors.grey,
-                fontWeight: mappedIndex == 0 ? FontWeight.bold : FontWeight.normal,
+                fontWeight:
+                    mappedIndex == 0 ? FontWeight.bold : FontWeight.normal,
                 fontSize: 16,
               ),
             ),
@@ -130,7 +135,6 @@ class FormWidgets {
       ),
     );
   }
-
 
   static Widget buildForm(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
@@ -497,7 +501,7 @@ class FormWidgets {
 
             Obx(() {
               // Ensure the reactive dependency is used by reading the list length.
-              final countries =  ["Any", ...countryController.countryList];
+              final countries = ["Any", ...countryController.countryList];
               final _ = countries.length;
 
               if (countryController.isLoading.value) {
@@ -512,7 +516,6 @@ class FormWidgets {
                 hinttext: 'Select Country',
               );
             }),
-
 
             SizedBox(height: 24),
             // Employment Status Dropdown
@@ -533,7 +536,6 @@ class FormWidgets {
   }
 
   static Widget buildPreferencesForm2(BasicInfoController controller) {
-
     final AuthController authController = Get.put(AuthController());
     final CityController cityController = Get.put(CityController());
     final CastController castController = Get.put(CastController());
@@ -547,7 +549,7 @@ class FormWidgets {
           // City of Current Residence
           Obx(() {
             // Force a reactive read by accessing the length
-            final cities = [ "Any", ...cityController.cityOptions];
+            final cities = ["Any", ...cityController.cityOptions];
             final _ = cities.length;
 
             print(cities.toString());
@@ -858,9 +860,10 @@ class FormWidgets {
                       fontWeight: FontWeight.w400, fontSize: 13),
                 ),
                 value: option,
-                groupValue: authController.employmentStatus.value,
+                groupValue: authController.monthlyIncome.value,
+                // FIXED HERE
                 onChanged: (value) =>
-                    authController.monthlyIncome.value = value,
+                    authController.monthlyIncome.value = value!,
                 contentPadding: EdgeInsets.zero,
                 activeColor: Colors.pink,
               ),

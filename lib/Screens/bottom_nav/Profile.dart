@@ -29,7 +29,14 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    print(userController.userData);
+    // Get screen dimensions for responsiveness
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Define relative font sizes
+    double headerFontSize = screenWidth * 0.08; // roughly equivalent to 32 on a 400px width screen
+    double subHeaderFontSize = screenWidth * 0.045; // roughly 18 on a 400px width screen
+    double detailFontSize = screenWidth * 0.04; // roughly 16 on a 400px width screen
 
     return SafeArea(
       child: Scaffold(
@@ -39,10 +46,11 @@ class _ProfileState extends State<Profile> {
             style: GoogleFonts.outfit(
               color: Colors.black,
               fontWeight: FontWeight.w400,
-              fontSize: 22,
+              fontSize: screenWidth * 0.055, // responsive title size
             ),
           ),
           centerTitle: true,
+          backgroundColor: Colors.white,
           actions: [
             IconButton(
               onPressed: () {
@@ -55,86 +63,99 @@ class _ProfileState extends State<Profile> {
         body: Obx(() {
           if (userController.isLoading.value) {
             return Center(
-                child: Lottie.asset("assets/animations/circularloader.json",
-                    height: 150, width: 150));
+              child: Lottie.asset(
+                "assets/animations/circularloader.json",
+                height: screenHeight * 0.2,
+                width: screenHeight * 0.2,
+              ),
+            );
           }
 
           if (userController.userData.value != null) {
             final user = userController.userData.value!;
             return Column(
               children: [
-                // Header Section
+                // Header Section with background image and profile details
                 Stack(
                   children: [
                     // Background Image
-                    Container(
-                      width: Get.width,
-                      height: Get.height * 0.83,
+                    SizedBox(
+                      width: screenWidth,
+                      height: screenHeight * 0.83,
                       child: CachedNetworkImage(
-                        imageUrl: _getImageUrl(user['profileimage'] ??
-                            "assets/images/PROFILE.png"),
-                        placeholder: (context, url) => Center(
-                          child: Lottie.asset(
-                            'assets/animations/registerloading.json',
-                            // Path to your Lottie file
-                            width: Get.width * 0.4,
-                            height: Get.height * 0.4,
-                            fit: BoxFit.contain,
-                          ),
+                        imageUrl: _getImageUrl(user['profileimage']),
+                        fadeInCurve: Curves.easeIn,
+                        placeholder: (context, url) => Image.asset(
+                          "assets/images/PROFILE.png",
+                          fit: BoxFit.cover,
+                        ),
+                        errorWidget: (context, url, error) => Image.asset(
+                          "assets/images/PROFILE.png",
+                          fit: BoxFit.cover,
                         ),
                         fit: BoxFit.cover,
                       ),
                     ),
-                    // Profile Details
+                    // Profile Details Positioned above the background image
                     Positioned(
-                      bottom: Get.height * 0.05,
-                      left: 16,
+                      bottom: screenHeight * 0.03,
+                      left: screenWidth * 0.04,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             '${user['firstname'] ?? ""}  ${user['lastname'] ?? ""} - ${_getAge(user['dateofbirth'] ?? "")}',
                             style: GoogleFonts.outfit(
-                              fontSize: 32,
+                              fontSize: headerFontSize,
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
                             ),
                           ),
+                          SizedBox(height: screenHeight * 0.001),
                           Text(
                             '${user['maritalstatus'] ?? ""} , ${user['education'] ?? ""}',
                             style: GoogleFonts.outfit(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: subHeaderFontSize,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
+                          SizedBox(height: screenHeight * 0.005),
                           Text(
-                          '${user['employmentstatus'] ?? ""}',  style: GoogleFonts.outfit(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),),   Text(
-                          '${user['nationality'] ?? ""}',  style: GoogleFonts.outfit(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),),
+                            '${user['employmentstatus'] ?? ""}',
+                            style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontSize: detailFontSize,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          SizedBox(height: screenHeight * 0.005),
+                          Text(
+                            '${user['nationality'] ?? ""}',
+                            style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontSize: detailFontSize,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
                         ],
                       ),
                     ),
+                    // Draggable indicator for Basic Info Bottom Sheet
                     Positioned(
                       bottom: 0,
-                      right: Get.width * 0.1,
-                      left: Get.width * 0.1,
+                      right: screenWidth * 0.1,
+                      left: screenWidth * 0.1,
                       child: GestureDetector(
                         onVerticalDragUpdate: (details) {
-                          if (details.primaryDelta! < -10) {
+                          if (details.primaryDelta != null &&
+                              details.primaryDelta! < -10) {
                             showBasicInfoBottomSheet(context);
                           }
                         },
                         child: Container(
-                          width: Get.width * 0.6,
-                          height: Get.height * 0.04,
+                          width: screenWidth * 0.6,
+                          height: screenHeight * 0.04,
                           decoration: const BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.only(
@@ -146,16 +167,16 @@ class _ProfileState extends State<Profile> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                width: 50,
+                                width: screenWidth * 0.125,
                                 height: 2,
                                 color: Colors.black,
                               ),
-                              const SizedBox(height: 5),
+                              SizedBox(height: screenHeight * 0.005),
                               Text(
                                 'Basic Info',
                                 style: GoogleFonts.outfit(
                                   color: Colors.black,
-                                  fontSize: 16,
+                                  fontSize: screenWidth * 0.04,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -181,32 +202,26 @@ class _ProfileState extends State<Profile> {
         'https://projects.funtashtechnologies.com/gomeetapi/'; // Replace with your base URL
     return baseUrl + relativePath;
   }
+
   int _getAge(String date) {
     if (date == '00000000' || date.isEmpty || date == 'null') {
       return 0; // Unknown age
     }
 
     try {
-      // Parse the birthdate from the given string format
       final birthDate = DateTime.parse(date);
-
-      // Get the current date
       final currentDate = DateTime.now();
-
-      // Calculate the difference in years
       int age = currentDate.year - birthDate.year;
-
-      // Check if the current date has already passed the birthdate for this year
-      if (currentDate.month < birthDate.month || (currentDate.month == birthDate.month && currentDate.day < birthDate.day)) {
-        age--; // Subtract one if the birthday hasn't occurred yet this year
+      if (currentDate.month < birthDate.month ||
+          (currentDate.month == birthDate.month &&
+              currentDate.day < birthDate.day)) {
+        age--;
       }
-
       return age;
     } catch (e) {
-      return 0; // In case of an error or invalid date format
+      return 0; // Error or invalid date format
     }
   }
-
 
   void showCustomDialog(BuildContext context) {
     showDialog(
@@ -214,10 +229,10 @@ class _ProfileState extends State<Profile> {
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          insetPadding: EdgeInsets.only(top: Get.height * 0.07),
+          insetPadding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.07),
           alignment: Alignment.topRight,
           child: Container(
-            width: Get.width * 0.6,
+            width: MediaQuery.of(context).size.width * 0.6,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
@@ -232,12 +247,12 @@ class _ProfileState extends State<Profile> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                buildMenuItem( icon:  Icons.person_outline,title:  'Saved Profiles',onTap: (){}),
-                buildMenuItem( icon:  Icons.settings_outlined, title: 'Settings',onTap: (){}),
-                buildMenuItem(icon:  Icons.share_outlined, title: 'Share App',onTap: (){}),
+                buildMenuItem(icon: Icons.person_outline, title: 'Saved Profiles', onTap: () {}),
+                buildMenuItem(icon: Icons.settings_outlined, title: 'Settings', onTap: () {}),
+                buildMenuItem(icon: Icons.share_outlined, title: 'Share App', onTap: () {}),
                 const Divider(),
-                buildMenuItem(icon: Icons.logout,title:  'Logout', onTap: () async {
-                  final prefs= await SharedPreferences.getInstance();
+                buildMenuItem(icon: Icons.logout, title: 'Logout', onTap: () async {
+                  final prefs = await SharedPreferences.getInstance();
                   prefs.setString("userid", "");
                   Get.offAll(LoginScreen(keyParam: 1,));
                 }),
@@ -265,13 +280,12 @@ class _ProfileState extends State<Profile> {
         style: GoogleFonts.outfit(fontWeight: FontWeight.w500, fontSize: 14),
       ),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: onTap, // ✅ Executes the provided function when tapped
+      onTap: onTap,
     );
   }
 
   void showBasicInfoBottomSheet(BuildContext context) {
     final user = userController.userData.value!;
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -280,7 +294,7 @@ class _ProfileState extends State<Profile> {
       ),
       builder: (context) {
         return FractionallySizedBox(
-          heightFactor: 0.75, // Adjust height as needed
+          heightFactor: 0.75,
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: const BoxDecoration(
@@ -291,17 +305,15 @@ class _ProfileState extends State<Profile> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Upgrade Button
                   const SizedBox(height: 10),
                   Center(
                     child: InkWell(
                       onTap: () {
-                        // Your action here
-                        Navigator.pop(context); // Close the bottom sheet
+                        Navigator.pop(context);
                         FormWidgets().showUpgradeDialog(context);
                       },
                       child: Container(
-                        width: Get.width * 0.6,
+                        width: MediaQuery.of(context).size.width * 0.6,
                         height: 60,
                         decoration: BoxDecoration(
                           color: Colors.yellow.shade600,
@@ -331,8 +343,6 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   const SizedBox(height: 20),
-
-                  // Informational Text
                   FormWidgets().buildInfoRow(
                     context,
                     "Boost your profile to the top of search results and get faster,\n handpicked matches tailored to your preferences.",
@@ -343,8 +353,6 @@ class _ProfileState extends State<Profile> {
                     "Enjoy unlimited messages and see who liked your profile\n to connect with more potential matches.",
                   ),
                   const SizedBox(height: 20),
-
-                  // Basic Information Section
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.grey.shade200,
@@ -354,7 +362,6 @@ class _ProfileState extends State<Profile> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Header
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -369,36 +376,25 @@ class _ProfileState extends State<Profile> {
                           ],
                         ),
                         const SizedBox(height: 10),
-
-                        // Basic Information Data Rows
-                        FormWidgets().buildBasicInfoRow(
-                            'Name', user['firstname'] + " " + user['lastname']),
+                        FormWidgets().buildBasicInfoRow('Name', user['firstname'] + " " + user['lastname']),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow(
-                            'Marital Status', user['maritalstatus']),
+                        FormWidgets().buildBasicInfoRow('Marital Status', user['maritalstatus']),
                         const SizedBox(height: 10),
                         FormWidgets().buildBasicInfoRow('Sect', user['sect']),
                         const SizedBox(height: 10),
                         FormWidgets().buildBasicInfoRow('Caste', user['cast']),
                         const SizedBox(height: 10),
-                        FormWidgets()
-                            .buildBasicInfoRow('Height', user['height']),
+                        FormWidgets().buildBasicInfoRow('Height', user['height']),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow(
-                            'Date of Birth', user['dateofbirth']),
+                        FormWidgets().buildBasicInfoRow('Date of Birth', user['dateofbirth']),
                         const SizedBox(height: 10),
-                        FormWidgets()
-                            .buildBasicInfoRow('Religion', user['religion']),
+                        FormWidgets().buildBasicInfoRow('Religion', user['religion']),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow(
-                            'Nationality', user['nationality']),
+                        FormWidgets().buildBasicInfoRow('Nationality', user['nationality']),
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 10),
-
-                  // Education Information Section
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -418,14 +414,11 @@ class _ProfileState extends State<Profile> {
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        FormWidgets().buildBasicInfoRow(
-                            'Education', 'Bachelors in Computer Science'),
+                        FormWidgets().buildBasicInfoRow('Education', 'Bachelors in Computer Science'),
                         const SizedBox(height: 10),
-                        FormWidgets()
-                            .buildBasicInfoRow('Monthly Income', user['monthlyincome']),
+                        FormWidgets().buildBasicInfoRow('Monthly Income', user['monthlyincome']),
                         const SizedBox(height: 10),
-                        FormWidgets()
-                            .buildBasicInfoRow('Employment Status', user['employmentstatus']),
+                        FormWidgets().buildBasicInfoRow('Employment Status', user['employmentstatus']),
                       ],
                     ),
                   ),

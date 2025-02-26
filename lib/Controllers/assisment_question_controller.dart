@@ -85,15 +85,10 @@ class AssessmentQuestionController extends GetxController {
         selectedOptions[questionId] = answer;
         questionRatings[questionId] = rating;
 
-        Get.snackbar("Success", responseData["ResponseMsg"] ?? "Answer submitted successfully!",
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green,
-            colorText: Colors.white);
+
       } else {
-        Get.snackbar("Error", responseData["ResponseMsg"] ?? "Failed to submit answer",
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white);
+        // Show error message in log
+        print("Failed to submit answer: ${responseData["Message"]}");
       }
     } catch (e) {
       Get.snackbar("Error", "An unexpected error occurred: ${e.toString()}",

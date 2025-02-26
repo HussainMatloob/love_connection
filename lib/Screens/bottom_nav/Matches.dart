@@ -41,7 +41,7 @@ class _MatchesState extends State<Matches> {
             Expanded(
               child: Obx(() {
                 // Render the screen based on the selected tab
-                return controller.currentPage.value == 0
+                return controller.Rcurrentpage.value == 0
                     ? FormWidgets().buildCompletedTab()
                     : FormWidgets().buildPendingTab();
               }),

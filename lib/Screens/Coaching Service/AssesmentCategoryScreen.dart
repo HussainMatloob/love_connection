@@ -10,10 +10,15 @@ class AssessmentCategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get screen size for responsive design
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Assessment Categories"),
+        title: Text("Assessment Categories",
+            style: TextStyle(fontSize: screenWidth * 0.05)), // Responsive title
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
@@ -23,31 +28,35 @@ class AssessmentCategoriesScreen extends StatelessWidget {
         }
 
         if (controller.assessmentCategories.isEmpty) {
-          return Center(child: Text("No categories available"));
+          return Center(
+            child: Text("No categories available",
+                style: TextStyle(fontSize: screenWidth * 0.04)), // Responsive text
+          );
         }
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 16), // Add spacing between rating and GridView
+            SizedBox(height: screenHeight * 0.02), // Adaptive spacing
 
-            // GridView for Categories
             Expanded(
               child: GridView.builder(
-                padding: const EdgeInsets.all(16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 22,
-                  crossAxisSpacing: 16,
+                padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: screenWidth < 600 ? 2 : 3, // Adjust for tablets
+                  mainAxisSpacing: screenHeight * 0.03, // Adaptive spacing
+                  crossAxisSpacing: screenWidth * 0.04,
+                  childAspectRatio: screenWidth < 600 ? 0.85 : 0.9, // Responsive ratio
                 ),
                 itemCount: controller.assessmentCategories.length,
                 itemBuilder: (context, index) {
                   final category = controller.assessmentCategories[index];
+
                   return GestureDetector(
                     onTap: () {
-                      print("Category Index: ${index}");
                       Get.to(() => AssessmentQuestionScreen(
-                            categoryName: category.title.toString(),
-                          ));
+                        categoryName: category.title.toString(),
+                      ));
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -58,7 +67,7 @@ class AssessmentCategoriesScreen extends StatelessWidget {
                             spreadRadius: 1,
                             blurRadius: 4,
                             offset: Offset(0, 3),
-                          ) // changes position of shadow
+                          )
                         ],
                         borderRadius: BorderRadius.circular(22),
                       ),
@@ -75,17 +84,27 @@ class AssessmentCategoriesScreen extends StatelessWidget {
                               errorBuilder: (context, error, stackTrace) =>
                                   Icon(Icons.image_not_supported),
                               fit: BoxFit.cover,
-                              height: 120,
-                              width: 100,
+                              height: screenWidth * 0.3, // Responsive height
+                              width: screenWidth * 0.20, // Responsive width
                             ),
                           ),
-                          SizedBox(height: 8),
-                          Text(
-                            category.title ?? "Unknown Category",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                          SizedBox(height: screenHeight * 0.01),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: screenWidth * 0.02), // Adaptive padding
+                            child: SizedBox(
+                              width: double.infinity, // Ensures full width
+                              child: Text(
+                                category.title ?? "Unknown Category",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: screenWidth * 0.035, // Responsive font
+                                ),
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
                             ),
                           ),
                         ],

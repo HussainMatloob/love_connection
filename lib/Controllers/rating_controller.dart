@@ -10,13 +10,13 @@ class RatingController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchRating(); // Fetch when initialized
+    // fetchRating(); // Fetch when initialized
     startAutoRefresh(); // Auto-refresh every 5 seconds
   }
 
-  Future<void> fetchRating() async {
+  Future<void> fetchRating(String categoryID) async {
     print("Fetching Rating...");
-    double? rating = await ApiService.fetchRatingPercentage();
+    double? rating = await ApiService.fetchRatingPercentage(categoryID);
 
     if (rating != null) {
       print("API Returned Rating: $rating");
@@ -29,7 +29,7 @@ class RatingController extends GetxController {
 
   void startAutoRefresh() {
     _timer = Timer.periodic(Duration(seconds: 5), (timer) {
-      fetchRating();
+      // fetchRating();
     });
   }
 

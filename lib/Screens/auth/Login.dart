@@ -25,8 +25,9 @@ class LoginScreen extends StatelessWidget {
               children: [
                 // add image view for logo here
                 Image.asset(
-                  'assets/images/logoT.png',
+                  'assets/images/LClogo2.png',
                   height: 200,
+                  color: Colors.pink.shade300,
                 ),
                 SizedBox(height: 20),
                 // Title

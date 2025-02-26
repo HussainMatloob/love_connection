@@ -37,10 +37,10 @@ class GetUsersController extends GetxController {
         print("===========================================================");
         users.value = response['Data'];
       } else {
-        Get.snackbar('Error', response['ResponseMsg']);
+        // Get.snackbar('Error', response['ResponseMsg']);
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      // Get.snackbar('Error', e.toString());
     } finally {
       isLoading(false);
     }

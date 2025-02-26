@@ -783,7 +783,7 @@ class ApiService {
 
   // Fetch Rating Percentage
 
-  static Future<double?> fetchRatingPercentage() async {
+  static Future<double?> fetchRatingPercentage(String categoryID) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getString('userid');
@@ -799,7 +799,7 @@ class ApiService {
         Uri.parse(
             "https://projects.funtashtechnologies.com/gomeetapi/getratings.php"),
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: {"userid": userId},
+        body: {"userid": userId, "categoryid": categoryID},
       );
 
       final responseData = jsonDecode(response.body);
