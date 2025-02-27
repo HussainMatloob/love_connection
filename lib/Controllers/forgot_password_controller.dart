@@ -1,82 +1,68 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
+import 'package:love_connection/ApiService/Auth_Service.dart';
 import 'package:love_connection/Screens/auth/Login.dart';
 
 class ForgotPasswordController extends GetxController {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
 
   var isEmailVerified = false.obs;
   var isLoadingVerify = false.obs;
   var isLoadingUpdate = false.obs;
+  var isPasswordHidden = true.obs;
+  var passwordErrorMessage = "".obs;
 
-  Future<void> verifyEmail() async {
-    String email = emailController.text.trim();
+  // Toggle Password Visibility
+  void togglePasswordVisibility() {
+    isPasswordHidden.value = !isPasswordHidden.value;
+  }
 
-    if (email.isEmpty) {
-      Get.snackbar("Error", "Please enter your email");
-      return;
-    }
-
-    isLoadingVerify.value = true;  // Start loading
-
-    try {
-      var url = Uri.parse("https://projects.funtashtechnologies.com/gomeetapi/forgotpassword.php");
-      var response = await http.post(url, body: {"email": email});
-
-      if (response.statusCode == 200) {
-        var jsonResponse = json.decode(response.body);
-        if (jsonResponse['status'] == true) {
-          isEmailVerified.value = true;
-          Get.snackbar("Success", "Email matches, enter new password");
-        } else {
-          Get.snackbar("Error", jsonResponse['message']);
-        }
-      } else {
-        Get.snackbar("Error", "Server Error: ${response.statusCode}");
-      }
-    } catch (e) {
-      Get.snackbar("Error", "Something went wrong: $e");
-    } finally {
-      isLoadingVerify.value = false;  // Stop loading
+  // Validate Password Strength
+  void validatePassword(String password) {
+    if (password.length < 8) {
+      passwordErrorMessage.value = "Password must be at least 8 characters long.";
+    } else if (!RegExp(r'(?=.*[A-Z])').hasMatch(password)) {
+      passwordErrorMessage.value = "Include at least one uppercase letter.";
+    } else if (!RegExp(r'(?=.*\d)').hasMatch(password)) {
+      passwordErrorMessage.value = "Include at least one number.";
+    } else if (!RegExp(r'(?=.*[@$!%*?&])').hasMatch(password)) {
+      passwordErrorMessage.value = "Include at least one special character.";
+    } else {
+      passwordErrorMessage.value = "";
     }
   }
 
-  Future<void> updatePassword() async {
-    String email = emailController.text.trim();
-    String newPassword = passwordController.text.trim();
+  // Verify Email
+  Future<void> verifyEmail() async {
+    isLoadingVerify.value = true;
+    var response = await AuthService.verifyEmail(emailController.text);
+    isLoadingVerify.value = false;
 
-    if (newPassword.isEmpty) {
-      Get.snackbar("Error", "Please enter a new password");
+    if (response['status']) {
+      isEmailVerified.value = true;
+      Get.snackbar("Success", "Email verified successfully!", backgroundColor: Colors.green, colorText: Colors.white);
+    } else {
+      Get.snackbar("Error", "Email not found!", backgroundColor: Colors.red, colorText: Colors.white);
+    }
+  }
+
+  // Update Password
+  Future<void> updatePassword() async {
+    if (passwordErrorMessage.value.isNotEmpty) {
+      Get.snackbar("Weak Password", passwordErrorMessage.value, backgroundColor: Colors.red, colorText: Colors.white);
       return;
     }
 
-    isLoadingUpdate.value = true;  // Start loading
+    isLoadingUpdate.value = true;
+    var response = await AuthService.updatePassword(emailController.text, passwordController.text);
+    isLoadingUpdate.value = false;
 
-    try {
-      var url = Uri.parse("https://projects.funtashtechnologies.com/gomeetapi/updatepassword.php");
-      var response = await http.post(url, body: {
-        "email": email,
-        "new_password": newPassword,
-      });
-
-      if (response.statusCode == 200) {
-        var jsonResponse = json.decode(response.body);
-        if (jsonResponse['status'] == true) {
-          Get.snackbar("Success", "Password updated successfully");
-          Get.offAll(LoginScreen());
-        } else {
-          Get.snackbar("Error", jsonResponse['message']);
-        }
-      } else {
-        Get.snackbar("Error", "Server Error: ${response.statusCode}");
-      }
-    } catch (e) {
-      Get.snackbar("Error", "Something went wrong: $e");
-    } finally {
-      isLoadingUpdate.value = false;  // Stop loading
+    if (response['status']) {
+      Get.snackbar("Success", "Password updated successfully!", backgroundColor: Colors.green, colorText: Colors.white);
+      Get.offAll(LoginScreen());
+    } else {
+      Get.snackbar("Error", "Password update failed!", backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
 }
