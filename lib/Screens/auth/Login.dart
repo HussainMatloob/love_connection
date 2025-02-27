@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:love_connection/Controllers/login_controller.dart';
 import 'package:love_connection/Screens/BasicInfoScreens/home.dart';
+import 'package:love_connection/Screens/auth/forgot_password_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   final LoginController controller = Get.put(LoginController());
@@ -88,7 +89,24 @@ class LoginScreen extends StatelessWidget {
                   ),
                 )),
 
-                SizedBox(height: 30),
+                // add text to forgot password in right side
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      Get.to(ForgotPasswordScreen());
+                    },
+                    child: Text(
+                      "Forgot Password?",
+                      style: TextStyle(
+                        color: Colors.pink.shade400,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 16),
                 // Login Button
                 Obx(() {
                   return SizedBox(

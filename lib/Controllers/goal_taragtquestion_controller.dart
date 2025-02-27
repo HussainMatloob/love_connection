@@ -85,67 +85,74 @@ class GoalTargetQuestionController extends GetxController {
         return;
       }
 
-      print(
-          "Calling getGoalRatingForGoals API with userId: $userId, categoryId: $categoryId");
+      print("Calling getGoalRatingForGoals API with userId: $userId, categoryId: $categoryId");
+
       final responseData = await ApiService.getGoalRatingForGoals(
         userId: userId,
         categoryId: categoryId,
       );
+
       print("Response from getGoalRatingForGoals: $responseData");
 
-      bool isSuccess = responseData["Result"] == true ||
-          responseData["Result"].toString() == "true";
+      bool isSuccess = responseData["Result"] == true || responseData["Result"].toString() == "true";
 
       if (responseData["BadgeMessage"] == "Please complete the tasks") {
+        // 🚀 Set values for an incomplete badge
         badgePoints.value = -1;
         badgeTitle.value = "";
         badgeDescription.value = "";
         badgeImageUrl.value = "";
         print("API indicates incomplete tasks. Badge set to -1.");
+
+        badgeChecked.value = true; // Show the incomplete badge
       } else if (isSuccess) {
-        final int total = int.tryParse(
-                responseData["OneRatingsCountFromGoaltargetQuestions"]
-                        ?.toString() ??
-                    "0") ??
-            0;
-        final int answers = int.tryParse(
-                responseData["OneRatingsCountFromAssesmentAnswers"]
-                        ?.toString() ??
-                    "0") ??
-            0;
+        final int total = int.tryParse(responseData["OneRatingsCountFromGoaltargetQuestions"]?.toString() ?? "0") ?? 0;
+        final int answers = int.tryParse(responseData["OneRatingsCountFromAssesmentAnswers"]?.toString() ?? "0") ?? 0;
+
         print("Answers: $answers, Total: $total");
 
         if (total > 0 && (answers / total) >= 0.5) {
-          final int points =
-              int.tryParse(responseData["BadgePoints"]?.toString() ?? "10") ??
-                  10;
+          // 🎉 Awarding a badge
+          final int points = int.tryParse(responseData["BadgePoints"]?.toString() ?? "10") ?? 10;
           badgePoints.value = points;
           badgeTitle.value = responseData["BadgeTitle"] ?? "Congratulations!";
-          badgeDescription.value =
-              responseData["BadgeMessage"] ?? "You have unlocked your badge.";
-          badgeImageUrl.value =
-              responseData["BadgeImageUrl"] ?? 'assets/images/VarifyBadge.png';
-          print(
-              "Badge awarded: ${badgePoints.value} points, Title: ${badgeTitle.value}");
+          badgeDescription.value = responseData["BadgeMessage"] ?? "You have unlocked your badge.";
+          badgeImageUrl.value = responseData["BadgeImageUrl"] ?? 'assets/images/VarifyBadge.png';
+
+          print("Badge awarded: ${badgePoints.value} points, Title: ${badgeTitle.value}");
+
+          badgeChecked.value = true; // ✅ Show the badge
         } else {
           badgePoints.value = -1;
           badgeTitle.value = "";
           badgeDescription.value = "";
           badgeImageUrl.value = "";
           print("Not enough answered questions. Badge set to -1.");
+
+          badgeChecked.value = true; // Show incomplete badge
         }
       } else {
+        // ❌ API returned an unsuccessful result
         badgePoints.value = -1;
         print("API returned unsuccessful result. Badge set to -1.");
+
+        badgeChecked.value = true; // Show incomplete badge
       }
-      badgeChecked.value = true;
+
+      // 🔥 Manually trigger UI update (only needed in some cases)
+      update();
+
+      // ⏳ Auto-hide badge after 5 seconds
       Future.delayed(Duration(seconds: 5), () {
         badgeChecked.value = false;
+        update();
       });
+
     } catch (e) {
       print("Error in checkGoalRatingForGoals: $e");
     }
   }
+
 
   void addOption(int categoryId, String questionId, String option) async {
     List<String> options = selectedOptions[questionId] ?? [];
