@@ -9,11 +9,11 @@ class GoalTargetScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.pink.shade50,
       appBar: AppBar(
         title: Text("Goal Targets"),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.pink.shade50,
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {

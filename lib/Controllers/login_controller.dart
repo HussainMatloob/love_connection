@@ -2,8 +2,6 @@ import 'package:get/get.dart';
 import 'package:love_connection/Screens/Service_selection_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ApiService/ApiService.dart';
-import '../Screens/SelectService.dart';
-import '../Screens/bottom_nav/BottomNavbar.dart';
 
 class LoginController extends GetxController {
   var isLoading = false.obs;
@@ -17,7 +15,6 @@ class LoginController extends GetxController {
   }
 
   final ApiService apiService = ApiService();
-
   Future<void> login(
     String email,
     String password,

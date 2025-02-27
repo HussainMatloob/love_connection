@@ -15,12 +15,12 @@ class AssessmentCategoriesScreen extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.pink.shade50,
       appBar: AppBar(
         title: Text("Assessment Categories",
             style: TextStyle(fontSize: screenWidth * 0.05)), // Responsive title
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.pink.shade50,
       ),
       body: Obx(() {
         if (controller.isLoading.value) {

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:love_connection/Screens/SelectService.dart';
 import 'package:love_connection/Screens/bottom_nav/Explore.dart';
 import 'package:love_connection/Screens/bottom_nav/Matches.dart';
 import 'package:love_connection/Screens/bottom_nav/Profile.dart';

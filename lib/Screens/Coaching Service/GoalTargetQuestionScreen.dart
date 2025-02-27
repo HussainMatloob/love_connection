@@ -17,11 +17,11 @@ class GoalTargetQuestionScreen extends StatelessWidget {
     controller.fetchGoalTargetQuestions(categoryId);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.pink.shade50,
       appBar: AppBar(
         title: Text(categoryName),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.pink.shade50,
       ),
       body: Stack(
         children: [

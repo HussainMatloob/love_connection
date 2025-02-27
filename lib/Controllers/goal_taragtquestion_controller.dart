@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ApiService/ApiService.dart';
@@ -117,7 +116,7 @@ class GoalTargetQuestionController extends GetxController {
           badgePoints.value = points;
           badgeTitle.value = responseData["BadgeTitle"] ?? "Congratulations!";
           badgeDescription.value = responseData["BadgeMessage"] ?? "You have unlocked your badge.";
-          badgeImageUrl.value = responseData["BadgeImageUrl"] ?? 'assets/images/VarifyBadge.png';
+          badgeImageUrl.value = responseData["BadgeImageUrl"] ?? 'assets/images/badge.png';
 
           print("Badge awarded: ${badgePoints.value} points, Title: ${badgeTitle.value}");
 

@@ -133,7 +133,7 @@ Widget buildAchievedBadge(dynamic controller) {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: LinearGradient(
-              colors: [Color(0xFFFF4081), Color(0xFFFF9100)],
+              colors: [Color(0xFFFB3879), Color(0xFFFB9918)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -149,7 +149,7 @@ Widget buildAchievedBadge(dynamic controller) {
             child: Image.asset(
               controller.badgeImageUrl.value.isNotEmpty
                   ? controller.badgeImageUrl.value
-                  : 'assets/images/VarifyBadge.png',
+                  : 'assets/images/badge.png',
               fit: BoxFit.contain,
             ),
           ),
@@ -197,18 +197,6 @@ Widget buildAchievedBadge(dynamic controller) {
         )),
         SizedBox(height: 20),
 
-        // 🎁 Claim Reward Button
-        ElevatedButton.icon(
-          onPressed: () => Get.back(),
-          icon: Icon(Icons.emoji_events, color: Colors.white),
-          label: Text("Claim Reward", style: TextStyle(color: Colors.white)),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.pinkAccent,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 14),
-            elevation: 6,
-          ),
-        ),
       ],
     ),
   );
