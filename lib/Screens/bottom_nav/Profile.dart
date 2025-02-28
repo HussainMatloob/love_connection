@@ -103,13 +103,25 @@ class _ProfileState extends State<Profile> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '${user['firstname'] ?? ""}  ${user['lastname'] ?? ""} - ${_getAge(user['dateofbirth'] ?? "")}',
-                            style: GoogleFonts.outfit(
-                              fontSize: headerFontSize,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                '${user['firstname'] ?? ""}  ${user['lastname'] ?? ""} - ${_getAge(user['dateofbirth'] ?? "")}',
+                                style: GoogleFonts.outfit(
+                                  fontSize: headerFontSize,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(width: 8), // Spacing between text and badge
+                              Image.asset(
+                                user['status'] == "verified"
+                                    ? "assets/images/VarifyBadge.png"
+                                    : "assets/images/unverified.png",
+                                width: 40, // Adjust size as needed
+                                height: 40,
+                              ),
+                            ],
                           ),
                           SizedBox(height: screenHeight * 0.001),
                           Text(
@@ -141,6 +153,7 @@ class _ProfileState extends State<Profile> {
                         ],
                       ),
                     ),
+
                     // Draggable indicator for Basic Info Bottom Sheet
                     Positioned(
                       bottom: 0,
