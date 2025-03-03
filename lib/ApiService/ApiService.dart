@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -25,8 +26,8 @@ class ApiService {
     required String maritalstatus,
     required String religion,
     required String religionlookingfor,
-    required String nationality,
-    required String nationalitylookingfor,
+    // required String nationality,
+    // required String nationalitylookingfor,
     required String education,
     required String educationlookingfor,
     required String employmentstatus,
@@ -35,12 +36,10 @@ class ApiService {
     required String citylookingfor,
     required String cast,
     required String castlookingfor,
-    // required String subcast,
-    // required String subcastlookingfor,
+    required String country,
+    required String countryLookingfor,
     required String sect,
     required String sectlookingfor,
-    // required String subsect,
-    // required String subsectlookingfor,
     required String ethnicity,
     required String ethnicitylookingfor,
     required String created_at,
@@ -67,22 +66,18 @@ class ApiService {
       request.fields['maritalstatus'] = maritalstatus;
       request.fields['religion'] = religion;
       request.fields['religionlookingfor'] = religionlookingfor;
-      request.fields['nationality'] = nationality;
-      request.fields['nationalitylookingfor'] = nationalitylookingfor;
       request.fields['education'] = education;
       request.fields['educationlookingfor'] = educationlookingfor;
       request.fields['employmentstatus'] = employmentstatus;
       request.fields['monthlyincome'] = monthlyincome;
+      request.fields['country'] = country;
+      request.fields['countrylookingfor'] = countryLookingfor;
       request.fields['city'] = city;
       request.fields['citylookingfor'] = citylookingfor;
       request.fields['cast'] = cast;
       request.fields['castlookingfor'] = castlookingfor;
-      // request.fields['subcast'] = subcast;
-      // request.fields['subcastlookingfor'] = subcastlookingfor;
       request.fields['sect'] = sect;
       request.fields['sectlookingfor'] = sectlookingfor;
-      // request.fields['subsect'] = subsect;
-      // request.fields['subsectlookingfor'] = subsectlookingfor;
       request.fields['ethnicity'] = ethnicity;
       request.fields['ethnicitylookingfor'] = ethnicitylookingfor;
       request.fields['created_at'] = created_at;
@@ -257,7 +252,7 @@ class ApiService {
 
   void printFullText(String text) {
     final pattern =
-        RegExp('.{1,800}'); // Breaks the text into chunks of 800 characters
+    RegExp('.{1,800}'); // Breaks the text into chunks of 800 characters
     for (final match in pattern.allMatches(text)) {
       if (kDebugMode) {
         print(match.group(0));
@@ -602,7 +597,7 @@ class ApiService {
   Future<List<AssessmentCategory>> fetchAssessmentCategories() async {
     try {
       final response =
-          await http.get(Uri.parse("$_baseUrl/getassesmentcategories.php"));
+      await http.get(Uri.parse("$_baseUrl/getassesmentcategories.php"));
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
@@ -869,4 +864,43 @@ class ApiService {
       };
     }
   }
+
+
+  static Future<Map<String, dynamic>> updateProfile(Map<String, String> data, List<Map<String, String>> files) async {
+    var request = http.MultipartRequest('POST', Uri.parse(_baseUrl));
+
+    log("API Request URL: $_baseUrl");
+    log("API Request Data: ${jsonEncode(data)}");
+
+    // Adding form fields
+    data.forEach((key, value) {
+      request.fields[key] = value;
+    });
+
+    // Adding file fields
+    for (var file in files) {
+      if (file['key'] != null && file['path'] != null) {
+        request.files.add(await http.MultipartFile.fromPath(file['key']!, file['path']!));
+        log("Adding file: Key - ${file['key']}, Path - ${file['path']}");
+      }
+    }
+
+    try {
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+      log("API Response Code: ${response.statusCode}");
+      log("API Response Body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to update profile');
+      }
+    } catch (e) {
+      log("API Error: ${e.toString()}");
+      throw Exception('Exception: ${e.toString()}');
+    }
+  }
+
+
 }

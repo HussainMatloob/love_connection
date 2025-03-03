@@ -43,6 +43,7 @@ class GetUsersController extends GetxController {
       // Get.snackbar('Error', e.toString());
     } finally {
       isLoading(false);
+      update();
     }
   }
 }

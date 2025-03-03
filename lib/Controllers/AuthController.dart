@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:love_connection/Controllers/image_controller.dart';
@@ -213,6 +214,8 @@ class AuthController extends GetxController {
     if (lastNameController.text.isEmpty) return 'Last Name is required.';
     if (height.value == null) return 'Height is required.';
     if (caste.value == null) return 'Caste is required.';
+    if(currentResidence.value == null) return 'Current Residence is required.';
+    if(lookingForResidence.value == null) return 'Looking For Residence is required.';
     if (cityOfResidence.value == null) return 'City of Residence is required.';
     if (dateOfBirth.value == null) return 'Date of Birth is required.';
     if (educationLevel.value == null) return 'Education Level is required.';
@@ -220,13 +223,14 @@ class AuthController extends GetxController {
     if (monthlyIncome.value == null) return 'Monthly income is required.';
     if (gender.value == null) return 'Gender is required.';
     if (maritalStatus.value == null) return 'Marital Status is required.';
-    // if (nationality.value == null) return 'Nationality is required.';
     if (religion.value == null) return 'Religion is required.';
+    if (lookingForReligion.value == null) return 'Looking for Religion is required.';
     if (profileImage.value == null) return 'Profile Image is required.';
     if (cninfront.value == null) return ' CNIC Front Image is required.';
     if (cninback.value == null) return ' CNIC Back Image is required.';
-    if (passportfront.value == null)
+    if (passportfront.value == null) {
       return ' Passport Front Image is required.';
+    }
     if (passportback.value == null) return ' Passport Back Image is required.';
     return ''; // No errors
   }
@@ -270,13 +274,9 @@ class AuthController extends GetxController {
         ethnicitylookingfor: lookingForEthnicity.value.toString(),
         gender: gender.value.toString(),
         maritalstatus: maritalStatus.value.toString(),
-        nationality: "  ",
-        nationalitylookingfor: lookingForNationality.value.toString(),
         religion: religion.value.toString(),
         religionlookingfor: lookingForReligion.value.toString(),
         sectlookingfor: lookingForSect.value.toString(),
-        // subcastlookingfor: lookingForCaste.value.toString(),
-        // subsectlookingfor: lookingForSubSect.value.toString(),
         email: emailController.value.toString(),
         password: passwordController.value.toString(),
         employmentstatus: employmentStatus.value.toString(),
@@ -290,14 +290,18 @@ class AuthController extends GetxController {
         passport_back: File(passportback.value!.path),
         selfieimage: File(selfieimage.value!.path),
         gallery: File(profileImage.value!.path),
+        country: currentResidence.value.toString(),
+        countryLookingfor: lookingForResidence.value.toString(),
       );
-      print(
-          "Registration Response Code: ===${response['ResponseMsg']} ==========");
+      if (kDebugMode) {
+        print("Registration Response Code: ===${response['ResponseMsg']} ==========");
+      }
 
       // Handle the response from the API service
       if (response['ResponseCode'] == '200') {
-        print(
-            "Registration Response Code: ===${response['ResponseCode'] == '200'} ==========");
+        if (kDebugMode) {
+          print("Registration Response Code: ===${response['ResponseCode'] == '200'} ==========");
+        }
         Get.snackbar(
           'Success',
           'Registration successful!',

@@ -78,6 +78,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/badge.png
+    - assets/images/Unverified.png
     - assets/svg/
     - assets/animations/
 

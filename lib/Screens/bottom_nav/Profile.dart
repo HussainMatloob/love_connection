@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:love_connection/Screens/UpdateProfile.dart';
 import 'package:love_connection/Screens/auth/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../ApiService/ApiService.dart';
@@ -34,9 +35,12 @@ class _ProfileState extends State<Profile> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     // Define relative font sizes
-    double headerFontSize = screenWidth * 0.08; // roughly equivalent to 32 on a 400px width screen
-    double subHeaderFontSize = screenWidth * 0.045; // roughly 18 on a 400px width screen
-    double detailFontSize = screenWidth * 0.04; // roughly 16 on a 400px width screen
+    double headerFontSize =
+        screenWidth * 0.08; // roughly equivalent to 32 on a 400px width screen
+    double subHeaderFontSize =
+        screenWidth * 0.045; // roughly 18 on a 400px width screen
+    double detailFontSize =
+        screenWidth * 0.04; // roughly 16 on a 400px width screen
 
     return SafeArea(
       child: Scaffold(
@@ -113,11 +117,12 @@ class _ProfileState extends State<Profile> {
                                   color: Colors.white,
                                 ),
                               ),
-                              SizedBox(width: 8), // Spacing between text and badge
+                              SizedBox(width: 8),
+                              // Spacing between text and badge
                               Image.asset(
                                 user['status'] == "verified"
                                     ? "assets/images/VarifyBadge.png"
-                                    : "assets/images/unverified.png",
+                                    : "assets/images/Unverified.png",
                                 width: 40, // Adjust size as needed
                                 height: 40,
                               ),
@@ -143,7 +148,7 @@ class _ProfileState extends State<Profile> {
                           ),
                           SizedBox(height: screenHeight * 0.005),
                           Text(
-                            '${user['nationality'] ?? ""}',
+                            '${user['country'] ?? ""}',
                             style: GoogleFonts.outfit(
                               color: Colors.white,
                               fontSize: detailFontSize,
@@ -242,7 +247,8 @@ class _ProfileState extends State<Profile> {
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          insetPadding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.07),
+          insetPadding:
+              EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.07),
           alignment: Alignment.topRight,
           child: Container(
             width: MediaQuery.of(context).size.width * 0.6,
@@ -260,15 +266,29 @@ class _ProfileState extends State<Profile> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                buildMenuItem(icon: Icons.person_outline, title: 'Saved Profiles', onTap: () {}),
-                buildMenuItem(icon: Icons.settings_outlined, title: 'Settings', onTap: () {}),
-                buildMenuItem(icon: Icons.share_outlined, title: 'Share App', onTap: () {}),
+                buildMenuItem(
+                    icon: Icons.person_outline,
+                    title: 'Saved Profiles',
+                    onTap: () {}),
+                buildMenuItem(
+                    icon: Icons.settings_outlined,
+                    title: 'Settings',
+                    onTap: () {}),
+                buildMenuItem(
+                    icon: Icons.share_outlined,
+                    title: 'Share App',
+                    onTap: () {}),
                 const Divider(),
-                buildMenuItem(icon: Icons.logout, title: 'Logout', onTap: () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  prefs.setString("userid", "");
-                  Get.offAll(LoginScreen(keyParam: 1,));
-                }),
+                buildMenuItem(
+                    icon: Icons.logout,
+                    title: 'Logout',
+                    onTap: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      prefs.setString("userid", "");
+                      Get.offAll(LoginScreen(
+                        keyParam: 1,
+                      ));
+                    }),
               ],
             ),
           ),
@@ -385,25 +405,38 @@ class _ProfileState extends State<Profile> {
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
-                            const Icon(Icons.edit, color: Colors.pink),
+                            GestureDetector(
+                                onTap: () {
+                                  Get.to(() => UpdateProfileScreen());
+                                },
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.pink,
+                                )),
                           ],
                         ),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow('Name', user['firstname'] + " " + user['lastname']),
+                        FormWidgets().buildBasicInfoRow(
+                            'Name', user['firstname'] + " " + user['lastname']),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow('Marital Status', user['maritalstatus']),
+                        FormWidgets().buildBasicInfoRow(
+                            'Marital Status', user['maritalstatus']),
                         const SizedBox(height: 10),
                         FormWidgets().buildBasicInfoRow('Sect', user['sect']),
                         const SizedBox(height: 10),
                         FormWidgets().buildBasicInfoRow('Caste', user['cast']),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow('Height', user['height']),
+                        FormWidgets()
+                            .buildBasicInfoRow('Height', user['height']),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow('Date of Birth', user['dateofbirth']),
+                        FormWidgets().buildBasicInfoRow(
+                            'Date of Birth', user['dateofbirth']),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow('Religion', user['religion']),
+                        FormWidgets()
+                            .buildBasicInfoRow('Religion', user['religion']),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow('Nationality', user['nationality']),
+                        FormWidgets()
+                            .buildBasicInfoRow('Nationality', user['country']),
                       ],
                     ),
                   ),
@@ -427,11 +460,14 @@ class _ProfileState extends State<Profile> {
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        FormWidgets().buildBasicInfoRow('Education', 'Bachelors in Computer Science'),
+                        FormWidgets().buildBasicInfoRow(
+                            'Education', 'Bachelors in Computer Science'),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow('Monthly Income', user['monthlyincome']),
+                        FormWidgets().buildBasicInfoRow(
+                            'Monthly Income', user['monthlyincome']),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow('Employment Status', user['employmentstatus']),
+                        FormWidgets().buildBasicInfoRow(
+                            'Employment Status', user['employmentstatus']),
                       ],
                     ),
                   ),
