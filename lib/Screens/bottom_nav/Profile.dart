@@ -88,7 +88,7 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     Positioned(
-                      bottom: 10.h,
+                      bottom: 15.h,
                       left: 12.w,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,10 +135,7 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                           SizedBox(height: 10.h),
-                          // Ensure spacing before Basic Info Button
 
-                          // Basic Info Section - FIXED LAYOUT
-                          // 📌 Swipe-Up Gesture for More Info (Full width)
                         ],
                       ),
                     ),
