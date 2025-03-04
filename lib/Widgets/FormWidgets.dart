@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:love_connection/ApiService/ApiService.dart';
@@ -138,7 +139,6 @@ class FormWidgets {
 
   static Widget buildForm(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
-
     return Padding(
       padding: EdgeInsets.all(Get.width * 0.05),
       child: SingleChildScrollView(
@@ -389,7 +389,7 @@ class FormWidgets {
     final ReligionController religionController = Get.put(ReligionController());
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(Get.width * 0.05),
+      padding: EdgeInsets.all(20.w), // Using ScreenUtil for padding
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -397,27 +397,20 @@ class FormWidgets {
             children: [
               Expanded(
                 child: Obx(() {
-                  // Force dependency by reading the length
                   final religions = religionController.religions;
-                  final _ = religions
-                      .length; // This line ensures Obx listens to changes.
-
+                  final _ = religions.length; // Ensure reactivity
                   return _buildDropdownField(
                     label: 'Religion',
                     value: authController.religion,
                     items: religions,
                   );
-
-                  print('Religions: $religions');
                 }),
               ),
-              SizedBox(width: Get.width * 0.02),
+              SizedBox(width: 10.w),
               Expanded(
                 child: Obx(() {
                   final religions = religionController.religions;
-                  final _ =
-                      religions.length; // Again, enforce the reactive read.
-
+                  final _ = religions.length;
                   return _buildDropdownField(
                     label: 'Looking for',
                     value: authController.lookingForReligion,
@@ -428,64 +421,42 @@ class FormWidgets {
             ],
           ),
 
-          SizedBox(height: Get.height * 0.02),
-          // Row(
-          //   children: [
-          //     Expanded(
-          //       child: _buildDropdownField(
-          //         label: 'Nationality',
-          //         value: authController.nationality,
-          //         items: authController.nationalityOptions,
-          //       ),
-          //     ),
-          //     SizedBox(width: Get.width * 0.02),
-          //     Expanded(
-          //       child: _buildDropdownField(
-          //         label: 'Looking for',
-          //         value: authController.lookingForNationality,
-          //         items: authController.nationalityOptions,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(height: Get.height * 0.02),
-
+          SizedBox(height: 20.h),
           _buildDropdownField(
             label: 'Height',
             value: authController.height,
             items: authController.heightOptions,
           ),
-          SizedBox(height: Get.height * 0.02),
+          SizedBox(height: 20.h),
           _buildDropdownField(
             label: 'Marital Status',
             value: authController.maritalStatus,
             items: authController.maritalStatusOptions,
           ),
-          SizedBox(height: Get.height * 0.02),
+          SizedBox(height: 20.h),
 
           Text(
             'Date of Birth',
             style: GoogleFonts.outfit(
               color: Colors.grey[600],
-              fontSize: Get.width * 0.04,
+              fontSize: 16.sp,
             ),
           ),
-          SizedBox(height: Get.height * 0.02),
+          SizedBox(height: 10.h),
           _buildDateOfBirth(authController),
-          SizedBox(height: Get.height * 0.02),
-
-          // add pink button
+          SizedBox(height: 20.h),
         ],
       ),
     );
   }
+
 
   static Widget buildPreferencesForm(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
     final CountryController countryController = Get.put(CountryController());
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.all(Get.width * 0.05),
+        padding: EdgeInsets.all(20.w), // Using ScreenUtil for padding
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -497,10 +468,9 @@ class FormWidgets {
               items: authController.educationOptions,
               hinttext: 'Select Education',
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 24.h),
 
             Obx(() {
-              // Ensure the reactive dependency is used by reading the list length.
               final countries = ["Any", ...countryController.countryList];
               final _ = countries.length;
 
@@ -512,28 +482,28 @@ class FormWidgets {
                 value: authController.currentResidence,
                 lookingForValue: authController.lookingForResidence,
                 items: countries,
-                // Now using the reactive country list with "Any" appended
                 hinttext: 'Select Country',
               );
             }),
 
-            SizedBox(height: 24),
+            SizedBox(height: 24.h),
             // Employment Status Dropdown
             FormWidgets().buildSingleDropdown(
               label: 'Employment Status',
               value: authController.employmentStatus,
               items: authController.employmentOptions,
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 24.h),
 
             // Income Selection Widget
             FormWidgets().buildIncomeSelection(),
-            SizedBox(height: 24),
+            SizedBox(height: 24.h),
           ],
         ),
       ),
     );
   }
+
 
   static Widget buildPreferencesForm2(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
@@ -541,122 +511,113 @@ class FormWidgets {
     final CastController castController = Get.put(CastController());
     final SectController sectController = Get.put(SectController());
 
-    return Padding(
-      padding: EdgeInsets.all(Get.width * 0.05),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // City of Current Residence
-          Obx(() {
-            // Force a reactive read by accessing the length
-            final cities = ["Any", ...cityController.cityOptions];
-            final _ = cities.length;
+    return Stack(
+      children: [
+        Padding(
+          padding: EdgeInsets.all(20.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Obx(() {
+                final cities = ["Any", ...cityController.cityOptions];
+                final _ = cities.length;
+                if (cityController.isLoading.value) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (cityController.cityOptions.isEmpty) {
+                  return buildDropdownPair(
+                    label: 'City of Current Residence',
+                    value: authController.cityOfResidence,
+                    lookingForValue: authController.lookingForCity,
+                    items: cityController.cityOptions,
+                    hinttext: 'No Cities found',
+                  );
+                }
+                return buildDropdownPair(
+                  label: 'City of Current Residence',
+                  value: authController.cityOfResidence,
+                  lookingForValue: authController.lookingForCity,
+                  items: cities,
+                  hinttext: 'Select City',
+                );
+              }),
+              SizedBox(height: 8.h),
 
-            print(cities.toString());
-            // handel loading state
-            if (cityController.isLoading.value) {
-              return Center(child: CircularProgressIndicator());
-            } else if (cityController.cityOptions.isEmpty) {
-              return buildDropdownPair(
-                label: 'City of Current Residence',
-                value: authController.cityOfResidence,
-                lookingForValue: authController.lookingForCity,
-                items: cityController.cityOptions,
-                hinttext: 'No Cities found',
-              );
-            }
+              Obx(() {
+                if (castController.isLoading.value) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (castController.errorMessage.isNotEmpty) {
+                  return Center(
+                    child: Text(
+                      castController.errorMessage.value,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  );
+                }
+                final List<String> casteNames = castController.castList
+                    .map<String>((cast) => cast["cast"].toString())
+                    .toList();
+                return buildDropdownPair(
+                  label: 'Caste',
+                  value: authController.caste,
+                  lookingForValue: authController.lookingForCaste,
+                  items: casteNames,
+                  hinttext: casteNames.isEmpty ? 'No Cast found' : 'Select Cast',
+                );
+              }),
+              SizedBox(height: 8.h),
 
-            return buildDropdownPair(
-              label: 'City of Current Residence',
-              value: authController.cityOfResidence,
-              lookingForValue: authController.lookingForCity,
-              items: cities,
-              hinttext: 'Select City',
-            );
-          }),
-          SizedBox(height: 8),
+              Obx(() {
+                if (sectController.isLoading.value) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (sectController.errorMessage.isNotEmpty) {
+                  return Center(
+                    child: Text(
+                      sectController.errorMessage.value,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  );
+                }
+                return buildDropdownPair(
+                  label: 'Sect',
+                  value: authController.sect,
+                  lookingForValue: authController.lookingForSect,
+                  items: sectController.sectList,
+                  hinttext: sectController.sectList.isEmpty
+                      ? 'No Sect found'
+                      : 'Select Sect',
+                );
+              }),
+              SizedBox(height: 8.h),
 
-          Obx(() {
-            if (castController.isLoading.value) {
-              return Center(child: CircularProgressIndicator());
-            }
-
-            if (castController.errorMessage.isNotEmpty) {
-              return Center(
-                child: Text(
-                  castController.errorMessage.value,
-                  style: TextStyle(color: Colors.red),
-                ),
-              );
-            }
-
-            // Extract caste names from the list of maps
-            final List<String> casteNames = castController.castList
-                .map<String>((cast) =>
-                    cast["cast"].toString()) // Extract "cast" as String
-                .toList();
-
-            return buildDropdownPair(
-              label: 'Caste',
-              value: authController.caste,
-              lookingForValue: authController.lookingForCaste,
-              items: casteNames,
-              // Pass the extracted caste names as a List<String>
-              hinttext: casteNames.isEmpty ? 'No Cast found' : 'Select Cast',
-            );
-          }),
-
-          SizedBox(height: 8),
-
-          // Sect
-          Obx(() {
-            if (sectController.isLoading.value) {
-              return Center(child: CircularProgressIndicator());
-            }
-
-            if (sectController.errorMessage.isNotEmpty) {
-              return Center(
-                child: Text(
-                  sectController.errorMessage.value,
-                  style: TextStyle(color: Colors.red),
-                ),
-              );
-            }
-
-            return buildDropdownPair(
-              label: 'Sect',
-              value: authController.sect,
-              lookingForValue: authController.lookingForSect,
-              items: sectController.sectList,
-              hinttext: sectController.sectList.isEmpty
-                  ? 'No Sect found'
-                  : 'Select Sect',
-            );
-          }),
-
-          SizedBox(height: 8),
-
-          // Ethnicity
-          buildDropdownPair(
-              label: 'Ethnicity',
-              value: authController.ethnicity,
-              lookingForValue: authController.lookingForEthnicity,
-              items: authController.ethnicityOptions,
-              hinttext: "Select Ethnicity"),
-          SizedBox(height: 20),
-
-          PinkButton(
-              text: "Next",
-              onTap: () {
-                if (authController.cityOfResidence.value == null ||
-                    authController.lookingForCity.value == null ||
-                    authController.caste.value == null ||
-                    authController.lookingForCaste.value == null ||
-                    authController.sect.value == null ||
-                    authController.lookingForSect.value == null ||
-                    authController.ethnicity.value == null ||
-                    authController.lookingForEthnicity.value == null) {
-                  {
+              buildDropdownPair(
+                  label: 'Ethnicity',
+                  value: authController.ethnicity,
+                  lookingForValue: authController.lookingForEthnicity,
+                  items: authController.ethnicityOptions,
+                  hinttext: "Select Ethnicity"),
+              SizedBox(height: 20.h),
+            ],
+          ),
+        ),
+        Positioned(
+          bottom: 20.h,
+          left: 0,
+          right: 0,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: PinkButton(
+                text: "Next",
+                onTap: () {
+                  if (authController.cityOfResidence.value == null ||
+                      authController.lookingForCity.value == null ||
+                      authController.caste.value == null ||
+                      authController.lookingForCaste.value == null ||
+                      authController.sect.value == null ||
+                      authController.lookingForSect.value == null ||
+                      authController.ethnicity.value == null ||
+                      authController.lookingForEthnicity.value == null) {
                     Get.snackbar(
                       'Error',
                       'Please fill in all required education and residence details.',
@@ -664,14 +625,14 @@ class FormWidgets {
                       backgroundColor: Colors.red.withOpacity(0.8),
                       colorText: Colors.white,
                     );
-                    return; // Stop navigation
+                    return;
+                  } else {
+                    Get.to(Profilepicture());
                   }
-                } else {
-                  Get.to(Profilepicture());
-                }
-              }),
-        ],
-      ),
+                }),
+          ),
+        ),
+      ],
     );
   }
 

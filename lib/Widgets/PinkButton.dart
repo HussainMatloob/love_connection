@@ -20,7 +20,7 @@ class PinkButton extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.pink[400], // Button color
-            borderRadius: BorderRadius.circular(40), // Rounded corners
+            borderRadius: BorderRadius.circular(16), // Rounded corners
           ),
           padding: EdgeInsets.symmetric(vertical: 16),
           alignment: Alignment.center,

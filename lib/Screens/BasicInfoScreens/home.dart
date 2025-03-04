@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -107,7 +108,10 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text(
           'Basic Information',
-          style: GoogleFonts.outfit(color: Colors.black),
+          style: GoogleFonts.outfit(
+            color: Colors.black,
+            fontSize: 18.sp, // Responsive font size
+          ),
         ),
         centerTitle: true,
       ),
@@ -116,9 +120,10 @@ class _HomeState extends State<Home> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.all(Get.width * 0.05),
+              padding: EdgeInsets.all(20.w), // Responsive padding
               child: FormWidgets.buildHomeTabs(
-                  controller, pageController, 'Basic', 'Preferences'),
+                controller, pageController, 'Basic', 'Preferences',
+              ),
             ),
             Expanded(
               child: PageView(
@@ -134,13 +139,13 @@ class _HomeState extends State<Home> {
             ),
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: EdgeInsets.symmetric(vertical: 10.h), // Responsive padding
                 child: SmoothPageIndicator(
                   controller: pageController,
                   count: 4,
-                  effect: const WormEffect(
-                    dotHeight: 8,
-                    dotWidth: 8,
+                  effect: WormEffect(
+                    dotHeight: 8.h, // Responsive dot size
+                    dotWidth: 8.w,
                     activeDotColor: Colors.pinkAccent,
                     dotColor: Colors.grey,
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import 'package:get/get.dart';
 import '../Controllers/onboardingController.dart';
 
@@ -68,14 +69,13 @@ class OnboardingScreen extends StatelessWidget {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom: 120),
+                        padding: EdgeInsets.only(bottom: 120.h),
                         child: Container(
-                          width: MediaQuery.of(context).size.width * 0.65, // 75% of screen width
-                          height: MediaQuery.of(context).size.width * 0.65, // Equal height
-                          // margin: const EdgeInsets.all(24),
+                          width: 0.75.sw, // 75% of screen width
+                          height: 0.75.sw, // Square box based on width
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.6),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -84,18 +84,18 @@ class OnboardingScreen extends StatelessWidget {
                               Text(
                                 data['title']!,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 30,
+                                style: TextStyle(
+                                  fontSize: 30.sp,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
                               ),
-                              const SizedBox(height: 15), // Space between text
+                              SizedBox(height: 15.h), // Space between text
                               Text(
                                 data['subtitle']!,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 16,
+                                style: TextStyle(
+                                  fontSize: 16.sp,
                                   color: Colors.white70,
                                   height: 1.4,
                                 ),
@@ -112,7 +112,7 @@ class OnboardingScreen extends StatelessWidget {
 
             // Page Indicator (Fixed)
             Positioned(
-              bottom: 100,
+              bottom: 100.h,
               left: 0,
               right: 0,
               child: Obx(
@@ -122,14 +122,14 @@ class OnboardingScreen extends StatelessWidget {
                     onboardingData.length,
                         (index) => AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
-                      margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                      width: controller.currentPage.value == index ? 14 : 8,
-                      height: 8,
+                      margin: EdgeInsets.symmetric(horizontal: 4.w),
+                      width: controller.currentPage.value == index ? 14.w : 8.w,
+                      height: 8.h,
                       decoration: BoxDecoration(
                         color: controller.currentPage.value == index
                             ? Colors.pinkAccent
                             : Colors.grey,
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(4.r),
                       ),
                     ),
                   ),
@@ -139,26 +139,26 @@ class OnboardingScreen extends StatelessWidget {
 
             // Skip and Next Buttons (Fixed)
             Positioned(
-              bottom: 24,
-              left: 24,
-              right: 24,
+              bottom: 24.h,
+              left: 24.w,
+              right: 24.w,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
                     onPressed: controller.skipOnboarding,
-                    child: const Text(
+                    child: Text(
                       'Skip',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      style: TextStyle(color: Colors.white, fontSize: 16.sp),
                     ),
                   ),
                   FloatingActionButton(
                     onPressed: controller.goToNextPage,
                     backgroundColor: Colors.pinkAccent,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
+                      borderRadius: BorderRadius.circular(50.r),
                     ),
-                    child: const Icon(Icons.arrow_forward, color: Colors.white),
+                    child: Icon(Icons.arrow_forward, color: Colors.white, size: 24.sp),
                   ),
                 ],
               ),

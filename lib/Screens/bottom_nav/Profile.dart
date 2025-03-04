@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -8,6 +7,7 @@ import 'package:lottie/lottie.dart';
 import 'package:love_connection/Screens/UpdateProfile.dart';
 import 'package:love_connection/Screens/auth/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../ApiService/ApiService.dart';
 import '../../Controllers/UserInfoController.dart';
 import '../../Widgets/FormWidgets.dart';
@@ -30,62 +30,49 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    // Get screen dimensions for responsiveness
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    // Define relative font sizes
-    double headerFontSize =
-        screenWidth * 0.08; // roughly equivalent to 32 on a 400px width screen
-    double subHeaderFontSize =
-        screenWidth * 0.045; // roughly 18 on a 400px width screen
-    double detailFontSize =
-        screenWidth * 0.04; // roughly 16 on a 400px width screen
-
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Profile',
-            style: GoogleFonts.outfit(
-              color: Colors.black,
-              fontWeight: FontWeight.w400,
-              fontSize: screenWidth * 0.055, // responsive title size
-            ),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          actions: [
-            IconButton(
-              onPressed: () {
-                showCustomDialog(context);
-              },
-              icon: const Icon(Icons.menu),
-            ),
-          ],
-        ),
-        body: Obx(() {
-          if (userController.isLoading.value) {
-            return Center(
-              child: Lottie.asset(
-                "assets/animations/circularloader.json",
-                height: screenHeight * 0.2,
-                width: screenHeight * 0.2,
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      builder: (context, child) {
+        return SafeArea(
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Profile',
+                style: GoogleFonts.outfit(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 18.sp,
+                ),
               ),
-            );
-          }
+              centerTitle: true,
+              backgroundColor: Colors.white,
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    showCustomDialog(context);
+                  },
+                  icon: const Icon(Icons.menu),
+                ),
+              ],
+            ),
+            body: Obx(() {
+              if (userController.isLoading.value) {
+                return Center(
+                  child: Lottie.asset(
+                    "assets/animations/circularloader.json",
+                    height: 100.h,
+                    width: 100.h,
+                  ),
+                );
+              }
 
-          if (userController.userData.value != null) {
-            final user = userController.userData.value!;
-            return Column(
-              children: [
-                // Header Section with background image and profile details
-                Stack(
+              if (userController.userData.value != null) {
+                final user = userController.userData.value!;
+                return Stack(
                   children: [
-                    // Background Image
                     SizedBox(
-                      width: screenWidth,
-                      height: screenHeight * 0.83,
+                      width: 1.sw,
+                      height: 1.sh - 60.h, // Dynamically adjusting height
                       child: CachedNetworkImage(
                         imageUrl: _getImageUrl(user['profileimage']),
                         fadeInCurve: Curves.easeIn,
@@ -100,132 +87,95 @@ class _ProfileState extends State<Profile> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    // Profile Details Positioned above the background image
                     Positioned(
-                      bottom: screenHeight * 0.03,
-                      left: screenWidth * 0.04,
+                      bottom: 10.h,
+                      left: 12.w,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
                               Text(
-                                '${user['firstname'] ?? ""}  ${user['lastname'] ?? ""} - ${_getAge(user['dateofbirth'] ?? "")}',
+                                '${user['firstname'] ?? ""} ${user['lastname'] ?? ""} - ${_getAge(user['dateofbirth'] ?? "")}',
                                 style: GoogleFonts.outfit(
-                                  fontSize: headerFontSize,
+                                  fontSize: 22.sp,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,
                                 ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(width: 8),
-                              // Spacing between text and badge
+                              SizedBox(width: 5.w),
                               Image.asset(
                                 user['status'] == "verified"
                                     ? "assets/images/VarifyBadge.png"
                                     : "assets/images/Unverified.png",
-                                width: 40, // Adjust size as needed
-                                height: 40,
+                                width: 30.w,
+                                height: 30.h,
                               ),
                             ],
                           ),
-                          SizedBox(height: screenHeight * 0.001),
+                          SizedBox(height: 2.h),
+                          // Ensure spacing
                           Text(
-                            '${user['maritalstatus'] ?? ""} , ${user['education'] ?? ""}',
+                            '${user['maritalstatus'] ?? ""}, ${user['education'] ?? ""}',
                             style: GoogleFonts.outfit(
                               color: Colors.white,
-                              fontSize: subHeaderFontSize,
+                              fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.005),
+                          SizedBox(height: 3.h),
+                          // Ensure spacing
                           Text(
-                            '${user['employmentstatus'] ?? ""}',
+                            '${user['country'] ?? "No country available"}',
                             style: GoogleFonts.outfit(
                               color: Colors.white,
-                              fontSize: detailFontSize,
-                              fontWeight: FontWeight.w400,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.005),
-                          Text(
-                            '${user['country'] ?? ""}',
-                            style: GoogleFonts.outfit(
-                              color: Colors.white,
-                              fontSize: detailFontSize,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
+                          SizedBox(height: 10.h),
+                          // Ensure spacing before Basic Info Button
+
+                          // Basic Info Section - FIXED LAYOUT
+                          // 📌 Swipe-Up Gesture for More Info (Full width)
                         ],
                       ),
                     ),
-
-                    // Draggable indicator for Basic Info Bottom Sheet
                     Positioned(
                       bottom: 0,
-                      right: screenWidth * 0.1,
-                      left: screenWidth * 0.1,
+                      left: Get.width * 0.1,
+                      right: Get.width * 0.1,
                       child: GestureDetector(
                         onVerticalDragUpdate: (details) {
-                          if (details.primaryDelta != null &&
-                              details.primaryDelta! < -10) {
+                          if (details.primaryDelta! < -10) {
                             showBasicInfoBottomSheet(context);
                           }
                         },
-                        child: Container(
-                          width: screenWidth * 0.6,
-                          height: screenHeight * 0.04,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(25),
-                              topRight: Radius.circular(25),
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: screenWidth * 0.125,
-                                height: 2,
-                                color: Colors.black,
-                              ),
-                              SizedBox(height: screenHeight * 0.005),
-                              Text(
-                                'Basic Info',
-                                style: GoogleFonts.outfit(
-                                  color: Colors.black,
-                                  fontSize: screenWidth * 0.04,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        child: _buildSwipeUpIndicator(),
                       ),
                     ),
                   ],
-                ),
-              ],
-            );
-          }
+                );
+              }
 
-          return const Center(child: Text('No user data available.'));
-        }),
-      ),
+              return const Center(child: Text('No user data available.'));
+            }),
+          ),
+        );
+      },
     );
   }
 
   String _getImageUrl(String relativePath) {
-    const baseUrl =
-        'https://projects.funtashtechnologies.com/gomeetapi/'; // Replace with your base URL
+    const baseUrl = 'https://projects.funtashtechnologies.com/gomeetapi/';
     return baseUrl + relativePath;
   }
 
   int _getAge(String date) {
     if (date == '00000000' || date.isEmpty || date == 'null') {
-      return 0; // Unknown age
+      return 0;
     }
-
     try {
       final birthDate = DateTime.parse(date);
       final currentDate = DateTime.now();
@@ -237,8 +187,31 @@ class _ProfileState extends State<Profile> {
       }
       return age;
     } catch (e) {
-      return 0; // Error or invalid date format
+      return 0;
     }
+  }
+
+  Widget _buildSwipeUpIndicator() {
+    return Container(
+      width: 120.w,
+      height: 30.h,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(width: 50.w, height: 3.h, color: Colors.black),
+          SizedBox(height: 5.h),
+          Text(
+            "Basic Info",
+            style: GoogleFonts.outfit(
+                fontSize: 16.sp, fontWeight: FontWeight.w400),
+          ),
+        ],
+      ),
+    );
   }
 
   void showCustomDialog(BuildContext context) {
@@ -479,4 +452,4 @@ class _ProfileState extends State<Profile> {
       },
     );
   }
-}
+} //MAKE IT FULL RESPONSIVE FOR ALL TYPE OF DEVICES SCREENC

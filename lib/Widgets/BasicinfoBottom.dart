@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -98,14 +99,14 @@ class BasicInfoBottomSheet extends StatelessWidget {
 
   Widget _buildInfoRow(String label1, String value1, String label2, String value2) {
     return Container(
-      width: Get.width ,
-      height: Get.height * 0.08,
+      width: 1.sw, // Full screen width
+      height: 60.h, // Responsive height
       decoration: BoxDecoration(
         color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(Get.width * 0.02),
+        borderRadius: BorderRadius.circular(8.r), // Responsive border radius
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h), // Responsive padding
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -113,20 +114,46 @@ class BasicInfoBottomSheet extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label1, style: GoogleFonts.outfit(color: Colors.grey, fontSize: 16)),
-                  SizedBox(height: 5),
-                  Text(value1, style: GoogleFonts.outfit(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(
+                    label1,
+                    style: GoogleFonts.outfit(
+                      color: Colors.grey,
+                      fontSize: 14.sp, // Responsive font size
+                    ),
+                  ),
+                  SizedBox(height: 4.h), // Responsive spacing
+                  Text(
+                    value1,
+                    style: GoogleFonts.outfit(
+                      color: Colors.black,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
-            SizedBox(width: Get.width * 0.18),
+            SizedBox(width: 20.w), // Responsive spacing between columns
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label2, style: GoogleFonts.outfit(color: Colors.grey, fontSize: 16)),
-                  SizedBox(height: 5),
-                  Text(value2, style: GoogleFonts.outfit(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(
+                    label2,
+                    style: GoogleFonts.outfit(
+                      color: Colors.grey,
+                      fontSize: 14.sp, // Responsive font size
+                    ),
+                  ),
+                  SizedBox(height: 4.h), // Responsive spacing
+                  Text(
+                    value2,
+                    style: GoogleFonts.outfit(
+                      color: Colors.black,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -135,6 +162,7 @@ class BasicInfoBottomSheet extends StatelessWidget {
       ),
     );
   }
+
 
   Widget _buildSingleInfoRow(String label, String value) {
     return Container(
