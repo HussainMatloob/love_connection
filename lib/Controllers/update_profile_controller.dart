@@ -5,10 +5,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'AuthController.dart';
 
 class ProfileController extends GetxController {
   var isLoading = false.obs;
   var userId = ''.obs;
+  final AuthController authController = Get.find<AuthController>();
 
   @override
   void onInit() {
@@ -18,10 +20,9 @@ class ProfileController extends GetxController {
 
   Future<void> loadUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId.value = prefs.getString("userid") ?? "";
+    userId.value = prefs.getString("userid")! ;
   }
 
-  // TextEditingControllers for all required fields
   final Map<String, TextEditingController> controllers = {
     'firstname': TextEditingController(),
     'lastname': TextEditingController(),
@@ -30,37 +31,10 @@ class ProfileController extends GetxController {
     'gender': TextEditingController(),
     'dateofbirth': TextEditingController(),
     'height': TextEditingController(),
-    'maritalstatus': TextEditingController(),
-    'religion': TextEditingController(),
-    'religionlookingfor': TextEditingController(),
-    'country': TextEditingController(),
-    'countrylookingfor': TextEditingController(),
-    'education': TextEditingController(),
-    'educationlookingfor': TextEditingController(),
-    'employmentstatus': TextEditingController(),
-    'monthlyincome': TextEditingController(),
-    'city': TextEditingController(),
-    'citylookingfor': TextEditingController(),
-    'cast': TextEditingController(),
-    'castlookingfor': TextEditingController(),
-    'subcast': TextEditingController(),
-    'subcastlookingfor': TextEditingController(),
-    'sect': TextEditingController(),
-    'sectlookingfor': TextEditingController(),
-    'subsect': TextEditingController(),
-    'subsectlookingfor': TextEditingController(),
-    'ethnicity': TextEditingController(),
-    'ethnicitylookingfor': TextEditingController(),
   };
 
-  // Image files
   final Map<String, Rx<File?>> imageFiles = {
     'profileimage': Rx<File?>(null),
-    'cnic_front': Rx<File?>(null),
-    'cnic_back': Rx<File?>(null),
-    'passport_front': Rx<File?>(null),
-    'passport_back': Rx<File?>(null),
-    'selfieimage': Rx<File?>(null),
   };
 
   Future<void> pickImage(ImageSource source, String field) async {
@@ -70,16 +44,52 @@ class ProfileController extends GetxController {
     }
   }
 
-  Future<void> captureSelfie() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      imageFiles['selfieimage']?.value = File(pickedFile.path);
+  bool validateAllFields() {
+    bool allFieldsValid = true;
+
+    controllers.forEach((key, controller) {
+      if (controller.text.trim().isEmpty) {
+        print("Missing field: $key");
+        allFieldsValid = false;
+      }
+    });
+
+    if (authController.educationLevel.value?.trim().isEmpty ?? true) {
+      print("Missing field: educationLevel");
+      allFieldsValid = false;
     }
+    if (authController.religion.value?.trim().isEmpty ?? true) {
+      print("Missing field: religion");
+      allFieldsValid = false;
+    }
+    if (authController.caste.value?.trim().isEmpty ?? true) {
+      print("Missing field: caste");
+      allFieldsValid = false;
+    }
+    if (authController.sect.value?.trim().isEmpty ?? true) {
+      print("Missing field: sect");
+      allFieldsValid = false;
+    }
+    if (authController.currentResidence.value?.trim().isEmpty ?? true) {
+      print("Missing field: currentResidence");
+      allFieldsValid = false;
+    }
+
+    // FIX: Preserve value, only assign default if NULL or empty
+    if (authController.cityOfResidence.value == null || authController.cityOfResidence.value!.trim().isEmpty) {
+      print("Missing field: cityOfResidence. Assigning default.");
+      authController.cityOfResidence.value = "Unknown";
+      allFieldsValid = false;
+    }
+
+    if (authController.ethnicity.value?.trim().isEmpty ?? true) {
+      print("Missing field: ethnicity");
+      allFieldsValid = false;
+    }
+
+    return allFieldsValid;
   }
 
-  bool validateAllFields() {
-    return controllers.values.every((controller) => controller.text.isNotEmpty);
-  }
 
   Future<void> updateUserProfile() async {
     if (!validateAllFields()) {
@@ -87,7 +97,14 @@ class ProfileController extends GetxController {
       return;
     }
 
-    if (userId.value.isEmpty) {
+    final prefs = await SharedPreferences.getInstance();
+    final String? userId = prefs.getString('userid');
+    if (userId == null || userId.isEmpty) {
+      print("checkGoalRatingForGoals: userId not found");
+      return;
+    }
+
+    if (userId.isEmpty) {
       Get.snackbar("Error", "User ID is missing", backgroundColor: Colors.red, colorText: Colors.white);
       return;
     }
@@ -122,8 +139,15 @@ class ProfileController extends GetxController {
 
   Map<String, String> getProfileData() {
     return {
-      'userid': userId.value,
-      ...controllers.map((key, controller) => MapEntry(key, controller.text)),
+      'id': userId.toString(),
+      ...controllers.map((key, controller) => MapEntry(key, controller.text.trim())),
+      'education': authController.educationLevel.value?.trim() ?? '',
+      'religion': authController.religion.value?.trim() ?? '',
+      'cast': authController.caste.value?.trim() ?? '',
+      'sect': authController.sect.value?.trim() ?? '',
+      'country': authController.currentResidence.value?.trim() ?? '',
+      'city': authController.cityOfResidence.value?.trim().isNotEmpty == true ? authController.cityOfResidence.value!.trim() : "Unknown", // Default if empty
+      'ethnicity': authController.ethnicity.value?.trim() ?? '',
     };
   }
 }
