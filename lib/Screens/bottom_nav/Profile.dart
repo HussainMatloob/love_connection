@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../ApiService/ApiService.dart';
 import '../../Controllers/UserInfoController.dart';
 import '../../Widgets/FormWidgets.dart';
+import 'package:country_flags/country_flags.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -30,6 +31,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    userController.fetchUserData();
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       builder: (context, child) {
@@ -87,8 +89,29 @@ class _ProfileState extends State<Profile> {
                         fit: BoxFit.cover,
                       ),
                     ),
+
+                    // add linear gradient color to the image at bottom
                     Positioned(
-                      bottom: 15.h,
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: 1.sh * 0.2,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.7),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    Positioned(
+                      bottom: 16.h,
                       left: 12.w,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +127,7 @@ class _ProfileState extends State<Profile> {
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(width: 5.w),
+                              SizedBox(width: 3.w),
                               Image.asset(
                                 user['status'] == "verified"
                                     ? "assets/images/VarifyBadge.png"
@@ -114,7 +137,7 @@ class _ProfileState extends State<Profile> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 2.h),
+                          SizedBox(height: 1.h),
                           // Ensure spacing
                           Text(
                             '${user['maritalstatus'] ?? ""}, ${user['education'] ?? ""}',
@@ -124,21 +147,36 @@ class _ProfileState extends State<Profile> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          SizedBox(height: 3.h),
+                          SizedBox(height: 1.h),
                           // Ensure spacing
-                          Text(
-                            '${user['country'] ?? "No country available"}',
-                            style: GoogleFonts.outfit(
-                              color: Colors.white,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          Row(
+                            children: [
+                              // ✅ Display country name
+                              Text(
+                                '${user['country'] ?? "No country available"}',
+                                style: GoogleFonts.outfit(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(width: 8.w),
+
+                              // ✅ Display country flag
+                              if (user['country'] != null)
+                                CountryFlag.fromCountryCode(
+                                  getCountryCode(user['country']!),
+                                  height: 16.h,
+                                  width: 24.w,
+                                ),
+                            ],
                           ),
-                          SizedBox(height: 10.h),
+                          SizedBox(height: 16.h),
 
                         ],
                       ),
                     ),
+
                     Positioned(
                       bottom: 0,
                       left: Get.width * 0.1,
@@ -449,4 +487,120 @@ class _ProfileState extends State<Profile> {
       },
     );
   }
+
+  final Map<String, String> countryNameToCode = {
+    "Albania": "AL",
+    "Angola": "AO",
+    "Argentina": "AR",
+    "Austria": "AT",
+    "Australia": "AU",
+    "Bosnia": "BA",
+    "Belgium": "BE",
+    "Burkina Faso": "BF",
+    "Bulgaria": "BG",
+    "Burundi": "BI",
+    "Bolivia": "BO",
+    "Brazil": "BR",
+    "Botswana": "BW",
+    "Belarus": "BY",
+    "Canada": "CA",
+    "Congo (Kinshasa)": "CD",
+    "Switzerland": "CH",
+    "Chile": "CL",
+    "Cameroon": "CM",
+    "China": "CN",
+    "Colombia": "CO",
+    "Cuba": "CU",
+    "Germany": "DE",
+    "Denmark": "DK",
+    "Dominican Republic": "DO",
+    "Algeria": "DZ",
+    "Ecuador": "EC",
+    "Egypt": "EG",
+    "Spain": "ES",
+    "Ethiopia": "ET",
+    "Finland": "FI",
+    "France": "FR",
+    "United Kingdom": "GB",
+    "Guinea": "GN",
+    "Greece": "GR",
+    "Guatemala": "GT",
+    "Croatia": "HR",
+    "Hungary": "HU",
+    "Indonesia": "ID",
+    "Ireland": "IE",
+    "India": "IN",
+    "Iraq": "IQ",
+    "Iran": "IR",
+    "Italy": "IT",
+    "Jordan": "JO",
+    "Japan": "JP",
+    "Kenya": "KE",
+    "Kyrgyzstan": "KG",
+    "Laos": "LA",
+    "Lebanon": "LB",
+    "Lithuania": "LT",
+    "Luxembourg": "LU",
+    "Latvia": "LV",
+    "Libya": "LY",
+    "Moldova": "MD",
+    "Montenegro": "ME",
+    "Madagascar": "MG",
+    "Macedonia": "MK",
+    "Mali": "ML",
+    "Burma": "MM",
+    "Mongolia": "MN",
+    "Malta": "MT",
+    "Malawi": "MW",
+    "Mexico": "MX",
+    "Malaysia": "MY",
+    "Mozambique": "MZ",
+    "Namibia": "NA",
+    "Niger": "NE",
+    "Netherlands": "NL",
+    "Norway": "NO",
+    "New Zealand": "NZ",
+    "Panama": "PA",
+    "Peru": "PE",
+    "Philippines": "PH",
+    "Pakistan": "PK",
+    "Poland": "PL",
+    "Puerto Rico": "PR",
+    "Portugal": "PT",
+    "Paraguay": "PY",
+    "Romania": "RO",
+    "Serbia": "RS",
+    "Russia": "RU",
+    "Saudi Arabia": "SA",
+    "Sudan": "SD",
+    "Sweden": "SE",
+    "Slovenia": "SI",
+    "Slovakia": "SK",
+    "Somalia": "SO",
+    "Syria": "SY",
+    "Chad": "TD",
+    "Thailand": "TH",
+    "Tajikistan": "TJ",
+    "Tunisia": "TN",
+    "Turkey": "TR",
+    "Taiwan": "TW",
+    "Tanzania": "TZ",
+    "Ukraine": "UA",
+    "Uganda": "UG",
+    "United States of America": "US",
+    "Uruguay": "UY",
+    "Uzbekistan": "UZ",
+    "Venezuela": "VE",
+    "Vietnam": "VN",
+    "Kosovo": "XK",
+    "Yemen": "YE",
+    "South Africa": "ZA",
+    "Zambia": "ZM",
+    "Nepal": "NP",
+  };
+
+  String getCountryCode(String countryName) {
+    return countryNameToCode[countryName] ?? "US"; // Default to "US" if not found
+  }
+
 } //MAKE IT FULL RESPONSIVE FOR ALL TYPE OF DEVICES SCREENC

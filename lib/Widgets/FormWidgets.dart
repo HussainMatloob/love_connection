@@ -55,8 +55,6 @@ class FormWidgets {
           onTap: () {
             controller.Rcurrentpage.value = index;
             // Update the selected tab
-
-
           },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
@@ -82,7 +80,6 @@ class FormWidgets {
       );
     });
   }
-
 
   static Widget buildHomeTabs(BasicInfoController controller,
       PageController pageController, String tab1, String tab2) {
@@ -255,7 +252,7 @@ class FormWidgets {
     });
   }
 
-  static Widget _buildDateOfBirth(AuthController controller) {
+  static Widget buildDateOfBirth(AuthController controller) {
     return GestureDetector(
       onTap: () async {
         final date = await showDatePicker(
@@ -277,10 +274,12 @@ class FormWidgets {
         decoration: BoxDecoration(
           color: Colors.grey[100],
           borderRadius: BorderRadius.circular(Get.width * 0.02),
-          border: Border.all(color: Colors.blue, width: 1),
+          border: Border.all(color: Colors.transparent, width: 0),
         ),
         child: Row(
           children: [
+            Icon(Icons.calendar_today, color: Colors.pink),
+            SizedBox(width: Get.width * 0.02),
             Expanded(
               child: Obx(() {
                 final date = controller.dateOfBirth.value;
@@ -294,7 +293,6 @@ class FormWidgets {
                 );
               }),
             ),
-            Icon(Icons.calendar_today, color: Colors.blue),
           ],
         ),
       ),
@@ -420,7 +418,6 @@ class FormWidgets {
               ),
             ],
           ),
-
           SizedBox(height: 20.h),
           _buildDropdownField(
             label: 'Height',
@@ -434,7 +431,6 @@ class FormWidgets {
             items: authController.maritalStatusOptions,
           ),
           SizedBox(height: 20.h),
-
           Text(
             'Date of Birth',
             style: GoogleFonts.outfit(
@@ -443,13 +439,12 @@ class FormWidgets {
             ),
           ),
           SizedBox(height: 10.h),
-          _buildDateOfBirth(authController),
+          buildDateOfBirth(authController),
           SizedBox(height: 20.h),
         ],
       ),
     );
   }
-
 
   static Widget buildPreferencesForm(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
@@ -504,7 +499,6 @@ class FormWidgets {
     );
   }
 
-
   static Widget buildPreferencesForm2(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
     final CityController cityController = Get.put(CityController());
@@ -541,7 +535,6 @@ class FormWidgets {
                 );
               }),
               SizedBox(height: 8.h),
-
               Obx(() {
                 if (castController.isLoading.value) {
                   return Center(child: CircularProgressIndicator());
@@ -562,11 +555,11 @@ class FormWidgets {
                   value: authController.caste,
                   lookingForValue: authController.lookingForCaste,
                   items: casteNames,
-                  hinttext: casteNames.isEmpty ? 'No Cast found' : 'Select Cast',
+                  hinttext:
+                      casteNames.isEmpty ? 'No Cast found' : 'Select Cast',
                 );
               }),
               SizedBox(height: 8.h),
-
               Obx(() {
                 if (sectController.isLoading.value) {
                   return Center(child: CircularProgressIndicator());
@@ -590,7 +583,6 @@ class FormWidgets {
                 );
               }),
               SizedBox(height: 8.h),
-
               buildDropdownPair(
                   label: 'Ethnicity',
                   value: authController.ethnicity,
@@ -970,15 +962,20 @@ class FormWidgets {
     ]);
   }
 
+
   Widget buildCompletedTab() {
     final GetConnectionsController connectionsController =
-        Get.put(GetConnectionsController(ApiService()));
+    Get.put(GetConnectionsController(ApiService()));
+
     return Obx(() {
       if (connectionsController.isLoading.value) {
-        // Show a loading indicator while fetching data
         return Center(
-            child: Lottie.asset("assets/animations/circularloader.json",
-                height: 150, width: 150));
+          child: Lottie.asset(
+            "assets/animations/circularloader.json",
+            height: 100.h,
+            width: 100.w,
+          ),
+        );
       } else if (connectionsController.connections.isEmpty) {
         return Center(
           child: FadeIn(
@@ -987,52 +984,52 @@ class FormWidgets {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Lottie.asset('assets/animations/snackbarloading.json',
-                    // Add a nice animation for empty state
-                    width: 200,
-                    height: 200,
-                    fit: BoxFit.cover,
-                    repeat: false),
-                SizedBox(height: 8),
+                Lottie.asset(
+                  'assets/animations/snackbarloading.json',
+                  width: 200.w,
+                  height: 200.h,
+                  fit: BoxFit.cover,
+                  repeat: false,
+                ),
+                SizedBox(height: 8.h),
                 Text(
                   "No Love Connections Yet! 💕",
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 22.sp,
                     fontWeight: FontWeight.w700,
                     color: Colors.pinkAccent,
                   ),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 8.h),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
                   child: Text(
                     "Looks like no one has completed a connection yet. Start connecting with people and accept requests to build your love story! ❤️",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 15.sp,
                       color: Colors.black54,
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 ElevatedButton.icon(
                   onPressed: () {
-                    connectionsController
-                        .getconnections(); // Reload connections
+                    connectionsController.getconnections();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.pinkAccent,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
                     elevation: 5,
                     shadowColor: Colors.pinkAccent.withOpacity(0.3),
                   ),
-                  icon: Icon(Icons.favorite, color: Colors.white),
+                  icon: Icon(Icons.favorite, color: Colors.white, size: 20.sp),
                   label: Text(
                     "Find Your Soulmate 💖",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(color: Colors.white, fontSize: 16.sp),
                   ),
                 ),
               ],
@@ -1040,39 +1037,35 @@ class FormWidgets {
           ),
         );
       } else {
-        // Display the list of pending profiles
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: Get.height * 0.01),
+              SizedBox(height: 10.h),
               FormWidgets.buildSearchView(
                 hintText: "Search",
                 searchQuery: connectionsController.searchQuerytext,
               ),
-              SizedBox(height: Get.height * 0.01),
-              // Remove Expanded or use a constrained height
+              SizedBox(height: 10.h),
               SizedBox(
-                height: Get.height * 0.7, // Adjust based on your desired layout
+                height: 0.7.sh, // Responsive height based on screen size
                 child: GridView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Two columns
-                    crossAxisSpacing: 16, // Horizontal space between cards
-                    mainAxisSpacing: 16, // Vertical space between cards
-                    childAspectRatio:
-                        0.65, // Adjust the aspect ratio of the cards
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16.w,
+                    mainAxisSpacing: 16.h,
+                    childAspectRatio: 0.65,
                   ),
                   itemCount: connectionsController.connections.length,
-                  // Adjust based on the number of items you have
                   itemBuilder: (context, index) {
-                    final connections =
-                        connectionsController.connections[index];
+                    final connections = connectionsController.connections[index];
                     return ProfileCard(
                       imageUrl: connections['profileimage'] != null
                           ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['profileimage']}'
                           : 'assets/images/profile.jpg',
                       name:
-                          '${connections['firstname']} ${connections['lastname']} - ${_formatDate(connections['dateofbirth'] ?? 'N/A')}',
+                      '${connections['firstname']} ${connections['lastname']} - ${_formatDate(connections['dateofbirth'] ?? 'N/A')}',
                       profession: connections['education'] ?? 'N/A',
                       ignoreButtonText: 'Call',
                       acceptButtonText: 'Chat',
@@ -1109,16 +1102,20 @@ class FormWidgets {
     }
   }
 
+
   Widget buildPendingTab() {
     final GetPendingRequestsController pendingRequestsController =
-        Get.put(GetPendingRequestsController());
+    Get.put(GetPendingRequestsController());
 
     return Obx(() {
       if (pendingRequestsController.isLoading.value) {
-        // Show a loading indicator while fetching data
         return Center(
-            child: Lottie.asset("assets/animations/circularloader.json",
-                height: 150, width: 150));
+          child: Lottie.asset(
+            "assets/animations/circularloader.json",
+            height: 100.h,
+            width: 100.w,
+          ),
+        );
       } else if (pendingRequestsController.pendingRequests.isEmpty) {
         return Center(
           child: FadeIn(
@@ -1127,34 +1124,35 @@ class FormWidgets {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Lottie.asset('assets/animations/snackbarloading.json',
-                    // Add a heart-themed animation
-                    width: 200,
-                    height: 200,
-                    fit: BoxFit.cover,
-                    repeat: false),
-                SizedBox(height: 16),
+                Lottie.asset(
+                  'assets/animations/snackbarloading.json',
+                  width: 100.w,
+                  height: 100.h,
+                  fit: BoxFit.cover,
+                  repeat: false,
+                ),
+                SizedBox(height: 16.h),
                 Text(
                   "No Pending Requests Sent! 💌",
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 22.sp,
                     fontWeight: FontWeight.w700,
                     color: Colors.pinkAccent,
                   ),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 8.h),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
                   child: Text(
                     "You haven’t sent any connection requests yet. Start reaching out and make new love connections today! 💖",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 15.sp,
                       color: Colors.black54,
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 ElevatedButton.icon(
                   onPressed: () {
                     pendingRequestsController.fetchPendingRequests();
@@ -1162,16 +1160,16 @@ class FormWidgets {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.pinkAccent,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
                     elevation: 5,
                     shadowColor: Colors.pinkAccent.withOpacity(0.3),
                   ),
-                  icon: Icon(Icons.favorite_border, color: Colors.white),
+                  icon: Icon(Icons.favorite_border, color: Colors.white, size: 20.sp),
                   label: Text(
                     "Send a Love Request 💕",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(color: Colors.white, fontSize: 16.sp),
                   ),
                 ),
               ],
@@ -1179,38 +1177,35 @@ class FormWidgets {
           ),
         );
       } else {
-        // Display the list of pending profiles
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: Get.height * 0.01),
+              SizedBox(height: 10.h),
               SizedBox(
-                height: Get.height, // Adjust based on your desired layout
+                height: 0.8.sh, // Adjusted height for responsiveness
                 child: GridView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Two columns
-                    crossAxisSpacing: 16, // Horizontal space between cards
-                    mainAxisSpacing: 16, // Vertical space between cards
-                    childAspectRatio:
-                        0.80, // Adjust the aspect ratio of the cards
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16.w,
+                    mainAxisSpacing: 16.h,
+                    childAspectRatio: 0.80,
                   ),
                   itemCount: pendingRequestsController.pendingRequests.length,
                   itemBuilder: (context, index) {
                     final pendingProfile =
-                        pendingRequestsController.pendingRequests[index];
+                    pendingRequestsController.pendingRequests[index];
 
                     return ProfilePendingCard(
                       imageUrl: pendingProfile['profileimage'] != null
                           ? 'https://projects.funtashtechnologies.com/gomeetapi/${pendingProfile['profileimage']}'
                           : 'assets/images/profile.jpg',
                       name:
-                          '${pendingProfile['firstname']} ${pendingProfile['lastname']} - ${_formatDate(pendingProfile['dateofbirth'] ?? 'N/A')}',
+                      '${pendingProfile['firstname']} ${pendingProfile['lastname']} - ${_formatDate(pendingProfile['dateofbirth'] ?? 'N/A')}',
                       profession: pendingProfile['city'] ?? 'N/A',
                       onClose: () {
-                        // Handle onClose action, e.g., remove from the list
-                        pendingRequestsController.pendingRequests
-                            .removeAt(index);
+                        pendingRequestsController.pendingRequests.removeAt(index);
                       },
                     );
                   },

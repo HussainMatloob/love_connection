@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../Controllers/AuthController.dart';
 import '../Controllers/ProfilePictureController.dart';
 import '../Controllers/image_controller.dart';
@@ -18,7 +17,7 @@ class Profilepicture extends StatefulWidget {
 
 class _ProfilepictureState extends State<Profilepicture> {
   final ProfilepictureController controller =
-      Get.put(ProfilepictureController());
+  Get.put(ProfilepictureController());
   final AuthController authController = Get.put(AuthController());
   final ImageController imageController = Get.put(ImageController());
 
@@ -58,7 +57,7 @@ class _ProfilepictureState extends State<Profilepicture> {
                     ),
                     SizedBox(height: 16.h),
                     Obx(
-                      () => GestureDetector(
+                          () => GestureDetector(
                         onTap: () => controller.pickImageFromGallery(),
                         child: DottedBorder(
                           color: Colors.pink.shade300,
@@ -67,45 +66,48 @@ class _ProfilepictureState extends State<Profilepicture> {
                           dashPattern: [6, 4],
                           strokeWidth: 2,
                           child: Container(
-                            width: 0.8.sw,
-                            height: 0.2.sh,
+                            width: 0.85.sw,
+                            height: 0.50.sh, // Adjusted height for better fit
                             decoration: BoxDecoration(
                               color: Colors.transparent,
                               borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: controller.profileImage.value == null
                                 ? Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.camera_alt_outlined,
-                                          size: 40.sp, color: Colors.grey),
-                                      SizedBox(height: 8.h),
-                                      Text('Upload Image',
-                                          style: GoogleFonts.outfit(
-                                              color: Colors.grey,
-                                              fontSize: 16.sp)),
-                                    ],
-                                  )
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.camera_alt_outlined,
+                                    size: 40.sp, color: Colors.grey),
+                                SizedBox(height: 8.h),
+                                Text('Upload Image',
+                                    style: GoogleFonts.outfit(
+                                        color: Colors.grey,
+                                        fontSize: 16.sp)),
+                              ],
+                            )
                                 : ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.r),
-                                    child: Image.file(
-                                      controller.profileImage.value!,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                    ),
-                                  ),
+                              borderRadius: BorderRadius.circular(8.r),
+                              child: Image.file(
+                                controller.profileImage.value!,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    Text(
-                      'Upload your images*',
-                      style: GoogleFonts.outfit(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Upload your images*',
+                        style: GoogleFonts.outfit(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black),
+                      ),
                     ),
                     SizedBox(height: 10.h),
                     Row(
@@ -134,15 +136,15 @@ class _ProfilepictureState extends State<Profilepicture> {
                                   ],
                                   image: imageController.images[index] != null
                                       ? DecorationImage(
-                                          image: FileImage(
-                                              imageController.images[index]!),
-                                          fit: BoxFit.cover,
-                                        )
+                                    image: FileImage(
+                                        imageController.images[index]!),
+                                    fit: BoxFit.cover,
+                                  )
                                       : null,
                                 ),
                                 child: imageController.images[index] == null
                                     ? Icon(Icons.add,
-                                        color: Colors.black54, size: 40.sp)
+                                    color: Colors.black54, size: 40.sp)
                                     : null,
                               ),
                             );

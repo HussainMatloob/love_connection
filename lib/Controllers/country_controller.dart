@@ -15,7 +15,11 @@ class CountryController extends GetxController {
   // Fetch country list from API
   void fetchCountryList() async {
     isLoading.value = true;
-    var countries = await apiService.fetchCountries(); // Call instance method
+    var countries = await apiService.fetchCountries(); // Call instance method\
+    // print all the countries with Good response message
+    print("================== All Countries ==================");
+    print(countries);
+
     if (countries.isNotEmpty) {
       countryList.assignAll(countries);
     }

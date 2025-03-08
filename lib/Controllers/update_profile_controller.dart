@@ -29,7 +29,6 @@ class ProfileController extends GetxController {
     'email': TextEditingController(),
     'password': TextEditingController(),
     'gender': TextEditingController(),
-    'dateofbirth': TextEditingController(),
     'height': TextEditingController(),
   };
 
@@ -100,14 +99,9 @@ class ProfileController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     final String? userId = prefs.getString('userid');
     if (userId == null || userId.isEmpty) {
-      print("checkGoalRatingForGoals: userId not found");
       return;
     }
 
-    if (userId.isEmpty) {
-      Get.snackbar("Error", "User ID is missing", backgroundColor: Colors.red, colorText: Colors.white);
-      return;
-    }
 
     isLoading(true);
     var uri = Uri.parse("https://projects.funtashtechnologies.com/gomeetapi/updateprofile.php");
@@ -141,6 +135,8 @@ class ProfileController extends GetxController {
     return {
       'id': userId.toString(),
       ...controllers.map((key, controller) => MapEntry(key, controller.text.trim())),
+      'dateofbirth': authController.dateOfBirth.value != null
+          ? authController.dateOfBirth.value!.toIso8601String().trim() : '',
       'education': authController.educationLevel.value?.trim() ?? '',
       'religion': authController.religion.value?.trim() ?? '',
       'cast': authController.caste.value?.trim() ?? '',
