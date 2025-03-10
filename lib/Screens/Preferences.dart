@@ -30,7 +30,7 @@ class _PreferencesState extends State<Preferences> {
             },
             children: [
               FormWidgets.buildPreferencesForm(controller),
-              FormWidgets.buildPreferencesForm2(controller),
+              // FormWidgets.buildPreferencesForm2(controller),
             ],
           ),
         ),

@@ -133,7 +133,7 @@ class _HomeState extends State<Home> {
                   FormWidgets.buildForm(controller), // Page 0
                   FormWidgets().buildSecondForm(), // Page 1
                   FormWidgets.buildPreferencesForm(controller), // Page 2
-                  FormWidgets.buildPreferencesForm2(controller), // Page 3
+                  FormWidgets().buildPreferencesForm2(controller), // Page 3
                 ],
               ),
             ),
