@@ -1,40 +1,64 @@
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/get_rx/src/rx_workers/rx_workers.dart';
 
 import '../ApiService/ApiService.dart';
 import 'AuthController.dart';
 
 class CityController extends GetxController {
-  var cityOptions = <String>[].obs;
+  var cityOptions = <String>[].obs; // Cities for current residence
+  var lookingForCityOptions = <String>[].obs; // Cities for looking for residence
   var isLoading = false.obs;
   final ApiService apiService = ApiService();
-
   final AuthController authController = Get.put(AuthController());
 
   @override
   void onInit() {
     super.onInit();
-    // Listen for changes in currentResidence and fetch cities accordingly
+
+    // Listen for currentResidence country change
     ever(authController.currentResidence, (String? countryName) {
-      print('Country Name from controller: $countryName');
       if (countryName != null && countryName.isNotEmpty) {
-        loadCities(countryName);
+        loadCities(countryName, isLookingFor: false);
+      }
+    });
+
+    // Listen for lookingForResidence country change
+    ever(authController.lookingForResidence, (String? countryName) {
+      if (countryName != null && countryName.isNotEmpty) {
+        loadCities(countryName, isLookingFor: true);
       }
     });
   }
 
   // Fetch cities based on the selected country
-  Future<void> loadCities(String countryName) async {
+  Future<void> loadCities(String countryName, {required bool isLookingFor}) async {
     try {
       isLoading.value = true;
-      print('Country Name ////// : $countryName');
       List<String> cities = await apiService.fetchCities(countryName);
-      cityOptions.assignAll(cities); // Update the cityOptions list
+
+      if (isLookingFor) {
+        // Ensure the selected value is valid
+        if (!cities.contains(authController.lookingForCity.value)) {
+          authController.lookingForCity.value = null; // Reset if not found
+        }
+        lookingForCityOptions.assignAll(cities);
+      } else {
+        // Ensure the selected value is valid
+        if (!cities.contains(authController.cityOfResidence.value)) {
+          authController.cityOfResidence.value = null; // Reset if not found
+        }
+        cityOptions.assignAll(cities);
+      }
     } catch (e) {
       print('Error fetching cities: $e');
-      cityOptions.assignAll([]); // In case of error, set cityOptions to an empty list
+      if (isLookingFor) {
+        lookingForCityOptions.assignAll([]);
+      } else {
+        cityOptions.assignAll([]);
+      }
     } finally {
       isLoading.value = false;
     }
   }
+
 }

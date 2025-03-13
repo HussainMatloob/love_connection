@@ -27,7 +27,7 @@ class LoginController extends GetxController {
         userId.value = response['userid'].toString();
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('userid', userId.toString());
-        print("User Login Succecfully and user id is : $userId");
+        print("User Login Successfully and user id is : $userId");
         Get.snackbar('Success', response['ResponseMsg'],
             snackPosition: SnackPosition.BOTTOM);
         Get.offAll(ServiceSelectionScreen());

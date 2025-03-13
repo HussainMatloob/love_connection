@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:love_connection/Screens/bottom_nav/BottomNavbar.dart';
-import '../Controllers/AuthController.dart';
 import 'SelectService.dart';
 
 class ServiceSelectionScreen extends StatefulWidget {

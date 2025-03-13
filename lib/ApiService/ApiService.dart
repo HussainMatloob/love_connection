@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/connect.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +11,7 @@ import '../Models/Assisment.dart';
 import '../Models/GoalTarget.dart';
 import '../Models/GoaltargetQuestions.dart';
 import '../Models/Questions.dart';
+import '../Screens/auth/Login.dart';
 
 class ApiService {
   static const String _baseUrl =
@@ -26,8 +28,6 @@ class ApiService {
     required String maritalstatus,
     required String religion,
     required String religionlookingfor,
-    // required String nationality,
-    // required String nationalitylookingfor,
     required String education,
     required String educationlookingfor,
     required String employmentstatus,
@@ -52,122 +52,129 @@ class ApiService {
     required File gallery,
   }) async {
     try {
-      final url = Uri.parse('$_baseUrl/registeration.php');
-      final request = http.MultipartRequest('POST', url);
 
-      // Add text fields
-      request.fields['firstname'] = firstname;
-      request.fields['lastname'] = lastname;
-      request.fields['email'] = email;
-      request.fields['password'] = password;
-      request.fields['gender'] = gender;
-      request.fields['dateofbirth'] = dateofbirth;
-      request.fields['height'] = height;
-      request.fields['maritalstatus'] = maritalstatus;
-      request.fields['religion'] = religion;
-      request.fields['religionlookingfor'] = religionlookingfor;
-      request.fields['education'] = education;
-      request.fields['educationlookingfor'] = educationlookingfor;
-      request.fields['employmentstatus'] = employmentstatus;
-      request.fields['monthlyincome'] = monthlyincome;
-      request.fields['country'] = country;
-      request.fields['countrylookingfor'] = countryLookingfor;
-      request.fields['city'] = city;
-      request.fields['citylookingfor'] = citylookingfor;
-      request.fields['cast'] = cast;
-      request.fields['castlookingfor'] = castlookingfor;
-      request.fields['sect'] = sect;
-      request.fields['sectlookingfor'] = sectlookingfor;
-      request.fields['ethnicity'] = ethnicity;
-      request.fields['ethnicitylookingfor'] = ethnicitylookingfor;
-      request.fields['created_at'] = created_at;
 
-      // Add the file field
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'profileimage', // Key name expected by the server
-          profileimage.path,
-        ),
-      );
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'gallery', // Key name expected by the server
-          gallery.path,
-        ),
-      );
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'cnic_front', // Key name expected by the server
-          cnic_front.path,
-        ),
-      );
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'cnic_back', // Key name expected by the server
-          cnic_back.path,
-        ),
-      );
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'passport_front', // Key name expected by the server
-          passport_front.path,
-        ),
-      );
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'passport_back', // Key name expected by the server
-          passport_back.path,
-        ),
-      );
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'selfieimage', // Key name expected by the server
-          selfieimage.path,
-        ),
-      );
+      var url = Uri.parse('$_baseUrl/registeration.php');
 
-      // Send the request
-      final response = await request.send();
+      // **🔹 Create Request**
+      var request = http.MultipartRequest('POST', url);
+
+      request.headers.addAll({
+        "Content-Type": "multipart/form-data",
+        "Accept": "application/json",
+      });
+
+
+      // **🔹 Add Text Fields**
+      Map<String, String> fields = {
+        'firstname': firstname.trim(),
+        'lastname': lastname.trim(),
+        'email': email.trim(),
+        'password': password.trim(),
+        'gender': gender.trim(),
+        'dateofbirth': dateofbirth.trim(),
+        'height': height.trim(),
+        'maritalstatus': maritalstatus.trim(),
+        'religion': religion.trim(),
+        'religionlookingfor': religionlookingfor.trim(),
+        'education': education.trim(),
+        'educationlookingfor': educationlookingfor.trim(),
+        'employmentstatus': employmentstatus.trim(),
+        'monthlyincome': monthlyincome.trim(),
+        'country': country.trim(),
+        'countrylookingfor': countryLookingfor.trim(),
+        'city': city.trim(),
+        'citylookingfor': citylookingfor.trim(),
+        'cast': cast.trim(),
+        'castlookingfor': castlookingfor.trim(),
+        'sect': sect.trim(),
+        'sectlookingfor': sectlookingfor.trim(),
+        'ethnicity': ethnicity.trim(),
+        'ethnicitylookingfor': ethnicitylookingfor.trim(),
+        'created_at': created_at.trim(),
+      };
+
+      print("📩 Email Sent: '${request.fields['email']}'");
+      print("📦 All Fields Sent: ${request.fields}");
+      print("📂 Files Sent: ${request.files.map((file) => file.filename).toList()}");
+      print("🚀 Firstname: $firstname");
+      print("🚀 Lastname: $lastname");
+      print("🚀 Email: $email");
+      print("🚀 Password: $password");
+      print("🚀 Profile Image Path: ${profileimage.path}");
+
+      request.fields.addAll(fields);
+
+      // **🔹 Add Files**
+      Future<void> addFile(String key, File file) async {
+        if (file.existsSync()) {
+          request.files.add(await http.MultipartFile.fromPath(key, file.path));
+        }
+      }
+
+      await addFile('profileimage', profileimage);
+      await addFile('gallery', gallery);
+      await addFile('cnic_front', cnic_front);
+      await addFile('cnic_back', cnic_back);
+      await addFile('passport_front', passport_front);
+      await addFile('passport_back', passport_back);
+      await addFile('selfieimage', selfieimage);
+
+      // **🔹 Send Request**
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      print('Response Status: ${response.statusCode}');
+      print('Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
-        final responseBody = await response.stream.bytesToString();
-
-        final parsedBody = jsonDecode(responseBody);
-        // Extract the 'userid' and save it
+        final parsedBody = jsonDecode(response.body);
         if (parsedBody['userid'] != null) {
           int userId = int.parse(parsedBody['userid'].toString());
-          if (kDebugMode) {
-            print(" Register Successfully User ID: $userId");
-          }
-          // final prefs = await SharedPreferences.getInstance();
-          // prefs.setString('userid', userId.toString());
-          if (kDebugMode) {
-            print(
-                "================================ user succesfully registered user id  : $userId========================================");
-            print('Response: $responseBody');
-          }
+          print("✅ Register Successfully. User ID: $userId");
+
+          Get.snackbar(
+            'Success',
+            'Registration successful!',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green.withOpacity(0.8),
+            colorText: Colors.white,
+          );
+
+          Get.offAll(LoginScreen(keyParam: 1));
+
+          return {
+            'ResponseCode': parsedBody['ResponseCode'],
+            'Result': parsedBody['Result'],
+            'ResponseMsg': parsedBody['ResponseMsg'],
+            'Data': parsedBody
+          };
         }
         return {
-          'ResponseCode': '200',
-          'Result': 'true',
-          'ResponseMsg': 'Success',
+          'ResponseCode': parsedBody['ResponseCode'],
+          'Result': parsedBody['Result'],
+          'ResponseMsg': parsedBody['ResponseMsg'],
           'Data': parsedBody
         };
       } else {
-        final responseBody = await response.stream.bytesToString();
-        if (kDebugMode) {
-          print('Error Response: $responseBody');
-        }
+        print('❌ Error Response: ${response.body}');
+        Get.snackbar(
+          'Error',
+          jsonDecode(response.body)['ResponseMsg'] ?? 'Unknown error',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+        );
+
         return {
           'ResponseCode': response.statusCode.toString(),
-          'Result': 'false',
-          'ResponseMsg': 'Failed'
+          'Result': jsonDecode(response.body)['Result'],
+          'ResponseMsg': jsonDecode(response.body)['ResponseMsg'],
+          'Data': response.body
         };
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error occurred: $e');
-      }
+      print('❌ Error Occurred: $e');
       return {
         'ResponseCode': '500',
         'Result': 'false',
@@ -175,6 +182,7 @@ class ApiService {
       };
     }
   }
+
 
   Future<Map<String, dynamic>> loginUser(String email, String password) async {
     final url = Uri.parse(
@@ -252,7 +260,7 @@ class ApiService {
 
   void printFullText(String text) {
     final pattern =
-    RegExp('.{1,800}'); // Breaks the text into chunks of 800 characters
+        RegExp('.{1,800}'); // Breaks the text into chunks of 800 characters
     for (final match in pattern.allMatches(text)) {
       if (kDebugMode) {
         print(match.group(0));
@@ -443,8 +451,9 @@ class ApiService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userid = prefs.getString('userid').toString();
-      print(
-          "================================ User id is :$userid  in Get User Info ========================================");
+      if (kDebugMode) {
+        print("================================ User id is :$userid  in Get User Info ========================================");
+      }
       final url = Uri.parse('$_baseUrl/getprofiledata.php');
       final response = await http.post(url, body: {'userId': userid});
 
@@ -597,7 +606,7 @@ class ApiService {
   Future<List<AssessmentCategory>> fetchAssessmentCategories() async {
     try {
       final response =
-      await http.get(Uri.parse("$_baseUrl/getassesmentcategories.php"));
+          await http.get(Uri.parse("$_baseUrl/getassesmentcategories.php"));
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
@@ -865,8 +874,8 @@ class ApiService {
     }
   }
 
-
-  static Future<Map<String, dynamic>> updateProfile(Map<String, String> data, List<Map<String, String>> files) async {
+  static Future<Map<String, dynamic>> updateProfile(
+      Map<String, String> data, List<Map<String, String>> files) async {
     var request = http.MultipartRequest('POST', Uri.parse(_baseUrl));
 
     log("API Request URL: $_baseUrl");
@@ -880,7 +889,8 @@ class ApiService {
     // Adding file fields
     for (var file in files) {
       if (file['key'] != null && file['path'] != null) {
-        request.files.add(await http.MultipartFile.fromPath(file['key']!, file['path']!));
+        request.files.add(
+            await http.MultipartFile.fromPath(file['key']!, file['path']!));
         log("Adding file: Key - ${file['key']}, Path - ${file['path']}");
       }
     }
@@ -901,6 +911,4 @@ class ApiService {
       throw Exception('Exception: ${e.toString()}');
     }
   }
-
-
 }

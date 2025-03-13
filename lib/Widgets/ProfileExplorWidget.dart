@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,10 +11,8 @@ class ProfileInfoWidget extends StatelessWidget {
   final String details;
   final String location;
   final String image;
-
   final Map<String, String> personalInfo;
   final Map<String, String> educationInfo;
-
   final VoidCallback onClose;
   final VoidCallback onCheck;
 
@@ -57,7 +54,6 @@ class ProfileInfoWidget extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-
 
           Positioned(
             top: 10.h, // Responsive positioning

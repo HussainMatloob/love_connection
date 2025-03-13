@@ -10,12 +10,12 @@ import '../Controllers/image_controller.dart';
 import '../Widgets/PinkButton.dart';
 import 'DocumentUpload.dart';
 
-class Profilepicture extends StatefulWidget {
+class ProfilePicture extends StatefulWidget {
   @override
   _ProfilepictureState createState() => _ProfilepictureState();
 }
 
-class _ProfilepictureState extends State<Profilepicture> {
+class _ProfilepictureState extends State<ProfilePicture> {
   final ProfilepictureController controller =
   Get.put(ProfilepictureController());
   final AuthController authController = Get.put(AuthController());
@@ -177,4 +177,4 @@ class _ProfilepictureState extends State<Profilepicture> {
       ),
     );
   }
-}
+} //update the screen code after merging controllers

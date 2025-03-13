@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:love_connection/Screens/Coaching%20Service/AssesmentCategoryScreen.dart';
-import '../Controllers/AuthController.dart';
-import '../Models/GoalTarget.dart';
 import 'Coaching Service/GoalTargets.dart';
 
 class SelectService extends StatefulWidget {

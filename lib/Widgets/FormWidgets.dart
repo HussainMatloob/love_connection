@@ -262,7 +262,7 @@ class FormWidgets {
           firstDate: DateTime.now().subtract(Duration(days: 36500)),
           // 100 years ago
           lastDate:
-              DateTime.now().subtract(Duration(days: 6570)), // 18 years ago
+          DateTime.now().subtract(Duration(days: 6570)), // 18 years ago
         );
         if (date != null) controller.setDateOfBirth(date);
       },
@@ -330,129 +330,147 @@ class FormWidgets {
     required List<String> items,
     double? width,
   }) {
-    // Ensure the list is unique
     List<String> uniqueItems = items.toSet().toList();
 
-    // Ensure value is valid
     if (!uniqueItems.contains(value.value)) {
       value.value = null;
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min, // Prevents unbounded height issues
       children: [
         Text(
           label,
           style: GoogleFonts.outfit(
-              color: Colors.grey[600],
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
+            color: Colors.grey[600],
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w400,
+          ),
         ),
-        SizedBox(height: Get.height * 0.01),
-        Container(
-          width: width,
+        SizedBox(height: 10.h),
+        Container( // Removed Expanded
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
           decoration: BoxDecoration(
             color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(Get.width * 0.02),
+            borderRadius: BorderRadius.circular(8.r),
           ),
-          child: Obx(() => DropdownButtonFormField<String>(
-            value: value.value,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: Get.width * 0.04,
-                vertical: Get.height * 0.015,
-              ),
-              border: InputBorder.none,
-            ),
-            hint: Text(
-              label,
-              style: GoogleFonts.outfit(
-                fontWeight: FontWeight.w400,
-                fontSize: 13,
-                color: Colors.black,
-              ),
-            ),
-            items: uniqueItems.map((String item) {
-              return DropdownMenuItem(
-                value: item,
-                child: Text(
-                  item,
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.w400),
+          child: Obx(
+                () => DropdownButtonFormField<String>(
+              isDense: true,
+              isExpanded: true,
+              value: value.value,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12.w,
+                  vertical: 12.h,
                 ),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              value.value = newValue;
-            },
-          )),
+                border: InputBorder.none,
+              ),
+              hint: Text(
+                label,
+                style: GoogleFonts.outfit(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14.sp,
+                  color: Colors.black,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+              items: uniqueItems.map((String item) {
+                return DropdownMenuItem(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: GoogleFonts.outfit(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14.sp,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                value.value = newValue;
+              },
+            ),
+          ),
         ),
       ],
     );
   }
 
 
+
   Widget buildSecondForm() {
     final ReligionController religionController = Get.put(ReligionController());
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(20.w), // Using ScreenUtil for padding
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Obx(() {
-                  final religions = religionController.religions;
-                  final _ = religions.length; // Ensure reactivity
-                  return buildDropdownField(
-                    label: 'Religion',
-                    value: authController.religion,
-                    items: religions,
-                  );
-                }),
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: Obx(() {
-                  final religions = religionController.religions;
-                  final _ = religions.length;
-                  return buildDropdownField(
-                    label: 'Looking for',
-                    value: authController.lookingForReligion,
-                    items: religions,
-                  );
-                }),
-              ),
-            ],
-          ),
-          SizedBox(height: 20.h),
-          buildDropdownField(
-            label: 'Height',
-            value: authController.height,
-            items: authController.heightOptions,
-          ),
-          SizedBox(height: 20.h),
-          buildDropdownField(
-            label: 'Marital Status',
-            value: authController.maritalStatus,
-            items: authController.maritalStatusOptions,
-          ),
-          SizedBox(height: 20.h),
-          Text(
-            'Date of Birth',
-            style: GoogleFonts.outfit(
-              color: Colors.grey[600],
-              fontSize: 16.sp,
+      padding: EdgeInsets.all(20.w),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: Get.height * 0.75, // Ensures a valid height
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Avoid infinite height issues
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Obx(() {
+                    final religions = religionController.religions;
+                    if (religions.isEmpty) return const CircularProgressIndicator();
+                    return buildDropdownField(
+                      label: 'Religion',
+                      value: authController.religion,
+                      items: religions,
+                    );
+                  }),
+                ),
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Obx(() {
+                    final religions = religionController.religions;
+                    if (religions.isEmpty) return const CircularProgressIndicator();
+                    return buildDropdownField(
+                      label: 'Looking for',
+                      value: authController.lookingForReligion,
+                      items: religions,
+                    );
+                  }),
+                ),
+              ],
             ),
-          ),
-          SizedBox(height: 10.h),
-          buildDateOfBirth(authController),
-          SizedBox(height: 20.h),
-        ],
+            SizedBox(height: 20.h),
+            buildDropdownField(
+              label: 'Height',
+              value: authController.height,
+              items: authController.heightOptions,
+            ),
+            SizedBox(height: 20.h),
+            buildDropdownField(
+              label: 'Marital Status',
+              value: authController.maritalStatus,
+              items: authController.maritalStatusOptions,
+            ),
+            SizedBox(height: 20.h),
+            Text(
+              'Date of Birth',
+              style: GoogleFonts.outfit(
+                color: Colors.grey[600],
+                fontSize: 16.sp,
+              ),
+            ),
+            SizedBox(height: 10.h),
+            buildDateOfBirth(authController),
+            SizedBox(height: 20.h),
+          ],
+        ),
       ),
     );
   }
+
 
   static Widget buildPreferencesForm(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
@@ -521,55 +539,17 @@ class FormWidgets {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              Row(
-                children: [
-                  Expanded(
-                    child: Obx(() {
-                      final cities = ["Any", ...cityController.cityOptions];
-                      return buildDropdownField(
-                        label: 'City fo Current Residence',
-                        value: authController.currentResidence,
-                        items: cities,
-                      );
-                    }),
-                  ),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: Obx(() {
-                      cityController.loadCities(authController.lookingForResidence.toString());
-                      final cities = ["Any", ...cityController.cityOptions];
-                      return buildDropdownField(
-                        label: 'Looking for',
-                        value: authController.lookingForResidence,
-                        items: cities,
-                      );
-                    }),
-                  ),
-                ],
-              ),
-
-              // Obx(() {
-              //   final cities = ["Any", ...cityController.cityOptions];
-              //   final _ = cities.length;
-              //   if (cityController.isLoading.value) {
-              //     return Center(child: CircularProgressIndicator());
-              //   } else if (cityController.cityOptions.isEmpty) {
-              //     return buildDropdownPair(
-              //       label: 'City of Current Residence',
-              //       value: authController.cityOfResidence,
-              //       lookingForValue: authController.lookingForCity,
-              //       items: cityController.cityOptions,
-              //       hinttext: 'No Cities found',
-              //     );
-              //   }
-              //   return buildDropdownPair(
-              //     label: 'City of Current Residence',
-              //     value: authController.cityOfResidence,
-              //     lookingForValue: authController.lookingForCity,
-              //     items: cities,
-              //     hinttext: 'Select City',
-              //   );
-              // }),
+              Obx(() {
+                if (cityController.isLoading.value) return Center(child: CircularProgressIndicator());
+                return buildDropdownPair1(
+                  label: 'City of Current Residence',
+                  value: authController.cityOfResidence,
+                  lookingForValue: authController.lookingForCity,
+                  selfItems: ["Any", ...cityController.cityOptions], // Cities for Residence
+                  lookingForItems: ["Any", ...cityController.lookingForCityOptions], // Cities for Looking For Residence
+                  hinttext: 'Select City',
+                );
+              }),
               SizedBox(height: 8.h),
               Obx(() {
                 if (castController.isLoading.value) {
@@ -655,7 +635,7 @@ class FormWidgets {
                     );
                     return;
                   } else {
-                    Get.to(Profilepicture());
+                    Get.to(ProfilePicture());
                   }
                 }),
           ),
@@ -677,9 +657,10 @@ class FormWidgets {
         Text(
           label,
           style: GoogleFonts.outfit(
-              color: Colors.grey[600],
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
+            color: Colors.grey[600],
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
         ),
         SizedBox(height: 8),
         Row(
@@ -691,10 +672,10 @@ class FormWidgets {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Obx(
-                  () => DropdownButtonFormField<String>(
+                      () => DropdownButtonFormField<String>(
                     isExpanded: true,
-                    // Ensure full width is used
-                    value: value.value,
+                    // Ensure the selected value exists in the list; otherwise, set to null
+                    value: items.contains(value.value) ? value.value : null, // ✅ FIX HERE
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(horizontal: 16),
                       border: InputBorder.none,
@@ -732,10 +713,10 @@ class FormWidgets {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Obx(
-                  () => DropdownButtonFormField<String>(
+                      () => DropdownButtonFormField<String>(
                     isExpanded: true,
-                    // Ensure full width is used
-                    value: lookingForValue.value,
+                    // Ensure the selected value exists in the list; otherwise, set to null
+                    value: items.contains(lookingForValue.value) ? lookingForValue.value : null, // ✅ FIX HERE
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(horizontal: 16),
                       border: InputBorder.none,
@@ -771,6 +752,127 @@ class FormWidgets {
       ],
     );
   }
+
+  static Widget buildDropdownPair1({
+    required String label,
+    required Rxn<String> value,
+    required Rxn<String> lookingForValue,
+    required List<String> selfItems, // Cities for residence
+    required List<String> lookingForItems, // Cities for looking-for residence
+    required String hinttext,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.outfit(
+            color: Colors.grey[600],
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            // Current Residence City Dropdown
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Obx(() {
+                  // Ensure value exists in the list, otherwise set to null
+                  String? selectedValue = selfItems.contains(value.value) ? value.value : null;
+
+                  return DropdownButtonFormField<String>(
+                    isExpanded: true,
+                    value: selectedValue,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                      border: InputBorder.none,
+                    ),
+                    hint: Text(
+                      hinttext,
+                      style: GoogleFonts.outfit(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    items: selfItems.toSet().map((String item) { // ✅ Remove duplicates
+                      return DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      value.value = newValue;
+                    },
+                  );
+                }),
+              ),
+            ),
+            const SizedBox(width: 16),
+
+            // Looking For Residence City Dropdown
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Obx(() {
+                  // Ensure value exists in the list, otherwise set to null
+                  String? selectedLookingForValue =
+                  lookingForItems.contains(lookingForValue.value) ? lookingForValue.value : null;
+
+                  return DropdownButtonFormField<String>(
+                    isExpanded: true,
+                    value: selectedLookingForValue,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                      border: InputBorder.none,
+                    ),
+                    hint: Text(
+                      'Looking for',
+                      style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                        color: Colors.black,
+                      ),
+                    ),
+                    items: lookingForItems.toSet().map((String item) { // ✅ Remove duplicates
+                      return DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      lookingForValue.value = newValue;
+                    },
+                  );
+                }),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+
+
 
   Widget buildSingleDropdown({
     required String label,

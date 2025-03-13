@@ -36,19 +36,12 @@ class UpdateProfileScreen extends StatelessWidget {
           children: [
             Center(child: _buildProfileImage()),
             SizedBox(height: 20),
-            _buildTextField("First Name", controller.controllers['firstname']!,
-                Icons.person),
-            _buildTextField("Last Name", controller.controllers['lastname']!,
-                Icons.person_outline),
-            _buildTextField(
-                "Email", controller.controllers['email']!, Icons.email),
-            _buildTextField(
-                "Password", controller.controllers['password']!, Icons.lock,
-                obscureText: true),
-            _buildTextField(
-                "Gender", controller.controllers['gender']!, Icons.male),
-            _buildTextField(
-                "Height", controller.controllers['height']!, Icons.height),
+            _buildTextField("First Name", controller.controllers['firstname']!, Icons.person),
+            _buildTextField("Last Name", controller.controllers['lastname']!, Icons.person_outline),
+            _buildTextField("Email", controller.controllers['email']!, Icons.email),
+            _buildTextField("Password", controller.controllers['password']!, Icons.lock, obscureText: true),
+            _buildTextField("Gender", controller.controllers['gender']!, Icons.male),
+            _buildTextField("Height", controller.controllers['height']!, Icons.height),
             FormWidgets.buildDateOfBirth(authController),
             SizedBox(height: 10),
             FormWidgets.buildDropdownPair(
@@ -58,37 +51,20 @@ class UpdateProfileScreen extends StatelessWidget {
               items: authController.educationOptions,
               hinttext: 'Select Education',
             ),
-            Obx(() {
-              final religions = religionController.religions;
-              final _ = religions.length; // Ensure reactivity
-              return FormWidgets.buildDropdownPair(
-                hinttext: 'Select Religion',
-                items: religions,
-                label: 'Religion',
-                value: authController.religion,
-                lookingForValue: authController.lookingForReligion,
-              );
-            }),
-            Obx(() {
-              if (castController.isLoading.value) {
-                return Center(child: CircularProgressIndicator());
-              }
+        Obx(() {
+          print("Religion value: ${authController.religion.value}"); // Debugging
+          return FormWidgets.buildDropdownPair(
+            label: 'Religion',
+            value: authController.religion,  // Fallback value to avoid errors
+            lookingForValue: authController.lookingForReligion,
+            items: religionController.religions,
+            hinttext: 'Select Religion',
+          );
+        }),
 
-              final List<String> casteNames = castController.castList
-                  .map<String>((cast) => cast["cast"].toString())
-                  .toList();
-              if (castController.errorMessage.isNotEmpty) {
-                return FormWidgets.buildDropdownPair(
-                  label: 'Caste',
-                  value: authController.caste,
-                  lookingForValue: authController.lookingForCaste,
-                  items: casteNames,
-                  hinttext: castController.errorMessage.isNotEmpty
-                      ? 'No Cast found'
-                      : 'Select Cast',
-                );
-              }
-
+        Obx(() {
+              if (castController.isLoading.value) return Center(child: CircularProgressIndicator());
+              final casteNames = castController.castList.map<String>((cast) => cast["cast"].toString()).toList();
               return FormWidgets.buildDropdownPair(
                 label: 'Caste',
                 value: authController.caste,
@@ -99,79 +75,43 @@ class UpdateProfileScreen extends StatelessWidget {
             }),
             SizedBox(height: 8.h),
             Obx(() {
-              if (sectController.isLoading.value) {
-                return Center(child: CircularProgressIndicator());
-              }
-              if (sectController.errorMessage.isNotEmpty) {
-                return Center(
-                  child: Text(
-                    sectController.errorMessage.value,
-                    style: TextStyle(color: Colors.red),
-                  ),
-                );
-              }
+              if (sectController.isLoading.value) return Center(child: CircularProgressIndicator());
               return FormWidgets.buildDropdownPair(
                 label: 'Sect',
                 value: authController.sect,
                 lookingForValue: authController.lookingForSect,
                 items: sectController.sectList,
-                hinttext: sectController.sectList.isEmpty
-                    ? 'No Sect found'
-                    : 'Select Sect',
+                hinttext: sectController.sectList.isEmpty ? 'No Sect found' : 'Select Sect',
               );
             }),
             SizedBox(height: 10),
             Obx(() {
-              final countries = ["Any", ...countryController.countryList];
-              final _ = countries.length;
-
-              if (countryController.isLoading.value) {
-                return Center(child: CircularProgressIndicator());
-              }
+              if (countryController.isLoading.value) return Center(child: CircularProgressIndicator());
               return FormWidgets.buildDropdownPair(
                 label: 'Country of Current Residence',
                 value: authController.currentResidence,
                 lookingForValue: authController.lookingForResidence,
-                items: countries,
+                items: ["Any", ...countryController.countryList],
                 hinttext: 'Select Country',
               );
             }),
             SizedBox(height: 10),
+
             Obx(() {
-              final cities = ["Any", ...cityController.cityOptions];
-              final _ = cities.length; // Forces UI rebuild when cities update
 
-              if (cityController.isLoading.value) {
-                return Center(child: CircularProgressIndicator());
-              }
-              if (cityController.cityOptions.isEmpty) {
-                return FormWidgets.buildDropdownPair(
-                  label: 'City of Current Residence',
-                  value: cities.contains(authController.cityOfResidence.value)
-                      ? authController.cityOfResidence
-                      : Rxn<String>(),
-                  lookingForValue:
-                      cities.contains(authController.lookingForCity.value)
-                          ? authController.lookingForCity
-                          : Rxn<String>(),
-                  items: [],
-                  hinttext: 'No Cities found',
-                );
-              }
+              if (cityController.isLoading.value) return Center(child: CircularProgressIndicator());
 
-              return FormWidgets.buildDropdownPair(
+              return FormWidgets.buildDropdownPair1(
                 label: 'City of Current Residence',
-                value: cities.contains(authController.cityOfResidence.value)
-                    ? authController.cityOfResidence
-                    : Rxn<String>(),
-                lookingForValue:
-                    cities.contains(authController.lookingForCity.value)
-                        ? authController.lookingForCity
-                        : Rxn<String>(),
-                items: cities,
+                value: authController.cityOfResidence,
+                lookingForValue: authController.lookingForCity,
+                selfItems: ["Any", ...cityController.cityOptions], // Cities for Residence
+                lookingForItems: ["Any", ...cityController.lookingForCityOptions], // Cities for Looking For Residence
                 hinttext: 'Select City',
               );
             }),
+
+
             SizedBox(height: 8.h),
             FormWidgets.buildDropdownPair(
                 label: 'Ethnicity',
@@ -183,20 +123,17 @@ class UpdateProfileScreen extends StatelessWidget {
             Obx(() => controller.isLoading.value
                 ? Center(child: CircularProgressIndicator())
                 : SizedBox(
-                    width: 1.sw,
-                    child: ElevatedButton(
-                      onPressed: controller.updateUserProfile,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.pink,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 14, horizontal: 40),
-                      ),
-                      child: Text("Update Profile",
-                          style: TextStyle(fontSize: 16, color: Colors.white)),
-                    ),
-                  )),
+              width: 1.sw,
+              child: ElevatedButton(
+                onPressed: controller.updateUserProfile,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.pink,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  padding: EdgeInsets.symmetric(vertical: 14, horizontal: 40),
+                ),
+                child: Text("Update Profile", style: TextStyle(fontSize: 16, color: Colors.white)),
+              ),
+            )),
           ],
         ),
       ),
@@ -207,20 +144,19 @@ class UpdateProfileScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => controller.pickImage(ImageSource.gallery, 'profileimage'),
       child: Obx(() => CircleAvatar(
-            radius: 60,
-            backgroundColor: Colors.blueGrey[100],
-            backgroundImage:
-                controller.imageFiles['profileimage']?.value != null
-                    ? FileImage(controller.imageFiles['profileimage']!.value!)
-                    : null,
-            child: controller.imageFiles['profileimage']?.value == null
-                ? Icon(Icons.camera_alt, size: 40, color: Colors.grey[600])
-                : null,
-          )),
+        radius: 60,
+        backgroundColor: Colors.blueGrey[100],
+        backgroundImage: controller.imageFiles['profileimage']?.value != null
+            ? FileImage(controller.imageFiles['profileimage']!.value!)
+            : null,
+        child: controller.imageFiles['profileimage']?.value == null
+            ? Icon(Icons.camera_alt, size: 40, color: Colors.grey[600])
+            : null,
+      )),
     );
   }
 
-  Widget _buildTextField(
+Widget _buildTextField(
       String hint, TextEditingController controller, IconData icon,
       {bool obscureText = false}) {
     return Padding(

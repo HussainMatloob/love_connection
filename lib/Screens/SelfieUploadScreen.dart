@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
 import '../Controllers/AuthController.dart';
@@ -21,71 +22,79 @@ class SelfieImageScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // Selfie Image Display
             Obx(() {
-              return controller.selfieImage.value == null
-                  ? Container(
-                      width: double.infinity,
-                      height: Get.height * 0.6,
-                      decoration: BoxDecoration(
-                        color: Colors.pink[50],
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.pinkAccent),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.pink.withOpacity(0.2),
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                            offset: Offset(2, 4),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Text(
-                          "No Selfie Captured",
-                          style: TextStyle(color: Colors.pinkAccent),
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Selfie Display or Placeholder
+                  Container(
+                    width: double.infinity,
+                    height: Get.height * 0.7,
+                    decoration: BoxDecoration(
+                      color: controller.selfieImage.value == null
+                          ? Colors.pink[50]
+                          : null,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.pinkAccent),
+                      image: controller.selfieImage.value != null
+                          ? DecorationImage(
+                              image: FileImage(controller.selfieImage.value!),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.pink.withOpacity(0.2),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                          offset: Offset(2, 4),
+                        ),
+                      ],
+                    ),
+                    child: controller.selfieImage.value == null
+                        ? Center(
+                            child: Text(
+                              "No Selfie Captured",
+                              style: TextStyle(color: Colors.pinkAccent),
+                            ),
+                          )
+                        : null,
+                  ),
+
+                  Positioned(
+                    bottom: 16,
+                    right: 16,
+                    child: GestureDetector(
+                      onTap: () {
+                        controller.captureSelfie(); // Call your camera function here
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.pinkAccent,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 6,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.camera_alt,
+                          color: Colors.white,
+                          size: 28,
                         ),
                       ),
-                    )
-                  : Container(
-                      width: double.infinity,
-                      height: Get.height * 0.6,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        image: DecorationImage(
-                          image: FileImage(controller.selfieImage.value!),
-                          fit: BoxFit.cover,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.pink.withOpacity(0.2),
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                            offset: Offset(2, 4),
-                          ),
-                        ],
-                      ),
-                    );
-            },),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: controller.captureSelfie,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pinkAccent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(
-                  "Open Camera",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-              ),
-            ),
+                    ),
+                  ),
+                ],
+              );
+            }),
 
             SizedBox(height: 20),
             Obx(

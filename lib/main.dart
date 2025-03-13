@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
             GetPage(name: '/BasicInfoScreens', page: () => Home()),
             GetPage(name: '/selfieuploadscreen', page: () => SelfieImageScreen()),
             GetPage(name: '/preferences', page: () => Preferences()),
-            GetPage(name: '/profilepicture', page: () => Profilepicture()),
+            GetPage(name: '/profilepicture', page: () => ProfilePicture()),
             GetPage(name: '/documentupload', page: () => DocumentUploadScreen()),
             GetPage(name: '/serviceselection', page: () => ServiceSelectionScreen()),
             GetPage(name: '/coachingservices', page: () => CoachingServiceProviderScreen()),

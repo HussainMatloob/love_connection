@@ -3,10 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
 import 'package:love_connection/Onboarding/OnboardingScreen.dart';
-import 'package:love_connection/Screens/bottom_nav/BottomNavbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'Screens/SelectService.dart';
 import 'Screens/Service_selection_screen.dart';
 
 class SplashScreen extends StatefulWidget {

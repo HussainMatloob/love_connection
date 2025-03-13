@@ -286,6 +286,13 @@ class _ProfileState extends State<Profile> {
                     icon: Icons.share_outlined,
                     title: 'Share App',
                     onTap: () {}),
+                buildMenuItem(
+                    icon: Icons.edit,
+                    title: 'Edit Profile',
+                    onTap: () {
+                      Get.to(() => UpdateProfileScreen());
+
+                    }),
                 const Divider(),
                 buildMenuItem(
                     icon: Icons.logout,
@@ -415,7 +422,7 @@ class _ProfileState extends State<Profile> {
                             ),
                             GestureDetector(
                                 onTap: () {
-                                  Get.to(() => UpdateProfileScreen());
+                                  // Get.to(() => UpdateProfileScreen());
                                 },
                                 child: Icon(
                                   Icons.edit,

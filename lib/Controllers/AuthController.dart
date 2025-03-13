@@ -171,18 +171,18 @@ class AuthController extends GetxController {
   ];
 
   // Preferences fields
-  final cityOfResidence = Rxn<String>();
-  final lookingForCity = Rxn<String>();
-  final caste = Rxn<String>();
-  final lookingForCaste = Rxn<String>();
-  final subCaste = Rxn<String>();
-  final lookingForSubCaste = Rxn<String>();
-  final sect = Rxn<String>();
-  final lookingForSect = Rxn<String>();
-  final subSect = Rxn<String>();
-  final lookingForSubSect = Rxn<String>();
-  final ethnicity = Rxn<String>();
-  final lookingForEthnicity = Rxn<String>();
+  final cityOfResidence = Rxn<String>('');
+  final lookingForCity = Rxn<String>('');
+  final caste = Rxn<String>('');
+  final lookingForCaste = Rxn<String>('');
+  final subCaste = Rxn<String>('');
+  final lookingForSubCaste = Rxn<String>('');
+  final sect = Rxn<String>('');
+  final lookingForSect = Rxn<String>('');
+  final subSect = Rxn<String>('');
+  final lookingForSubSect = Rxn<String>('');
+  final ethnicity = Rxn<String>('');
+  final lookingForEthnicity = Rxn<String>('');
 
   // Dropdown options
   final cityOptions = [
@@ -257,8 +257,8 @@ class AuthController extends GetxController {
     try {
       // Send the registration request to the API service
       final response = await _apiService.registerUser(
-        firstname: firstNameController.value.toString(),
-        lastname: lastNameController.value.toString(),
+        firstname: firstNameController.text.trim(),
+        lastname: lastNameController.text.trim(),
         height: height.value.toString(),
         cast: caste.value.toString(),
         // subcast: subCaste.value.toString(),
@@ -277,8 +277,8 @@ class AuthController extends GetxController {
         religion: religion.value.toString(),
         religionlookingfor: lookingForReligion.value.toString(),
         sectlookingfor: lookingForSect.value.toString(),
-        email: emailController.value.toString(),
-        password: passwordController.value.toString(),
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
         employmentstatus: employmentStatus.value.toString(),
         monthlyincome: monthlyIncome.value.toString(),
         created_at: createdAt.value.toString(),
@@ -293,30 +293,15 @@ class AuthController extends GetxController {
         country: currentResidence.value.toString(),
         countryLookingfor: lookingForResidence.value.toString(),
       );
-      if (kDebugMode) {
-        print("Registration Response Code: ===${response['ResponseMsg']} ==========");
-      }
 
       // Handle the response from the API service
-      if (response['ResponseCode'] == '200') {
-        if (kDebugMode) {
-          print("Registration Response Code: ===${response['ResponseCode'] == '200'} ==========");
-        }
-        Get.snackbar(
-          'Success',
-          'Registration successful!',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green.withOpacity(0.8),
-          colorText: Colors.white,
-        );
+      if (response['ResponseCode'] == '200' && response['Result'] == 'true') {
+          print(response['Data']);
 
-        Get.offAll(LoginScreen(keyParam: 1));
-
-        // Navigate to next screen or show confirmation
       } else {
         Get.snackbar(
           'Error',
-          response['error'] ?? 'An unknown error occurred',
+          response['ResponseMsg'] ?? 'An unknown error occurred',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red.withOpacity(0.8),
           colorText: Colors.white,

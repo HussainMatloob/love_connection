@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../Controllers/assisment_question_controller.dart';
 import '../../Controllers/rating_controller.dart';
-import '../../Widgets/Custome_dialog.dart';
 
 class AssessmentQuestionScreen extends StatelessWidget {
   final String categoryName;

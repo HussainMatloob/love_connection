@@ -8,8 +8,8 @@ import 'package:love_connection/Controllers/AcceptRequestController.dart';
 import 'package:love_connection/Widgets/FormWidgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Controllers/GetConnectionRequest.dart';
-import '../../Widgets/ProfileCard.dart';import 'package:animate_do/animate_do.dart';
-import 'package:lottie/lottie.dart';
+import '../../Widgets/ProfileCard.dart';
+import 'package:animate_do/animate_do.dart';
 
 class Requests extends StatefulWidget {
   const Requests({super.key});
@@ -29,7 +29,6 @@ class _RequestsState extends State<Requests> {
     super.didChangeDependencies();
     _controller.fetchReceivedConnectionRequests();
   }
-
   @override
   Widget build(BuildContext context) {
     // Fetch the data when the screen is loaded

@@ -17,16 +17,17 @@ class SectController extends GetxController {
 
     // Listen for changes in religion or caste and fetch sect data
     everAll([authController.religion, authController.caste], (_) {
-      print('Religion: ${authController.religion.value}, Caste: ${authController.caste.value}');
+      final religion = authController.religion.value ?? ''; // ✅ Prevents null error
+      final caste = authController.caste.value ?? '';
 
-      if (authController.religion.value!.isNotEmpty || authController.caste.value!.isNotEmpty) {
-        fetchSectData(
-            religion: authController.religion.value.toString(),
-            caste: authController.caste.toString()
-        );
+      print('Religion: $religion, Caste: $caste');
+
+      if (religion.isNotEmpty || caste.isNotEmpty) {
+        fetchSectData(religion: religion, caste: caste);
       }
     });
   }
+
 
 
 
