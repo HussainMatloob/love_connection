@@ -525,7 +525,7 @@ class FormWidgets {
     );
   }
 
-   Widget buildPreferencesForm2(BasicInfoController controller) {
+  Widget buildPreferencesForm2(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
     final CityController cityController = Get.put(CityController());
     final CastController castController = Get.put(CastController());
@@ -539,30 +539,26 @@ class FormWidgets {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
+              // City Dropdown
               Obx(() {
                 if (cityController.isLoading.value) return Center(child: CircularProgressIndicator());
                 return buildDropdownPair1(
                   label: 'City of Current Residence',
                   value: authController.cityOfResidence,
                   lookingForValue: authController.lookingForCity,
-                  selfItems: ["Any", ...cityController.cityOptions], // Cities for Residence
-                  lookingForItems: ["Any", ...cityController.lookingForCityOptions], // Cities for Looking For Residence
+                  selfItems: ["Any", ...cityController.cityOptions], // Cities for Residence with "Any"
+                  lookingForItems: ["Any", ...cityController.lookingForCityOptions], // Cities for Looking For Residence with "Any"
                   hinttext: 'Select City',
                 );
               }),
               SizedBox(height: 8.h),
+
+              // Caste Dropdown with "Any" Option
               Obx(() {
                 if (castController.isLoading.value) {
                   return Center(child: CircularProgressIndicator());
                 }
-                if (castController.errorMessage.isNotEmpty) {
-                  return Center(
-                    child: Text(
-                      castController.errorMessage.value,
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  );
-                }
+
                 final List<String> casteNames = castController.castList
                     .map<String>((cast) => cast["cast"].toString())
                     .toList();
@@ -570,40 +566,37 @@ class FormWidgets {
                   label: 'Caste',
                   value: authController.caste,
                   lookingForValue: authController.lookingForCaste,
-                  items: casteNames,
+                  items: ["Any", ...casteNames], // Add "Any" option
                   hinttext:
-                      casteNames.isEmpty ? 'No Cast found' : 'Select Cast',
+                  casteNames.isEmpty ? 'No Cast found' : 'Select Cast',
                 );
               }),
               SizedBox(height: 8.h),
+
+              // Sect Dropdown with "Any" Option
               Obx(() {
                 if (sectController.isLoading.value) {
                   return Center(child: CircularProgressIndicator());
                 }
-                if (sectController.errorMessage.isNotEmpty) {
-                  return Center(
-                    child: Text(
-                      sectController.errorMessage.value,
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  );
-                }
+
                 return buildDropdownPair(
                   label: 'Sect',
                   value: authController.sect,
                   lookingForValue: authController.lookingForSect,
-                  items: sectController.sectList,
+                  items: ["Any", ...sectController.sectList], // Add "Any" option
                   hinttext: sectController.sectList.isEmpty
                       ? 'No Sect found'
                       : 'Select Sect',
                 );
               }),
               SizedBox(height: 8.h),
+
+              // Ethnicity Dropdown with "Any" Option
               buildDropdownPair(
                   label: 'Ethnicity',
                   value: authController.ethnicity,
                   lookingForValue: authController.lookingForEthnicity,
-                  items: authController.ethnicityOptions,
+                  items: ["Any", ...authController.ethnicityOptions], // Add "Any" option
                   hinttext: "Select Ethnicity"),
               SizedBox(height: 20.h),
             ],
@@ -925,45 +918,93 @@ class FormWidgets {
   }
 
   Widget buildIncomeSelection() {
+    final currencyOptions = [
+      {'code': 'USD', 'label': '🇺🇸 USD'},
+      {'code': 'INR', 'label': '🇮🇳 INR'},
+      {'code': 'EUR', 'label': '🇪🇺 EUR'},
+      {'code': 'GBP', 'label': '🇬🇧 GBP'},
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Monthly Household Income',
           style: GoogleFonts.outfit(
-              color: Colors.grey[600],
-              fontSize: Get.width * 0.04,
-              fontWeight: FontWeight.w400),
-        ),
-        SizedBox(height: 8),
-        ...authController.incomeOptions.map(
-          (option) => Obx(
-            () => Container(
-              padding: EdgeInsets.only(bottom: 12),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: RadioListTile<String>(
-                title: Text(
-                  option,
-                  style: GoogleFonts.outfit(
-                      fontWeight: FontWeight.w400, fontSize: 13),
-                ),
-                value: option,
-                groupValue: authController.monthlyIncome.value,
-                // FIXED HERE
-                onChanged: (value) =>
-                    authController.monthlyIncome.value = value!,
-                contentPadding: EdgeInsets.zero,
-                activeColor: Colors.pink,
-              ),
-            ),
+            color: Colors.grey[600],
+            fontSize: Get.width * 0.04,
+            fontWeight: FontWeight.w400,
           ),
+        ),
+        SizedBox(height: 10),
+
+        // 🏷️ Row for Currency and Income Dropdowns
+        Row(
+          children: [
+            // 🌍 Currency Dropdown (1% width)
+            Expanded(
+              flex: 30,
+              child: Obx(() => Container(
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  value: authController.selectedCurrency.value,
+                  underline: SizedBox(),
+                  icon: Icon(Icons.keyboard_arrow_down),
+                  style: GoogleFonts.outfit(color: Colors.black87, fontSize: 14),
+                  onChanged: (value) =>
+                  authController.selectedCurrency.value = value!,
+                  items: currencyOptions
+                      .map((currency) => DropdownMenuItem<String>(
+                    value: currency['code']!,
+                    child: Text(currency['label']!,
+                        style: GoogleFonts.outfit(fontSize: 14)),
+                  ))
+                      .toList(),
+                ),
+              )),
+            ),
+
+            SizedBox(width: 8), // Space between dropdowns
+
+            // 💰 Income Dropdown (Remaining width)
+            Expanded(
+              flex: 70,
+              child: Obx(() => Container(
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  value: authController.monthlyIncome.value,
+                  underline: SizedBox(),
+                  icon: Icon(Icons.keyboard_arrow_down),
+                  style: GoogleFonts.outfit(color: Colors.black87, fontSize: 14),
+                  onChanged: (value) =>
+                  authController.monthlyIncome.value = value!,
+                  items: authController.incomeOptions
+                      .map((option) => DropdownMenuItem<String>(
+                    value: option,
+                    child: Text(option,
+                        style: GoogleFonts.outfit(fontSize: 14)),
+                  ))
+                      .toList(),
+                ),
+              )),
+            ),
+          ],
         ),
       ],
     );
   }
+
+
 
   // create a search view widget with search text hint and icon to search text
   static Widget buildSearchView({

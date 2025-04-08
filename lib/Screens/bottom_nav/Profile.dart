@@ -74,7 +74,7 @@ class _ProfileState extends State<Profile> {
                   children: [
                     SizedBox(
                       width: 1.sw,
-                      height: 1.sh - 60.h, // Dynamically adjusting height
+                      height: 1.sh * 1,
                       child: CachedNetworkImage(
                         imageUrl: _getImageUrl(user['profileimage']),
                         fadeInCurve: Curves.easeIn,
@@ -111,7 +111,7 @@ class _ProfileState extends State<Profile> {
                     ),
 
                     Positioned(
-                      bottom: 16.h,
+                      bottom: 18.h,
                       left: 12.w,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,7 +301,7 @@ class _ProfileState extends State<Profile> {
                       final prefs = await SharedPreferences.getInstance();
                       prefs.setString("userid", "");
                       Get.offAll(LoginScreen(
-                        keyParam: 1,
+
                       ));
                     }),
               ],

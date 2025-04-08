@@ -101,9 +101,11 @@ class AuthController extends GetxController {
   ];
 
   final List<String> incomeOptions = [
-    'Less than 1000',
-    'Greater than 1000, less than 3000',
-    'Greater than 3000'
+    'Below 1000',
+    '1000 - 3000',
+    '3000 - 5000',
+    '5000 - 10,000',
+    'Above 10,000',
   ];
 
   final List<String> countryOptions = [
@@ -183,6 +185,7 @@ class AuthController extends GetxController {
   final lookingForSubSect = Rxn<String>('');
   final ethnicity = Rxn<String>('');
   final lookingForEthnicity = Rxn<String>('');
+  var selectedCurrency = 'USD'.obs; // Default currency
 
   // Dropdown options
   final cityOptions = [

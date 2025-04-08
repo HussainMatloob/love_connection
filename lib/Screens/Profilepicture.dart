@@ -56,8 +56,7 @@ class _ProfilepictureState extends State<ProfilePicture> {
                       ),
                     ),
                     SizedBox(height: 16.h),
-                    Obx(
-                          () => GestureDetector(
+                    Obx(() => GestureDetector(
                         onTap: () => controller.pickImageFromGallery(),
                         child: DottedBorder(
                           color: Colors.pink.shade300,
