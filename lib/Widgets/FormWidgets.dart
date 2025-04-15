@@ -1441,7 +1441,7 @@ class FormWidgets {
           style: GoogleFonts.outfit(
             color: Colors.black,
             fontWeight: FontWeight.bold,
-            fontSize: 14,
+            fontSize: 13,
           ),
         ),
       ],
