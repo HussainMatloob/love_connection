@@ -14,6 +14,8 @@ class AssessmentCategoriesScreen extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    ratingController.startAutoRefresh(); // Start auto-refresh for rating
+
     return Scaffold(
       backgroundColor: Colors.pink.shade50,
       appBar: AppBar(
@@ -38,7 +40,6 @@ class AssessmentCategoriesScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: screenHeight * 0.02), // Adaptive spacing
-
             Expanded(
               child: GridView.builder(
                 padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding

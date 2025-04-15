@@ -42,13 +42,24 @@ class ProfileInfoWidget extends StatelessWidget {
             width: screenWidth,
             height: screenHeight,
             child: CachedNetworkImage(
-              imageUrl: image,
+              imageUrl: image.isEmpty
+                  ? 'assets/images/fallback.png'
+                  : image,
               placeholder: (context, url) => Center(
                 child: Lottie.asset(
                   'assets/animations/registerloading.json',
                   width: 150.w,
                   height: 150.h,
                   fit: BoxFit.contain,
+                ),
+              ),
+              errorWidget: (context, url, error) => Center(
+                child: Image.asset(
+                  'assets/images/fallback.png',
+                  // Replace with your fallback image path
+                  fit: BoxFit.cover,
+                  width: screenWidth,
+                  height: screenHeight,
                 ),
               ),
               fit: BoxFit.cover,
@@ -74,14 +85,16 @@ class ProfileInfoWidget extends StatelessWidget {
                         offset: Offset(0, 3),
                       ),
                     ],
-                    borderRadius: BorderRadius.circular(20.r), // Responsive border radius
+                    borderRadius:
+                        BorderRadius.circular(20.r), // Responsive border radius
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 8.w), // Responsive padding
+                        padding: EdgeInsets.only(left: 8.w),
+                        // Responsive padding
                         child: Icon(
                           Icons.favorite,
                           color: Colors.pink,
@@ -196,7 +209,8 @@ class ProfileInfoWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildCircleButton(Icons.close, onClose, color: Colors.white),
-                _buildCircleButton(Icons.check, onCheck, color: Colors.pink.shade300),
+                _buildCircleButton(Icons.check, onCheck,
+                    color: Colors.pink.shade300),
               ],
             ),
           ),
@@ -238,7 +252,10 @@ class ProfileInfoWidget extends StatelessWidget {
   }
 
   // 📌 Helper Widget: Favorite & Save Button
-  Widget _buildTopButton({required IconData icon, required String label, required VoidCallback onPressed}) {
+  Widget _buildTopButton(
+      {required IconData icon,
+      required String label,
+      required VoidCallback onPressed}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -255,7 +272,8 @@ class ProfileInfoWidget extends StatelessWidget {
           ),
           Text(
             label,
-            style: GoogleFonts.outfit(fontSize: 14.sp, fontWeight: FontWeight.w400),
+            style: GoogleFonts.outfit(
+                fontSize: 14.sp, fontWeight: FontWeight.w400),
           ),
         ],
       ),
@@ -263,7 +281,8 @@ class ProfileInfoWidget extends StatelessWidget {
   }
 
   // 📌 Helper Widget: Circle Button
-  Widget _buildCircleButton(IconData icon, VoidCallback onPressed, {Color color = Colors.white}) {
+  Widget _buildCircleButton(IconData icon, VoidCallback onPressed,
+      {Color color = Colors.white}) {
     return Container(
       width: 50.r,
       height: 50.r,
@@ -275,7 +294,9 @@ class ProfileInfoWidget extends StatelessWidget {
         ],
       ),
       child: IconButton(
-        icon: Icon(icon, color: icon == Icons.close ? Colors.pink : Colors.white, size: 24.sp),
+        icon: Icon(icon,
+            color: icon == Icons.close ? Colors.pink : Colors.white,
+            size: 24.sp),
         onPressed: onPressed,
       ),
     );
@@ -297,7 +318,8 @@ class ProfileInfoWidget extends StatelessWidget {
           SizedBox(height: 5.h),
           Text(
             "Basic Info",
-            style: GoogleFonts.outfit(fontSize: 16.sp, fontWeight: FontWeight.w400),
+            style: GoogleFonts.outfit(
+                fontSize: 16.sp, fontWeight: FontWeight.w400),
           ),
         ],
       ),

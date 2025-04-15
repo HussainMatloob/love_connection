@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Controllers/assisment_question_controller.dart';
 import '../../Controllers/rating_controller.dart';
 
@@ -28,8 +29,13 @@ class AssessmentQuestionScreen extends StatelessWidget {
     };
 
     final int categoryId = categoryMap[categoryName] ?? 0;
-    print("Category id is :$categoryId");
 
+// Save categoryId in local memory
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setInt('selectedCategoryId', categoryId);
+    });
+
+    print("Category id is :$categoryId");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.fetchQuestions(categoryId);
     });
@@ -286,7 +292,8 @@ class AssessmentQuestionScreen extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 16,horizontal : 16),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                       // Bigger button
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),

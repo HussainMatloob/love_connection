@@ -48,18 +48,28 @@ class ProfileCard extends StatelessWidget {
               // Profile Image as the background
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child:  CachedNetworkImage(
-                  imageUrl: imageUrl,
-                  width:Get.width ,
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl.isEmpty
+                      ? 'assets/images/fallback.png'
+                      : imageUrl,
+                  width: Get.width,
                   height: Get.height,
                   placeholder: (context, url) => Center(
                     child: Lottie.asset(
                       'assets/animations/registerloading.json',
-                      // Path to your Lottie file
                       width: Get.width * 0.3,
                       height: Get.height * 0.3,
                       fit: BoxFit.contain,
                     ),
+                  ),
+                  errorWidget: (context, url, error) => Center(
+                    child:   Image.asset(
+                    'assets/images/fallback.png',
+                    // Replace with your fallback image path
+                    fit: BoxFit.cover,
+                    width: Get.width,
+                    height: Get.height,
+                  ),
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -98,38 +108,47 @@ class ProfileCard extends StatelessWidget {
         ),
         SizedBox(height: 12),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            GestureDetector(
-              onTap: onIgnore,
-              child: Container(
-                width: Get.width * 0.18,
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                ),
-                child: Center(
-                  child: Text(
-                    ignoreButtonText,
-                    style: GoogleFonts.outfit(color: Colors.pink),
+            Expanded(
+              child: GestureDetector(
+                onTap: onIgnore,
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                  child: Center(
+                    child: Text(
+                      ignoreButtonText,
+                      style: GoogleFonts.outfit(
+                        color: Colors.pink,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-            GestureDetector(
-              onTap: onAccept,
-              child: Container(
-                width: Get.width * 0.18,
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.pinkAccent,
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                ),
-                child: Center(
-                  child: Text(
-                    acceptButtonText,
-                    style: GoogleFonts.outfit(color: Colors.white),
+            SizedBox(width: 16),
+            Expanded(
+              child: GestureDetector(
+                onTap: onAccept,
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.pinkAccent,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                  child: Center(
+                    child: Text(
+                      acceptButtonText,
+                      style: GoogleFonts.outfit(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ),
               ),
