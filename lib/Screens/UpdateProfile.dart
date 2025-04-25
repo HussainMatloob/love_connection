@@ -111,7 +111,6 @@ class UpdateProfileScreen extends StatelessWidget {
               );
             }),
 
-
             SizedBox(height: 8.h),
             FormWidgets.buildDropdownPair(
                 label: 'Ethnicity',

@@ -42,9 +42,7 @@ class ProfileInfoWidget extends StatelessWidget {
             width: screenWidth,
             height: screenHeight,
             child: CachedNetworkImage(
-              imageUrl: image.isEmpty
-                  ? 'assets/images/fallback.png'
-                  : image,
+              imageUrl: image.isEmpty ? 'assets/images/fallback.png' : image,
               placeholder: (context, url) => Center(
                 child: Lottie.asset(
                   'assets/animations/registerloading.json',
@@ -305,8 +303,7 @@ class ProfileInfoWidget extends StatelessWidget {
   // 📌 Helper Widget: Swipe-Up Indicator
   Widget _buildSwipeUpIndicator() {
     return Container(
-      width: 120.w,
-      height: 30.h,
+      padding: EdgeInsets.all(10.r),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
@@ -316,10 +313,12 @@ class ProfileInfoWidget extends StatelessWidget {
         children: [
           Container(width: 50.w, height: 3.h, color: Colors.black),
           SizedBox(height: 5.h),
-          Text(
-            "Basic Info",
-            style: GoogleFonts.outfit(
-                fontSize: 16.sp, fontWeight: FontWeight.w400),
+          FittedBox(
+            child: Text(
+              "Basic Info",
+              style: GoogleFonts.outfit(
+                  fontSize: 16.sp, fontWeight: FontWeight.w400),
+            ),
           ),
         ],
       ),

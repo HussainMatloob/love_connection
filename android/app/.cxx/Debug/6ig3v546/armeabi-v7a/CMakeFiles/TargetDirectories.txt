@@ -1,0 +1,2 @@
+C:/Users/JIB/Downloads/love_connection/android/app/.cxx/Debug/6ig3v546/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/JIB/Downloads/love_connection/android/app/.cxx/Debug/6ig3v546/armeabi-v7a/CMakeFiles/rebuild_cache.dir

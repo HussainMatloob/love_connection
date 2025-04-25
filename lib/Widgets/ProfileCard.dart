@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -63,13 +64,13 @@ class ProfileCard extends StatelessWidget {
                     ),
                   ),
                   errorWidget: (context, url, error) => Center(
-                    child:   Image.asset(
-                    'assets/images/fallback.png',
-                    // Replace with your fallback image path
-                    fit: BoxFit.cover,
-                    width: Get.width,
-                    height: Get.height,
-                  ),
+                    child: Image.asset(
+                      'assets/images/fallback.png',
+                      // Replace with your fallback image path
+                      fit: BoxFit.cover,
+                      width: Get.width,
+                      height: Get.height,
+                    ),
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -110,44 +111,44 @@ class ProfileCard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: onIgnore,
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                  ),
-                  child: Center(
-                    child: Text(
-                      ignoreButtonText,
-                      style: GoogleFonts.outfit(
-                        color: Colors.pink,
-                        fontWeight: FontWeight.w500,
-                      ),
+            GestureDetector(
+              onTap: onIgnore,
+              child: Container(
+                width: 60.w,
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.all(Radius.circular(8.r)),
+                ),
+                child: Center(
+                  child: Text(
+                    ignoreButtonText,
+                    style: GoogleFonts.outfit(
+                      color: Colors.pink,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
               ),
             ),
             SizedBox(width: 16),
-            Expanded(
-              child: GestureDetector(
-                onTap: onAccept,
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.pinkAccent,
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                  ),
-                  child: Center(
-                    child: Text(
-                      acceptButtonText,
-                      style: GoogleFonts.outfit(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
+            GestureDetector(
+              onTap: onAccept,
+              child: Container(
+                width: 60.w,
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                decoration: BoxDecoration(
+                  color: Colors.pinkAccent,
+                  borderRadius: BorderRadius.all(Radius.circular(8.r)),
+                ),
+                child: Center(
+                  child: Text(
+                    acceptButtonText,
+                    style: GoogleFonts.outfit(
+                      color: Colors.white,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),

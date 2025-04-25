@@ -1,0 +1,2 @@
+F:/Android_projects/love_connection/android/app/.cxx/Debug/4ly6m2u5/x86_64/CMakeFiles/edit_cache.dir
+F:/Android_projects/love_connection/android/app/.cxx/Debug/4ly6m2u5/x86_64/CMakeFiles/rebuild_cache.dir

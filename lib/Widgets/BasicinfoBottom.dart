@@ -35,7 +35,7 @@ class BasicInfoBottomSheet extends StatelessWidget {
             child: Text(
               'Basic Info',
               style: GoogleFonts.outfit(
-                fontSize: 22,
+                fontSize: 22.sp,
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
@@ -52,16 +52,20 @@ class BasicInfoBottomSheet extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
-          _buildInfoRow('Name', personalInfo['name'] ?? '', 'Marital Status', personalInfo['maritalStatus'] ?? ''),
+          _buildInfoRow('Name', personalInfo['name'] ?? '', 'Marital Status',
+              personalInfo['maritalStatus'] ?? ''),
           SizedBox(height: 10),
 
-          _buildInfoRow('Sect', personalInfo['sect'] ?? '', 'Caste', personalInfo['caste'] ?? ''),
+          _buildInfoRow('Sect', personalInfo['sect'] ?? '', 'Caste',
+              personalInfo['caste'] ?? ''),
           SizedBox(height: 10),
 
-          _buildInfoRow('Height', personalInfo['height'] ?? '', 'Date of Birth', personalInfo['dob'] ?? ''),
+          _buildInfoRow('Height', personalInfo['height'] ?? '', 'Date of Birth',
+              personalInfo['dob'] ?? ''),
           SizedBox(height: 10),
 
-          _buildInfoRow('Religion', personalInfo['religion'] ?? '', 'Nationality', personalInfo['nationality'] ?? ''),
+          _buildInfoRow('Religion', personalInfo['religion'] ?? '',
+              'Nationality', personalInfo['nationality'] ?? ''),
           SizedBox(height: 20),
           // Education and Employment Section
           Text(
@@ -76,12 +80,13 @@ class BasicInfoBottomSheet extends StatelessWidget {
           _buildSingleInfoRow('Education', educationInfo['education'] ?? ''),
           SizedBox(height: 10),
 
-          _buildSingleInfoRow('Monthly Income', educationInfo['monthlyIncome'] ?? ''),
+          _buildSingleInfoRow(
+              'Monthly Income', educationInfo['monthlyIncome'] ?? ''),
           SizedBox(height: 10),
 
-          _buildSingleInfoRow('Employment Status', educationInfo['employmentStatus'] ?? ''),
+          _buildSingleInfoRow(
+              'Employment Status', educationInfo['employmentStatus'] ?? ''),
           SizedBox(height: 10),
-
         ],
       ),
     );
@@ -97,7 +102,8 @@ class BasicInfoBottomSheet extends StatelessWidget {
     return formattedDate;
   }
 
-  Widget _buildInfoRow(String label1, String value1, String label2, String value2) {
+  Widget _buildInfoRow(
+      String label1, String value1, String label2, String value2) {
     return Container(
       width: 1.sw, // Full screen width
       height: 60.h, // Responsive height
@@ -106,7 +112,8 @@ class BasicInfoBottomSheet extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.r), // Responsive border radius
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h), // Responsive padding
+        padding: EdgeInsets.symmetric(
+            horizontal: 16.w, vertical: 8.h), // Responsive padding
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -163,7 +170,6 @@ class BasicInfoBottomSheet extends StatelessWidget {
     );
   }
 
-
   Widget _buildSingleInfoRow(String label, String value) {
     return Container(
       width: Get.width,
@@ -176,9 +182,14 @@ class BasicInfoBottomSheet extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: GoogleFonts.outfit(color: Colors.grey, fontSize: 16)),
+            Text(label,
+                style: GoogleFonts.outfit(color: Colors.grey, fontSize: 16)),
             SizedBox(height: 5),
-            Text(value, style: GoogleFonts.outfit(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(value,
+                style: GoogleFonts.outfit(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
           ],
         ),

@@ -262,7 +262,7 @@ class FormWidgets {
           firstDate: DateTime.now().subtract(Duration(days: 36500)),
           // 100 years ago
           lastDate:
-          DateTime.now().subtract(Duration(days: 6570)), // 18 years ago
+              DateTime.now().subtract(Duration(days: 6570)), // 18 years ago
         );
         if (date != null) controller.setDateOfBirth(date);
       },
@@ -309,8 +309,8 @@ class FormWidgets {
           (index) => Obx(() {
             return Container(
               margin: EdgeInsets.symmetric(horizontal: 5),
-              width: 8,
-              height: 8,
+              width: 8.w,
+              height: 8.h,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: controller.currentFormPage.value == index
@@ -349,7 +349,8 @@ class FormWidgets {
           ),
         ),
         SizedBox(height: 10.h),
-        Container( // Removed Expanded
+        Container(
+          // Removed Expanded
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: 10.w),
           decoration: BoxDecoration(
@@ -357,7 +358,7 @@ class FormWidgets {
             borderRadius: BorderRadius.circular(8.r),
           ),
           child: Obx(
-                () => DropdownButtonFormField<String>(
+            () => DropdownButtonFormField<String>(
               isDense: true,
               isExpanded: true,
               value: value.value,
@@ -400,8 +401,6 @@ class FormWidgets {
     );
   }
 
-
-
   Widget buildSecondForm() {
     final ReligionController religionController = Get.put(ReligionController());
 
@@ -420,7 +419,8 @@ class FormWidgets {
                 Expanded(
                   child: Obx(() {
                     final religions = religionController.religions;
-                    if (religions.isEmpty) return const CircularProgressIndicator();
+                    if (religions.isEmpty)
+                      return const CircularProgressIndicator();
                     return buildDropdownField(
                       label: 'Religion',
                       value: authController.religion,
@@ -432,7 +432,8 @@ class FormWidgets {
                 Expanded(
                   child: Obx(() {
                     final religions = religionController.religions;
-                    if (religions.isEmpty) return const CircularProgressIndicator();
+                    if (religions.isEmpty)
+                      return const CircularProgressIndicator();
                     return buildDropdownField(
                       label: 'Looking for',
                       value: authController.lookingForReligion,
@@ -470,7 +471,6 @@ class FormWidgets {
       ),
     );
   }
-
 
   static Widget buildPreferencesForm(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
@@ -538,16 +538,22 @@ class FormWidgets {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               // City Dropdown
               Obx(() {
-                if (cityController.isLoading.value) return Center(child: CircularProgressIndicator());
+                if (cityController.isLoading.value)
+                  return Center(child: CircularProgressIndicator());
                 return buildDropdownPair1(
                   label: 'City of Current Residence',
                   value: authController.cityOfResidence,
                   lookingForValue: authController.lookingForCity,
-                  selfItems: ["Any", ...cityController.cityOptions], // Cities for Residence with "Any"
-                  lookingForItems: ["Any", ...cityController.lookingForCityOptions], // Cities for Looking For Residence with "Any"
+                  selfItems: [
+                    "Any",
+                    ...cityController.cityOptions
+                  ], // Cities for Residence with "Any"
+                  lookingForItems: [
+                    "Any",
+                    ...cityController.lookingForCityOptions
+                  ], // Cities for Looking For Residence with "Any"
                   hinttext: 'Select City',
                 );
               }),
@@ -568,7 +574,7 @@ class FormWidgets {
                   lookingForValue: authController.lookingForCaste,
                   items: ["Any", ...casteNames], // Add "Any" option
                   hinttext:
-                  casteNames.isEmpty ? 'No Cast found' : 'Select Cast',
+                      casteNames.isEmpty ? 'No Cast found' : 'Select Cast',
                 );
               }),
               SizedBox(height: 8.h),
@@ -583,7 +589,10 @@ class FormWidgets {
                   label: 'Sect',
                   value: authController.sect,
                   lookingForValue: authController.lookingForSect,
-                  items: ["Any", ...sectController.sectList], // Add "Any" option
+                  items: [
+                    "Any",
+                    ...sectController.sectList
+                  ], // Add "Any" option
                   hinttext: sectController.sectList.isEmpty
                       ? 'No Sect found'
                       : 'Select Sect',
@@ -596,7 +605,10 @@ class FormWidgets {
                   label: 'Ethnicity',
                   value: authController.ethnicity,
                   lookingForValue: authController.lookingForEthnicity,
-                  items: ["Any", ...authController.ethnicityOptions], // Add "Any" option
+                  items: [
+                    "Any",
+                    ...authController.ethnicityOptions
+                  ], // Add "Any" option
                   hinttext: "Select Ethnicity"),
               SizedBox(height: 20.h),
             ],
@@ -665,10 +677,12 @@ class FormWidgets {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Obx(
-                      () => DropdownButtonFormField<String>(
+                  () => DropdownButtonFormField<String>(
                     isExpanded: true,
                     // Ensure the selected value exists in the list; otherwise, set to null
-                    value: items.contains(value.value) ? value.value : null, // ✅ FIX HERE
+                    value: items.contains(value.value)
+                        ? value.value
+                        : null, // ✅ FIX HERE
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(horizontal: 16),
                       border: InputBorder.none,
@@ -706,10 +720,12 @@ class FormWidgets {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Obx(
-                      () => DropdownButtonFormField<String>(
+                  () => DropdownButtonFormField<String>(
                     isExpanded: true,
                     // Ensure the selected value exists in the list; otherwise, set to null
-                    value: items.contains(lookingForValue.value) ? lookingForValue.value : null, // ✅ FIX HERE
+                    value: items.contains(lookingForValue.value)
+                        ? lookingForValue.value
+                        : null, // ✅ FIX HERE
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(horizontal: 16),
                       border: InputBorder.none,
@@ -777,7 +793,8 @@ class FormWidgets {
                 ),
                 child: Obx(() {
                   // Ensure value exists in the list, otherwise set to null
-                  String? selectedValue = selfItems.contains(value.value) ? value.value : null;
+                  String? selectedValue =
+                      selfItems.contains(value.value) ? value.value : null;
 
                   return DropdownButtonFormField<String>(
                     isExpanded: true,
@@ -793,7 +810,8 @@ class FormWidgets {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    items: selfItems.toSet().map((String item) { // ✅ Remove duplicates
+                    items: selfItems.toSet().map((String item) {
+                      // ✅ Remove duplicates
                       return DropdownMenuItem<String>(
                         value: item,
                         child: Text(
@@ -823,7 +841,9 @@ class FormWidgets {
                 child: Obx(() {
                   // Ensure value exists in the list, otherwise set to null
                   String? selectedLookingForValue =
-                  lookingForItems.contains(lookingForValue.value) ? lookingForValue.value : null;
+                      lookingForItems.contains(lookingForValue.value)
+                          ? lookingForValue.value
+                          : null;
 
                   return DropdownButtonFormField<String>(
                     isExpanded: true,
@@ -840,7 +860,8 @@ class FormWidgets {
                         color: Colors.black,
                       ),
                     ),
-                    items: lookingForItems.toSet().map((String item) { // ✅ Remove duplicates
+                    items: lookingForItems.toSet().map((String item) {
+                      // ✅ Remove duplicates
                       return DropdownMenuItem<String>(
                         value: item,
                         child: Text(
@@ -863,9 +884,6 @@ class FormWidgets {
       ],
     );
   }
-
-
-
 
   Widget buildSingleDropdown({
     required String label,
@@ -945,28 +963,29 @@ class FormWidgets {
             Expanded(
               flex: 30,
               child: Obx(() => Container(
-                padding: EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  value: authController.selectedCurrency.value,
-                  underline: SizedBox(),
-                  icon: Icon(Icons.keyboard_arrow_down),
-                  style: GoogleFonts.outfit(color: Colors.black87, fontSize: 14),
-                  onChanged: (value) =>
-                  authController.selectedCurrency.value = value!,
-                  items: currencyOptions
-                      .map((currency) => DropdownMenuItem<String>(
-                    value: currency['code']!,
-                    child: Text(currency['label']!,
-                        style: GoogleFonts.outfit(fontSize: 14)),
-                  ))
-                      .toList(),
-                ),
-              )),
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value: authController.selectedCurrency.value,
+                      underline: SizedBox(),
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      style: GoogleFonts.outfit(
+                          color: Colors.black87, fontSize: 14),
+                      onChanged: (value) =>
+                          authController.selectedCurrency.value = value!,
+                      items: currencyOptions
+                          .map((currency) => DropdownMenuItem<String>(
+                                value: currency['code']!,
+                                child: Text(currency['label']!,
+                                    style: GoogleFonts.outfit(fontSize: 14)),
+                              ))
+                          .toList(),
+                    ),
+                  )),
             ),
 
             SizedBox(width: 8), // Space between dropdowns
@@ -975,36 +994,35 @@ class FormWidgets {
             Expanded(
               flex: 70,
               child: Obx(() => Container(
-                padding: EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  value: authController.monthlyIncome.value,
-                  underline: SizedBox(),
-                  icon: Icon(Icons.keyboard_arrow_down),
-                  style: GoogleFonts.outfit(color: Colors.black87, fontSize: 14),
-                  onChanged: (value) =>
-                  authController.monthlyIncome.value = value!,
-                  items: authController.incomeOptions
-                      .map((option) => DropdownMenuItem<String>(
-                    value: option,
-                    child: Text(option,
-                        style: GoogleFonts.outfit(fontSize: 14)),
-                  ))
-                      .toList(),
-                ),
-              )),
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value: authController.monthlyIncome.value,
+                      underline: SizedBox(),
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      style: GoogleFonts.outfit(
+                          color: Colors.black87, fontSize: 14),
+                      onChanged: (value) =>
+                          authController.monthlyIncome.value = value!,
+                      items: authController.incomeOptions
+                          .map((option) => DropdownMenuItem<String>(
+                                value: option,
+                                child: Text(option,
+                                    style: GoogleFonts.outfit(fontSize: 14)),
+                              ))
+                          .toList(),
+                    ),
+                  )),
             ),
           ],
         ),
       ],
     );
   }
-
-
 
   // create a search view widget with search text hint and icon to search text
   static Widget buildSearchView({
@@ -1141,10 +1159,9 @@ class FormWidgets {
     ]);
   }
 
-
   Widget buildCompletedTab() {
     final GetConnectionsController connectionsController =
-    Get.put(GetConnectionsController(ApiService()));
+        Get.put(GetConnectionsController(ApiService()));
 
     return Obx(() {
       if (connectionsController.isLoading.value) {
@@ -1201,7 +1218,8 @@ class FormWidgets {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
                     elevation: 5,
                     shadowColor: Colors.pinkAccent.withOpacity(0.3),
                   ),
@@ -1238,13 +1256,14 @@ class FormWidgets {
                   ),
                   itemCount: connectionsController.connections.length,
                   itemBuilder: (context, index) {
-                    final connections = connectionsController.connections[index];
+                    final connections =
+                        connectionsController.connections[index];
                     return ProfileCard(
                       imageUrl: connections['profileimage'] != null
                           ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['profileimage']}'
                           : 'assets/images/profile.jpg',
                       name:
-                      '${connections['firstname']} ${connections['lastname']} - ${_formatDate(connections['dateofbirth'] ?? 'N/A')}',
+                          '${connections['firstname']} ${connections['lastname']} - ${_formatDate(connections['dateofbirth'] ?? 'N/A')}',
                       profession: connections['education'] ?? 'N/A',
                       ignoreButtonText: 'Call',
                       acceptButtonText: 'Chat',
@@ -1281,10 +1300,9 @@ class FormWidgets {
     }
   }
 
-
   Widget buildPendingTab() {
     final GetPendingRequestsController pendingRequestsController =
-    Get.put(GetPendingRequestsController());
+        Get.put(GetPendingRequestsController());
 
     return Obx(() {
       if (pendingRequestsController.isLoading.value) {
@@ -1341,11 +1359,13 @@ class FormWidgets {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
                     elevation: 5,
                     shadowColor: Colors.pinkAccent.withOpacity(0.3),
                   ),
-                  icon: Icon(Icons.favorite_border, color: Colors.white, size: 20.sp),
+                  icon: Icon(Icons.favorite_border,
+                      color: Colors.white, size: 20.sp),
                   label: Text(
                     "Send a Love Request 💕",
                     style: TextStyle(color: Colors.white, fontSize: 16.sp),
@@ -1374,17 +1394,18 @@ class FormWidgets {
                   itemCount: pendingRequestsController.pendingRequests.length,
                   itemBuilder: (context, index) {
                     final pendingProfile =
-                    pendingRequestsController.pendingRequests[index];
+                        pendingRequestsController.pendingRequests[index];
 
                     return ProfilePendingCard(
                       imageUrl: pendingProfile['profileimage'] != null
                           ? 'https://projects.funtashtechnologies.com/gomeetapi/${pendingProfile['profileimage']}'
                           : 'assets/images/profile.jpg',
                       name:
-                      '${pendingProfile['firstname']} ${pendingProfile['lastname']} - ${_formatDate(pendingProfile['dateofbirth'] ?? 'N/A')}',
+                          '${pendingProfile['firstname']} ${pendingProfile['lastname']} - ${_formatDate(pendingProfile['dateofbirth'] ?? 'N/A')}',
                       profession: pendingProfile['city'] ?? 'N/A',
                       onClose: () {
-                        pendingRequestsController.pendingRequests.removeAt(index);
+                        pendingRequestsController.pendingRequests
+                            .removeAt(index);
                       },
                     );
                   },

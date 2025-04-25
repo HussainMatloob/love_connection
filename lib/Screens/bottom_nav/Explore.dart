@@ -12,7 +12,8 @@ class Explore extends StatelessWidget {
   Explore({super.key});
 
   final GetUsersController usersController = Get.put(GetUsersController());
-  final SendConectionController sendConectionController = Get.put(SendConectionController());
+  final SendConectionController sendConectionController =
+      Get.put(SendConectionController());
 
   @override
   Widget build(BuildContext context) {
@@ -69,33 +70,42 @@ class Explore extends StatelessWidget {
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 0.w),
                         child: ProfileInfoWidget(
-                          name: '${profile['firstname']} ${profile['lastname']}',
+                          name:
+                              '${profile['firstname']} ${profile['lastname']}',
                           age: _calculateAge(profile['dateofbirth'] ?? ''),
-                          details: '${profile['education']} from ${profile['city']}',
+                          details:
+                              '${profile['education']} from ${profile['city']}',
                           location: profile['city'] ?? '',
                           image: _getImageUrl(profile["profileimage"] ?? ''),
                           onClose: () {},
+
                           /// ✅ Button with Better UI
                           onCheck: () async {
                             final prefs = await SharedPreferences.getInstance();
                             final userID = prefs.getString("userid").toString();
-                            sendConectionController.sendConnectionRequest(userID, profile['id']);
+                            sendConectionController.sendConnectionRequest(
+                                userID, profile['id']);
                             usersController.users.removeAt(index);
                           },
                           personalInfo: {
-                            'name': '${profile['firstname']} ${profile['lastname']}',
-                            'maritalStatus': profile['maritalstatus'] ?? 'Unknown',
+                            'name':
+                                '${profile['firstname']} ${profile['lastname']}',
+                            'maritalStatus':
+                                profile['maritalstatus'] ?? 'Unknown',
                             'sect': profile['sect'] ?? 'Unknown',
                             'caste': profile['cast'] ?? 'Unknown',
                             'height': profile['height'] ?? 'Unknown',
-                            'dob': _formatDate(profile['dateofbirth'] ?? 'Unknown'),
+                            'dob': _formatDate(
+                                profile['dateofbirth'] ?? 'Unknown'),
                             'religion': profile['religion'] ?? 'Unknown',
                             'nationality': profile['country'] ?? 'Unknown',
                           },
                           educationInfo: {
                             'education': profile['education'] ?? 'Unknown',
-                            'monthlyIncome': profile['monthlyincome'] ?? 'Unknown',
-                            'employmentStatus': profile['employmentstatus'] ?? 'Unknown',
+                            'monthlyIncome':
+                                profile['monthlyincome'] ?? 'Unknown',
+                            'employmentStatus':
+                                profile['employmentstatus'] ?? 'Unknown',
                           },
                         ),
                       );
@@ -117,7 +127,8 @@ class Explore extends StatelessWidget {
     if (dob == null) return 'Unknown';
     final currentDate = DateTime.now();
     int age = currentDate.year - dob.year;
-    if (currentDate.month < dob.month || (currentDate.month == dob.month && currentDate.day < dob.day)) {
+    if (currentDate.month < dob.month ||
+        (currentDate.month == dob.month && currentDate.day < dob.day)) {
       age--;
     }
     return age.toString();
@@ -135,7 +146,8 @@ class Explore extends StatelessWidget {
       return 'Unknown';
     }
     try {
-      final parsedDate = DateTime.parse('${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(6, 8)}');
+      final parsedDate = DateTime.parse(
+          '${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(6, 8)}');
       return '${parsedDate.day}-${parsedDate.month}-${parsedDate.year}';
     } catch (e) {
       return 'Unknown';

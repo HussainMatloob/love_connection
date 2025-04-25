@@ -96,7 +96,7 @@ class _ProfileState extends State<Profile> {
                       left: 0,
                       right: 0,
                       child: Container(
-                        height: 1.sh * 0.2,
+                        height: 10.h * 0.2,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
@@ -172,7 +172,6 @@ class _ProfileState extends State<Profile> {
                             ],
                           ),
                           SizedBox(height: 16.h),
-
                         ],
                       ),
                     ),
@@ -228,8 +227,9 @@ class _ProfileState extends State<Profile> {
 
   Widget _buildSwipeUpIndicator() {
     return Container(
-      width: 120.w,
-      height: 30.h,
+      padding: EdgeInsets.all(10.r),
+      // width: 120.w,
+      // height: 40.h,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
@@ -291,7 +291,6 @@ class _ProfileState extends State<Profile> {
                     title: 'Edit Profile',
                     onTap: () {
                       Get.to(() => UpdateProfileScreen());
-
                     }),
                 const Divider(),
                 buildMenuItem(
@@ -300,9 +299,7 @@ class _ProfileState extends State<Profile> {
                     onTap: () async {
                       final prefs = await SharedPreferences.getInstance();
                       prefs.setString("userid", "");
-                      Get.offAll(LoginScreen(
-
-                      ));
+                      Get.offAll(LoginScreen());
                     }),
               ],
             ),
@@ -607,7 +604,7 @@ class _ProfileState extends State<Profile> {
   };
 
   String getCountryCode(String countryName) {
-    return countryNameToCode[countryName] ?? "US"; // Default to "US" if not found
+    return countryNameToCode[countryName] ??
+        "US"; // Default to "US" if not found
   }
-
 } //MAKE IT FULL RESPONSIVE FOR ALL TYPE OF DEVICES SCREENC
