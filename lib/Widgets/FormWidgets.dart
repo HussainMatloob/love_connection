@@ -252,7 +252,8 @@ class FormWidgets {
     });
   }
 
-  static Widget buildDateOfBirth(AuthController controller) {
+  static Widget buildDateOfBirth(
+      AuthController controller, DateTime dateOfBirth, bool isProfileupdate) {
     return GestureDetector(
       onTap: () async {
         final date = await showDatePicker(
@@ -282,7 +283,10 @@ class FormWidgets {
             SizedBox(width: Get.width * 0.02),
             Expanded(
               child: Obx(() {
-                final date = controller.dateOfBirth.value;
+                var date = controller.dateOfBirth.value;
+                if (isProfileupdate) {
+                  date = dateOfBirth;
+                }
                 return Text(
                   date != null
                       ? DateFormat('dd/MM/yyyy').format(date)
@@ -464,7 +468,8 @@ class FormWidgets {
               ),
             ),
             SizedBox(height: 10.h),
-            buildDateOfBirth(authController),
+            buildDateOfBirth(authController,
+                DateTime.parse('2007-06-04 00:00:00.000'), false),
             SizedBox(height: 20.h),
           ],
         ),

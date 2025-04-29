@@ -148,7 +148,7 @@ class ProfileInfoWidget extends StatelessWidget {
 
           // 📌 Name, Details & Location at the bottom (Full width)
           Positioned(
-            bottom: 0,
+            bottom: 70.h,
             left: 0,
             right: 0,
             child: Container(

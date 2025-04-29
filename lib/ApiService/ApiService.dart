@@ -343,7 +343,7 @@ class ApiService {
 
   // Method to send a connection request
   Future<Map<String, dynamic>> sendConnectionRequest({
-    required int userId,
+    required String userId,
     required String connectionId,
   }) async {
     try {
@@ -448,8 +448,8 @@ class ApiService {
       final prefs = await SharedPreferences.getInstance();
       final userid = prefs.getString('userid').toString();
       if (kDebugMode) {
-        print(
-            "================================ User id is :$userid  in Get User Info ========================================");
+        // print(
+        //     "================================ User id is :$userid  in Get User Info ========================================");
       }
       final url = Uri.parse('$_baseUrl/getprofiledata.php');
       final response = await http.post(url, body: {'userId': userid});

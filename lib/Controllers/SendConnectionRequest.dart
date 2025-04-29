@@ -11,7 +11,7 @@ class SendConectionController extends GetxController {
   final ApiService apiService = ApiService();
 
   // Method to send a connection request
-  Future<void> sendConnectionRequest(int userId, String connectionId) async {
+  Future<void> sendConnectionRequest(String userId, String connectionId) async {
     try {
       isLoading.value = true;
 

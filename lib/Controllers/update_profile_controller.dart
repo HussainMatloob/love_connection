@@ -4,14 +4,20 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:love_connection/ApiService/ApiService.dart';
+import 'package:love_connection/utils/date_time_util.dart';
+import 'package:love_connection/utils/flush_messages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'AuthController.dart';
 
 class ProfileController extends GetxController {
+  var isProfileloading = false.obs;
+  final ApiService _apiService = ApiService();
   var isLoading = false.obs;
   var userId = ''.obs;
+  final dateOfBirth = Rxn<DateTime>();
   final AuthController authController = Get.put(AuthController());
-
+  var userID = '';
   @override
   void onInit() {
     super.onInit();
@@ -31,6 +37,68 @@ class ProfileController extends GetxController {
     'gender': TextEditingController(),
     'height': TextEditingController(),
   };
+
+//  FormWidgets().buildBasicInfoRow(
+//                             'Name', user['firstname'] + " " + user['lastname']),
+//                         const SizedBox(height: 10),
+//                         FormWidgets().buildBasicInfoRow(
+//                             'Marital Status', user['maritalstatus']),
+//                         const SizedBox(height: 10),
+//                         FormWidgets().buildBasicInfoRow('Sect', user['sect']),
+//                         const SizedBox(height: 10),
+//                         FormWidgets().buildBasicInfoRow('Caste', user['cast']),
+//                         const SizedBox(height: 10),
+//                         FormWidgets()
+//                             .buildBasicInfoRow('Height', user['height']),
+//                         const SizedBox(height: 10),
+//                         FormWidgets().buildBasicInfoRow(
+//                             'Date of Birth', user['dateofbirth']),
+//                         const SizedBox(height: 10),
+//                         FormWidgets()
+//                             .buildBasicInfoRow('Religion', user['religion']),
+//                         const SizedBox(height: 10),
+//                         FormWidgets()
+//                             .buildBasicInfoRow('Nationality', user['country']),
+
+  /*-------------------------------------------------------*/
+  /*                      get user details                 */
+  /*-------------------------------------------------------*/
+
+  var userData = Rxn<Map<String, dynamic>?>(); // Stores the user data
+
+  // Method to fetch user data
+  Future<void> fetchUserDetails(BuildContext context) async {
+    try {
+      isProfileloading(true);
+
+      final response = await _apiService.GetUserInfo();
+
+      if (response['ResponseCode'] == '200' && response['Result'] == 'true') {
+        userData.value = response['UserData']; // Set user data
+        controllers['firstname']?.text = userData.value?['firstname'] ?? '';
+        controllers['lastname']?.text = userData.value?['lastname'] ?? '';
+        controllers['email']?.text = userData.value?['email'] ?? '';
+        controllers['password']?.text = userData.value?['password'] ?? '';
+        controllers['gender']?.text = userData.value?['gender'] ?? '';
+        controllers['height']?.text = userData.value?['height'] ?? '';
+
+        dateOfBirth.value = DateTimeUtil.setDateOfBirth(
+            userData.value?['dateofbirth'] ?? "02/03/2000");
+
+        isProfileloading(false);
+      } else {
+        FlushMessages.snackBarMessage("Error",
+            "Error fetching details ,please refresh page", context, Colors.red);
+        isProfileloading(false);
+      }
+    } catch (e) {
+      FlushMessages.snackBarMessage("Error",
+          "Error fetching details ,please refresh page:", context, Colors.red);
+      isProfileloading(false);
+    } finally {
+      isProfileloading(false);
+    }
+  }
 
   final Map<String, Rx<File?>> imageFiles = {
     'profileimage': Rx<File?>(null),

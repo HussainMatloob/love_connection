@@ -21,7 +21,6 @@ class CastController extends GetxController {
     });
     super.onInit();
     fetchCastData(religion1.value.toString());
-
   }
 
   Future<void> fetchCastData(String religion) async {

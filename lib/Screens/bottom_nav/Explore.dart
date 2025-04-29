@@ -93,9 +93,9 @@ class _ExploreState extends State<Explore> {
                           /// ✅ Button with Better UI
                           onCheck: () async {
                             final prefs = await SharedPreferences.getInstance();
-                            final userID = prefs.getInt("userid");
+                            final userID = prefs.getString("userid");
                             sendConectionController.sendConnectionRequest(
-                                userID ?? 0, profile['id']);
+                                userID ?? '', profile['id']);
                             usersController.users.removeAt(index);
                           },
                           personalInfo: {

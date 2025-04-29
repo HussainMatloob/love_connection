@@ -31,7 +31,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    userController.fetchUserData();
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       builder: (context, child) {
@@ -111,7 +110,7 @@ class _ProfileState extends State<Profile> {
                     ),
 
                     Positioned(
-                      bottom: 18.h,
+                      bottom: 70.h,
                       left: 12.w,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,7 +289,7 @@ class _ProfileState extends State<Profile> {
                     icon: Icons.edit,
                     title: 'Edit Profile',
                     onTap: () {
-                      Get.to(() => UpdateProfileScreen());
+                      Get.to(() => Updateprofile());
                     }),
                 const Divider(),
                 buildMenuItem(
