@@ -19,20 +19,24 @@ class GetUsersController extends GetxController {
     try {
       isLoading(true);
       // get it here from shared preferences
-      final userID; 
-      
+      final userID;
+
       final prefs = await SharedPreferences.getInstance();
       userID = prefs.getString("userid").toString();
-      
-      print("============================== USERS DATA =============================");
-      print("================================ User id is :${userID}========================================");
+
+      print(
+          "============================== USERS DATA =============================");
+      print(
+          "================================ User id is :${userID}========================================");
       // Call the API
       final response = await _apiService.getUsers(userId: userID);
 
       // Check response and update the users list
       if (response['ResponseCode'] == '200' && response['Result'] == 'true') {
-        print("============================ FETCH USERS ===============================");
-        print("==============================${response['ResponseMsg']}=============================");
+        print(
+            "============================ FETCH USERS ===============================");
+        print(
+            "==============================${response['ResponseMsg']}=============================");
         print(response['Data']);
         print("===========================================================");
         users.value = response['Data'];
@@ -43,7 +47,6 @@ class GetUsersController extends GetxController {
       // Get.snackbar('Error', e.toString());
     } finally {
       isLoading(false);
-      update();
     }
   }
 }

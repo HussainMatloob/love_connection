@@ -8,17 +8,28 @@ import '../../Controllers/GetuserController.dart';
 import '../../Widgets/NoprofileFound.dart';
 import '../../Widgets/ProfileExplorWidget.dart';
 
-class Explore extends StatelessWidget {
-  Explore({super.key});
+class Explore extends StatefulWidget {
+  const Explore({super.key});
 
+  @override
+  State<Explore> createState() => _ExploreState();
+}
+
+class _ExploreState extends State<Explore> {
   final GetUsersController usersController = Get.put(GetUsersController());
   final SendConectionController sendConectionController =
       Get.put(SendConectionController());
+  late final PageController _pageController;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _pageController = PageController();
+    usersController.fetchUsers();
+  }
 
   @override
   Widget build(BuildContext context) {
-    usersController.fetchUsers();
-
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -62,7 +73,7 @@ class Explore extends StatelessWidget {
                 } else {
                   return PageView.builder(
                     itemCount: usersController.users.length,
-                    controller: PageController(),
+                    controller: _pageController,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
                       final profile = usersController.users[index];
@@ -82,9 +93,9 @@ class Explore extends StatelessWidget {
                           /// ✅ Button with Better UI
                           onCheck: () async {
                             final prefs = await SharedPreferences.getInstance();
-                            final userID = prefs.getString("userid").toString();
+                            final userID = prefs.getInt("userid");
                             sendConectionController.sendConnectionRequest(
-                                userID, profile['id']);
+                                userID ?? 0, profile['id']);
                             usersController.users.removeAt(index);
                           },
                           personalInfo: {

@@ -52,8 +52,6 @@ class ApiService {
     required File gallery,
   }) async {
     try {
-
-
       var url = Uri.parse('$_baseUrl/registeration.php');
 
       // **🔹 Create Request**
@@ -63,7 +61,6 @@ class ApiService {
         "Content-Type": "multipart/form-data",
         "Accept": "application/json",
       });
-
 
       // **🔹 Add Text Fields**
       Map<String, String> fields = {
@@ -96,7 +93,8 @@ class ApiService {
 
       print("📩 Email Sent: '${request.fields['email']}'");
       print("📦 All Fields Sent: ${request.fields}");
-      print("📂 Files Sent: ${request.files.map((file) => file.filename).toList()}");
+      print(
+          "📂 Files Sent: ${request.files.map((file) => file.filename).toList()}");
       print("🚀 Firstname: $firstname");
       print("🚀 Lastname: $lastname");
       print("🚀 Email: $email");
@@ -183,7 +181,6 @@ class ApiService {
     }
   }
 
-
   Future<Map<String, dynamic>> loginUser(String email, String password) async {
     final url = Uri.parse(
         '${_baseUrl}/login.php'); // Replace with actual login endpoint
@@ -218,26 +215,25 @@ class ApiService {
         body: {'userid': userId},
       );
 
-      if (response.statusCode == 200) {
-        // final responseBody = await response.stream.bytesToString();
-        //         // final jsonData = json.decode(responseBody);
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
 
+      if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
 
-        if (jsonData['ResponseCode'] == '200') {
-          // Return full response including `Data` array
+        if (jsonData['ResponseCode'].toString() == '200') {
           return {
             'ResponseCode': jsonData['ResponseCode'],
             'Result': jsonData['Result'],
             'ResponseMsg': jsonData['ResponseMsg'],
-            'Data': jsonData['Data']
+            'Data': jsonData['Data'],
           };
         } else {
           return {
             'ResponseCode': jsonData['ResponseCode'],
             'Result': jsonData['Result'],
             'ResponseMsg': jsonData['ResponseMsg'],
-            'Data': []
+            'Data': [],
           };
         }
       } else {
@@ -245,7 +241,7 @@ class ApiService {
           'ResponseCode': response.statusCode.toString(),
           'Result': 'false',
           'ResponseMsg': 'Failed to fetch users',
-          'Data': []
+          'Data': [],
         };
       }
     } catch (e) {
@@ -253,7 +249,7 @@ class ApiService {
         'ResponseCode': '500',
         'Result': 'false',
         'ResponseMsg': e.toString(),
-        'Data': []
+        'Data': [],
       };
     }
   }
@@ -347,7 +343,7 @@ class ApiService {
 
   // Method to send a connection request
   Future<Map<String, dynamic>> sendConnectionRequest({
-    required String userId,
+    required int userId,
     required String connectionId,
   }) async {
     try {
@@ -452,7 +448,8 @@ class ApiService {
       final prefs = await SharedPreferences.getInstance();
       final userid = prefs.getString('userid').toString();
       if (kDebugMode) {
-        print("================================ User id is :$userid  in Get User Info ========================================");
+        print(
+            "================================ User id is :$userid  in Get User Info ========================================");
       }
       final url = Uri.parse('$_baseUrl/getprofiledata.php');
       final response = await http.post(url, body: {'userId': userid});

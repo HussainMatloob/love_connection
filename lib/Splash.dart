@@ -24,13 +24,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // Simulate a delay to show the splash screen
     await Future.delayed(Duration(seconds: 5));
-    if (userId != null && userId.isNotEmpty  ) {
-        Get.offAll(ServiceSelectionScreen());
+    if (userId != null && userId.isNotEmpty) {
+      Get.offAll(ServiceSelectionScreen());
     } else {
       // Navigate to Onboarding screen if userId doesn't exist
       Get.offAll(OnboardingScreen());
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

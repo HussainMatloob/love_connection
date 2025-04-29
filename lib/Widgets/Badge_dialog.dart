@@ -1,6 +1,7 @@
 import 'dart:ui'; // ✅ Required for blur
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
@@ -80,11 +81,12 @@ Widget buildIncompleteBadge(dynamic controller) {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 22,
+              fontSize: 22.sp,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.2,
               shadows: [
-                Shadow(blurRadius: 5, color: Colors.black45, offset: Offset(1, 1))
+                Shadow(
+                    blurRadius: 5, color: Colors.black45, offset: Offset(1, 1))
               ],
             ),
           ),
@@ -94,22 +96,25 @@ Widget buildIncompleteBadge(dynamic controller) {
           Text(
             "Complete all assessments before unlocking this badge.",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.white70),
+            style: TextStyle(fontSize: 16.sp, color: Colors.white70),
           ),
           SizedBox(height: 16),
 
           // 🔄 "Check Again" Button
           Obx(() => ElevatedButton.icon(
-            onPressed: controller.recheckProgress,
-            icon: Icon(Icons.sync, color: Colors.white),
-            label: Text("Check Again", style: TextStyle(color: Colors.white)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.pinkAccent,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 14),
-              elevation: 6,
-            ),
-          )),
+                onPressed: controller.recheckProgress,
+                icon: Icon(Icons.sync, color: Colors.white),
+                label:
+                    Text("Check Again", style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.pinkAccent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r)),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 30.w, vertical: 14.h),
+                  elevation: 6,
+                ),
+              )),
         ],
       ),
     ),
@@ -127,76 +132,75 @@ Widget buildAchievedBadge(dynamic controller) {
       children: [
         // 🏅 Shiny Badge Design
         Obx(() => Container(
-          width: 160,
-          height: 160,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-              colors: [Color(0xFFFB3879), Color(0xFFFB9918)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.pinkAccent.withOpacity(0.5),
-                blurRadius: 20,
-                spreadRadius: 4,
+              width: 160.w,
+              height: 160.h,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [Color(0xFFFB3879), Color(0xFFFB9918)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.pinkAccent.withOpacity(0.5),
+                    blurRadius: 20,
+                    spreadRadius: 4,
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: ClipOval(
-            child: Image.asset(
-              controller.badgeImageUrl.value.isNotEmpty
-                  ? controller.badgeImageUrl.value
-                  : 'assets/images/badge.png',
-              fit: BoxFit.contain,
-            ),
-          ),
-        )),
+              child: ClipOval(
+                child: Image.asset(
+                  controller.badgeImageUrl.value.isNotEmpty
+                      ? controller.badgeImageUrl.value
+                      : 'assets/images/badge.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            )),
         SizedBox(height: 16),
 
         // 🎖️ Badge Title
         Obx(() => AnimatedDefaultTextStyle(
-          duration: Duration(milliseconds: 500),
-          style: TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            shadows: [
-              Shadow(
-                color: Colors.black.withOpacity(0.5),
-                blurRadius: 4,
-                offset: Offset(2, 2),
+              duration: Duration(milliseconds: 500),
+              style: TextStyle(
+                fontSize: 26.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.5),
+                    blurRadius: 4,
+                    offset: Offset(2, 2),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Text(
-            controller.badgeTitle.value.isNotEmpty
-                ? controller.badgeTitle.value
-                : "Congratulations! 🎉",
-            textAlign: TextAlign.center,
-          ),
-        )),
+              child: Text(
+                controller.badgeTitle.value.isNotEmpty
+                    ? controller.badgeTitle.value
+                    : "Congratulations! 🎉",
+                textAlign: TextAlign.center,
+              ),
+            )),
         SizedBox(height: 8),
 
         // 📜 Badge Description
         Obx(() => AnimatedDefaultTextStyle(
-          duration: Duration(milliseconds: 500),
-          style: TextStyle(
-            fontSize: 18,
-            fontStyle: FontStyle.italic,
-            color: Colors.white70,
-          ),
-          child: Text(
-            controller.badgeDescription.value.isNotEmpty
-                ? controller.badgeDescription.value
-                : "You have unlocked a new badge!",
-            textAlign: TextAlign.center,
-          ),
-        )),
-        SizedBox(height: 20),
-
+              duration: Duration(milliseconds: 500),
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontStyle: FontStyle.italic,
+                color: Colors.white70,
+              ),
+              child: Text(
+                controller.badgeDescription.value.isNotEmpty
+                    ? controller.badgeDescription.value
+                    : "You have unlocked a new badge!",
+                textAlign: TextAlign.center,
+              ),
+            )),
+        SizedBox(height: 20.h),
       ],
     ),
   );

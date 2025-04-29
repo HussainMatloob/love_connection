@@ -1,0 +1,2 @@
+C:/Users/JIB/Downloads/love_connection/android/app/.cxx/RelWithDebInfo/12654311/x86/CMakeFiles/edit_cache.dir
+C:/Users/JIB/Downloads/love_connection/android/app/.cxx/RelWithDebInfo/12654311/x86/CMakeFiles/rebuild_cache.dir

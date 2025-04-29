@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
+
 import 'package:love_connection/Screens/Service_selection_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ApiService/ApiService.dart';
@@ -9,24 +9,22 @@ class LoginController extends GetxController {
   var isLoading = false.obs;
   var isLoggedIn = false.obs;
   var userId = ''.obs;
-
   var isPasswordHidden = true.obs;
-
   void togglePasswordVisibility() {
     isPasswordHidden.value = !isPasswordHidden.value;
   }
 
   final ApiService apiService = ApiService();
   Future<void> login(
-      String email,
-      String password,
-      ) async {
+    String email,
+    String password,
+  ) async {
     isLoading.value = true;
     try {
       final response = await apiService.loginUser(email, password);
       if (response['ResponseCode'] == '200' && response['Result'] == 'true') {
         isLoggedIn.value = true;
-        userId.value = response['userid'].toString();
+        userId.value = response['userid'];
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('userid', userId.toString());
         print("User Login Successfully and user id is : $userId");
@@ -37,7 +35,8 @@ class LoginController extends GetxController {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            backgroundColor: const Color(0xFFFFF1F3), // Light romantic pink background
+            backgroundColor:
+                const Color(0xFFFFF1F3), // Light romantic pink background
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 24),
               child: Column(
@@ -104,8 +103,4 @@ class LoginController extends GetxController {
       isLoading.value = false;
     }
   }
-
-
-
-
 }

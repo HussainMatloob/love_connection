@@ -18,7 +18,8 @@ class BasicInfoBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      height: 537.h,
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -26,68 +27,71 @@ class BasicInfoBottomSheet extends StatelessWidget {
           topRight: Radius.circular(20),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Title
-          Center(
-            child: Text(
-              'Basic Info',
-              style: GoogleFonts.outfit(
-                fontSize: 22.sp,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Title
+            Center(
+              child: Text(
+                'Basic Info',
+                style: GoogleFonts.outfit(
+                  fontSize: 22.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 20),
-          // Personal Section
-          Text(
-            'Personal',
-            style: GoogleFonts.outfit(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: Colors.pink,
+            SizedBox(height: 20),
+            // Personal Section
+            Text(
+              'Personal',
+              style: GoogleFonts.outfit(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                color: Colors.pink,
+              ),
             ),
-          ),
-          SizedBox(height: 10),
-          _buildInfoRow('Name', personalInfo['name'] ?? '', 'Marital Status',
-              personalInfo['maritalStatus'] ?? ''),
-          SizedBox(height: 10),
+            SizedBox(height: 10.h),
+            _buildInfoRow('Name', personalInfo['name'] ?? '', 'Marital Status',
+                personalInfo['maritalStatus'] ?? ''),
+            SizedBox(height: 10.h),
 
-          _buildInfoRow('Sect', personalInfo['sect'] ?? '', 'Caste',
-              personalInfo['caste'] ?? ''),
-          SizedBox(height: 10),
+            _buildInfoRow('Sect', personalInfo['sect'] ?? '', 'Caste',
+                personalInfo['caste'] ?? ''),
+            SizedBox(height: 10.h),
 
-          _buildInfoRow('Height', personalInfo['height'] ?? '', 'Date of Birth',
-              personalInfo['dob'] ?? ''),
-          SizedBox(height: 10),
+            _buildInfoRow('Height', personalInfo['height'] ?? '',
+                'Date of Birth', personalInfo['dob'] ?? ''),
+            SizedBox(height: 10.h),
 
-          _buildInfoRow('Religion', personalInfo['religion'] ?? '',
-              'Nationality', personalInfo['nationality'] ?? ''),
-          SizedBox(height: 20),
-          // Education and Employment Section
-          Text(
-            'Education and Employment',
-            style: GoogleFonts.outfit(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: Colors.pink,
+            _buildInfoRow('Religion', personalInfo['religion'] ?? '',
+                'Nationality', personalInfo['nationality'] ?? ''),
+            SizedBox(height: 20.h),
+            // Education and Employment Section
+            Text(
+              'Education and Employment',
+              style: GoogleFonts.outfit(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w500,
+                color: Colors.pink,
+              ),
             ),
-          ),
-          SizedBox(height: 10),
-          _buildSingleInfoRow('Education', educationInfo['education'] ?? ''),
-          SizedBox(height: 10),
+            SizedBox(height: 10.h),
+            _buildSingleInfoRow('Education', educationInfo['education'] ?? ''),
+            SizedBox(height: 10.h),
 
-          _buildSingleInfoRow(
-              'Monthly Income', educationInfo['monthlyIncome'] ?? ''),
-          SizedBox(height: 10),
+            _buildSingleInfoRow(
+                'Monthly Income', educationInfo['monthlyIncome'] ?? ''),
+            SizedBox(height: 10.h),
 
-          _buildSingleInfoRow(
-              'Employment Status', educationInfo['employmentStatus'] ?? ''),
-          SizedBox(height: 10),
-        ],
+            _buildSingleInfoRow(
+                'Employment Status', educationInfo['employmentStatus'] ?? ''),
+            SizedBox(height: 10.h),
+          ],
+        ),
       ),
     );
   }
@@ -105,8 +109,8 @@ class BasicInfoBottomSheet extends StatelessWidget {
   Widget _buildInfoRow(
       String label1, String value1, String label2, String value2) {
     return Container(
-      width: 1.sw, // Full screen width
-      height: 60.h, // Responsive height
+      padding: EdgeInsets.all(8.r),
+      // Responsive height
       decoration: BoxDecoration(
         color: Colors.grey[100],
         borderRadius: BorderRadius.circular(8.r), // Responsive border radius
@@ -184,13 +188,13 @@ class BasicInfoBottomSheet extends StatelessWidget {
           children: [
             Text(label,
                 style: GoogleFonts.outfit(color: Colors.grey, fontSize: 16)),
-            SizedBox(height: 5),
+            SizedBox(height: 5.h),
             Text(value,
                 style: GoogleFonts.outfit(
                     color: Colors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
+            SizedBox(height: 10.h),
           ],
         ),
       ),

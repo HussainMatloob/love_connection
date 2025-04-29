@@ -10,7 +10,7 @@ import 'AuthController.dart';
 class ProfileController extends GetxController {
   var isLoading = false.obs;
   var userId = ''.obs;
-  final AuthController authController = Get.find<AuthController>();
+  final AuthController authController = Get.put(AuthController());
 
   @override
   void onInit() {
@@ -20,7 +20,7 @@ class ProfileController extends GetxController {
 
   Future<void> loadUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId.value = prefs.getString("userid")! ;
+    userId.value = prefs.getString("userid")!;
   }
 
   final Map<String, TextEditingController> controllers = {
@@ -75,7 +75,8 @@ class ProfileController extends GetxController {
     }
 
     // FIX: Preserve value, only assign default if NULL or empty
-    if (authController.cityOfResidence.value == null || authController.cityOfResidence.value!.trim().isEmpty) {
+    if (authController.cityOfResidence.value == null ||
+        authController.cityOfResidence.value!.trim().isEmpty) {
       print("Missing field: cityOfResidence. Assigning default.");
       authController.cityOfResidence.value = "Unknown";
       allFieldsValid = false;
@@ -89,10 +90,10 @@ class ProfileController extends GetxController {
     return allFieldsValid;
   }
 
-
   Future<void> updateUserProfile() async {
     if (!validateAllFields()) {
-      Get.snackbar("Error", "All fields are required", backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar("Error", "All fields are required",
+          backgroundColor: Colors.red, colorText: Colors.white);
       return;
     }
 
@@ -102,15 +103,16 @@ class ProfileController extends GetxController {
       return;
     }
 
-
     isLoading(true);
-    var uri = Uri.parse("https://projects.funtashtechnologies.com/gomeetapi/updateprofile.php");
+    var uri = Uri.parse(
+        "https://projects.funtashtechnologies.com/gomeetapi/updateprofile.php");
     var request = http.MultipartRequest('POST', uri);
     request.fields.addAll(getProfileData());
 
     for (var entry in imageFiles.entries) {
       if (entry.value.value != null) {
-        request.files.add(await http.MultipartFile.fromPath(entry.key, entry.value.value!.path));
+        request.files.add(await http.MultipartFile.fromPath(
+            entry.key, entry.value.value!.path));
       }
     }
 
@@ -120,12 +122,15 @@ class ProfileController extends GetxController {
       var jsonResponse = jsonDecode(responseBody);
 
       if (jsonResponse["ResponseCode"] == "200") {
-        Get.snackbar("Success", "Profile updated successfully!", backgroundColor: Colors.green, colorText: Colors.white);
+        Get.snackbar("Success", "Profile updated successfully!",
+            backgroundColor: Colors.green, colorText: Colors.white);
       } else {
-        Get.snackbar("Error", jsonResponse["ResponseMsg"], backgroundColor: Colors.red, colorText: Colors.white);
+        Get.snackbar("Error", jsonResponse["ResponseMsg"],
+            backgroundColor: Colors.red, colorText: Colors.white);
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to update profile. Try again.", backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar("Error", "Failed to update profile. Try again.",
+          backgroundColor: Colors.red, colorText: Colors.white);
     } finally {
       isLoading(false);
     }
@@ -134,15 +139,19 @@ class ProfileController extends GetxController {
   Map<String, String> getProfileData() {
     return {
       'id': userId.toString(),
-      ...controllers.map((key, controller) => MapEntry(key, controller.text.trim())),
+      ...controllers
+          .map((key, controller) => MapEntry(key, controller.text.trim())),
       'dateofbirth': authController.dateOfBirth.value != null
-          ? authController.dateOfBirth.value!.toIso8601String().trim() : '',
+          ? authController.dateOfBirth.value!.toIso8601String().trim()
+          : '',
       'education': authController.educationLevel.value?.trim() ?? '',
       'religion': authController.religion.value?.trim() ?? '',
       'cast': authController.caste.value?.trim() ?? '',
       'sect': authController.sect.value?.trim() ?? '',
       'country': authController.currentResidence.value?.trim() ?? '',
-      'city': authController.cityOfResidence.value?.trim().isNotEmpty == true ? authController.cityOfResidence.value!.trim() : "Unknown", // Default if empty
+      'city': authController.cityOfResidence.value?.trim().isNotEmpty == true
+          ? authController.cityOfResidence.value!.trim()
+          : "Unknown", // Default if empty
       'ethnicity': authController.ethnicity.value?.trim() ?? '',
     };
   }

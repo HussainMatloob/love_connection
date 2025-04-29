@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../ApiService/ApiService.dart';
 
 class SendConectionController extends GetxController {
-
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var successMessage = ''.obs;
@@ -12,7 +11,7 @@ class SendConectionController extends GetxController {
   final ApiService apiService = ApiService();
 
   // Method to send a connection request
-  Future<void> sendConnectionRequest(String userId, String connectionId) async {
+  Future<void> sendConnectionRequest(int userId, String connectionId) async {
     try {
       isLoading.value = true;
 
@@ -108,5 +107,4 @@ class SendConectionController extends GetxController {
       isLoading.value = false;
     }
   }
-
 }
