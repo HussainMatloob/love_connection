@@ -256,7 +256,7 @@ class FormWidgets {
       AuthController controller, DateTime dateOfBirth, bool isProfileupdate) {
     return GestureDetector(
       onTap: () async {
-        final date = await showDatePicker(
+        var date = await showDatePicker(
           context: Get.context!,
           initialDate: DateTime.now().subtract(Duration(days: 6570)),
           // 18 years ago
@@ -283,10 +283,12 @@ class FormWidgets {
             SizedBox(width: Get.width * 0.02),
             Expanded(
               child: Obx(() {
-                var date = controller.dateOfBirth.value;
-                if (isProfileupdate) {
-                  date = dateOfBirth;
+                if (isProfileupdate && controller.dateOfBirth.value == null) {
+                  controller.setDateOfBirth(dateOfBirth);
                 }
+
+                var date = controller.dateOfBirth.value;
+
                 return Text(
                   date != null
                       ? DateFormat('dd/MM/yyyy').format(date)
