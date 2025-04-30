@@ -75,7 +75,7 @@ class _ProfileState extends State<Profile> {
                       width: 1.sw,
                       height: 1.sh * 1,
                       child: CachedNetworkImage(
-                        imageUrl: _getImageUrl(user['profileimage']),
+                        imageUrl: _getImageUrl(user['selfieimage']),
                         fadeInCurve: Curves.easeIn,
                         placeholder: (context, url) => Image.asset(
                           "assets/images/PROFILE.png",
@@ -89,7 +89,7 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
 
-                    // add linear gradient color to the image at bottom
+                    //add linear gradient color to the image at bottom
                     Positioned(
                       bottom: 0,
                       left: 0,
@@ -108,6 +108,10 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                     ),
+
+                    // Column(childreen[
+
+                    // ]),
 
                     Positioned(
                       bottom: 70.h,
