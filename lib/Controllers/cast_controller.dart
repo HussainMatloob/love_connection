@@ -28,10 +28,12 @@ class CastController extends GetxController {
       isLoading(true);
       final data = await _apiService.fetchCastData(religion);
       castList.assignAll(data);
+      isLoading(false);
       castList.refresh();
 
       errorMessage('');
     } catch (e) {
+      isLoading(false);
       errorMessage(e.toString());
     } finally {
       isLoading(false);

@@ -289,6 +289,7 @@ class _ProfileState extends State<Profile> {
                     icon: Icons.edit,
                     title: 'Edit Profile',
                     onTap: () {
+                      Navigator.of(context).pop();
                       Get.to(() => Updateprofile());
                     }),
                 const Divider(),

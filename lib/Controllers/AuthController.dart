@@ -217,8 +217,9 @@ class AuthController extends GetxController {
     if (lastNameController.text.isEmpty) return 'Last Name is required.';
     if (height.value == null) return 'Height is required.';
     if (caste.value == null) return 'Caste is required.';
-    if(currentResidence.value == null) return 'Current Residence is required.';
-    if(lookingForResidence.value == null) return 'Looking For Residence is required.';
+    if (currentResidence.value == null) return 'Current Residence is required.';
+    if (lookingForResidence.value == null)
+      return 'Looking For Residence is required.';
     if (cityOfResidence.value == null) return 'City of Residence is required.';
     if (dateOfBirth.value == null) return 'Date of Birth is required.';
     if (educationLevel.value == null) return 'Education Level is required.';
@@ -227,7 +228,8 @@ class AuthController extends GetxController {
     if (gender.value == null) return 'Gender is required.';
     if (maritalStatus.value == null) return 'Marital Status is required.';
     if (religion.value == null) return 'Religion is required.';
-    if (lookingForReligion.value == null) return 'Looking for Religion is required.';
+    if (lookingForReligion.value == null)
+      return 'Looking for Religion is required.';
     if (profileImage.value == null) return 'Profile Image is required.';
     if (cninfront.value == null) return ' CNIC Front Image is required.';
     if (cninback.value == null) return ' CNIC Back Image is required.';
@@ -299,8 +301,7 @@ class AuthController extends GetxController {
 
       // Handle the response from the API service
       if (response['ResponseCode'] == '200' && response['Result'] == 'true') {
-          print(response['Data']);
-
+        print(response['Data']);
       } else {
         Get.snackbar(
           'Error',

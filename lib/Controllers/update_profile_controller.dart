@@ -5,19 +5,23 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:love_connection/ApiService/ApiService.dart';
+import 'package:love_connection/Controllers/sect_controller.dart';
 import 'package:love_connection/utils/date_time_util.dart';
 import 'package:love_connection/utils/flush_messages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'AuthController.dart';
 
 class ProfileController extends GetxController {
+  var isBack = false.obs;
   var isProfileloading = false.obs;
   final ApiService _apiService = ApiService();
   var isLoading = false.obs;
   var userId = ''.obs;
   final dateOfBirth = Rxn<DateTime>();
   final AuthController authController = Get.put(AuthController());
+  final SectController sectController = Get.put(SectController());
   var userID = '';
+
   @override
   void onInit() {
     super.onInit();
@@ -37,28 +41,6 @@ class ProfileController extends GetxController {
     'gender': TextEditingController(),
     'height': TextEditingController(),
   };
-
-//  FormWidgets().buildBasicInfoRow(
-//                             'Name', user['firstname'] + " " + user['lastname']),
-//                         const SizedBox(height: 10),
-//                         FormWidgets().buildBasicInfoRow(
-//                             'Marital Status', user['maritalstatus']),
-//                         const SizedBox(height: 10),
-//                         FormWidgets().buildBasicInfoRow('Sect', user['sect']),
-//                         const SizedBox(height: 10),
-//                         FormWidgets().buildBasicInfoRow('Caste', user['cast']),
-//                         const SizedBox(height: 10),
-//                         FormWidgets()
-//                             .buildBasicInfoRow('Height', user['height']),
-//                         const SizedBox(height: 10),
-//                         FormWidgets().buildBasicInfoRow(
-//                             'Date of Birth', user['dateofbirth']),
-//                         const SizedBox(height: 10),
-//                         FormWidgets()
-//                             .buildBasicInfoRow('Religion', user['religion']),
-//                         const SizedBox(height: 10),
-//                         FormWidgets()
-//                             .buildBasicInfoRow('Nationality', user['country']),
 
   /*-------------------------------------------------------*/
   /*                      get user details                 */
@@ -81,9 +63,45 @@ class ProfileController extends GetxController {
         controllers['password']?.text = userData.value?['password'] ?? '';
         controllers['gender']?.text = userData.value?['gender'] ?? '';
         controllers['height']?.text = userData.value?['height'] ?? '';
-
         dateOfBirth.value = DateTimeUtil.setDateOfBirth(
             userData.value?['dateofbirth'] ?? "02/03/2000");
+
+        authController.educationLevel.value =
+            userData.value?['education'] ?? '';
+
+        authController.lookingForEducation.value =
+            userData.value?['educationlookingfor'] ?? '';
+
+        authController.religion.value = userData.value?['religion'] ?? '';
+
+        authController.lookingForReligion.value =
+            userData.value?['religionlookingfor'] ?? '';
+
+        authController.caste.value = userData.value?['cast'] ?? '';
+
+        authController.lookingForCaste.value =
+            userData.value?['castlookingfor'] ?? '';
+
+        authController.sect.value = userData.value?['sect'] ?? '';
+
+        authController.lookingForSect.value =
+            userData.value?['sectlookingfor'] ?? '';
+
+        authController.currentResidence.value =
+            userData.value?['country'] ?? '';
+
+        authController.lookingForResidence.value =
+            userData.value?['countrylookingfor'] ?? '';
+
+        authController.cityOfResidence.value = userData.value?['city'] ?? '';
+
+        authController.lookingForCity.value =
+            userData.value?['citylookingfor'] ?? '';
+
+        authController.ethnicity.value = userData.value?['ethnicity'] ?? '';
+
+        authController.lookingForEthnicity.value =
+            userData.value?['ethnicitylookingfor'] ?? '';
 
         isProfileloading(false);
       } else {
@@ -100,10 +118,12 @@ class ProfileController extends GetxController {
     }
   }
 
+// Image file map
   final Map<String, Rx<File?>> imageFiles = {
-    'profileimage': Rx<File?>(null),
+    'selfieimage': Rx<File?>(null),
   };
 
+// Pick image from gallery or camera
   Future<void> pickImage(ImageSource source, String field) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile != null) {
