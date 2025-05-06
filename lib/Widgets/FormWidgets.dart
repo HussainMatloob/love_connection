@@ -490,7 +490,8 @@ class FormWidgets {
           children: [
             // Education Level Dropdown Pair
             buildDropdownPair(
-              label: 'Education Level',
+              label1: 'Your Education',
+              label2: 'Looking For',
               value: authController.educationLevel,
               lookingForValue: authController.lookingForEducation,
               items: authController.educationOptions,
@@ -506,7 +507,8 @@ class FormWidgets {
                 return Center(child: CircularProgressIndicator());
               }
               return buildDropdownPair(
-                label: 'Country of Current Residence',
+                label1: 'Your Country',
+                label2: 'Looking For',
                 value: authController.currentResidence,
                 lookingForValue: authController.lookingForResidence,
                 items: countries,
@@ -517,7 +519,8 @@ class FormWidgets {
             SizedBox(height: 24.h),
             // Employment Status Dropdown
             FormWidgets().buildSingleDropdown(
-              label: 'Employment Status',
+              label1: 'Your Employment Status',
+              label2: 'Looking For',
               value: authController.employmentStatus,
               items: authController.employmentOptions,
             ),
@@ -550,7 +553,8 @@ class FormWidgets {
                 if (cityController.isLoading.value)
                   return Center(child: CircularProgressIndicator());
                 return buildDropdownPair1(
-                  label: 'City of Current Residence',
+                  label1: 'Your City',
+                  label2: 'Looking For',
                   value: authController.cityOfResidence,
                   lookingForValue: authController.lookingForCity,
                   selfItems: [
@@ -576,7 +580,9 @@ class FormWidgets {
                     .map<String>((cast) => cast["cast"].toString())
                     .toList();
                 return buildDropdownPair(
-                  label: 'Caste',
+                  label1: 'Your Caste',
+                  label2: 'Looking For',
+
                   value: authController.caste,
                   lookingForValue: authController.lookingForCaste,
                   items: ["Any", ...casteNames], // Add "Any" option
@@ -593,7 +599,9 @@ class FormWidgets {
                 }
 
                 return buildDropdownPair(
-                  label: 'Sect',
+                  label1: 'Your Sect',
+                  label2: 'Looking For',
+
                   value: authController.sect,
                   lookingForValue: authController.lookingForSect,
                   items: [
@@ -609,7 +617,8 @@ class FormWidgets {
 
               // Ethnicity Dropdown with "Any" Option
               buildDropdownPair(
-                  label: 'Ethnicity',
+                  label1: 'Your Ethnicity',
+                  label2: 'Looking For',
                   value: authController.ethnicity,
                   lookingForValue: authController.lookingForEthnicity,
                   items: [
@@ -657,7 +666,8 @@ class FormWidgets {
   }
 
   static Widget buildDropdownPair({
-    required String label,
+    required String label1,
+    required String label2,
     required Rxn<String> value,
     required Rxn<String> lookingForValue,
     required List<String> items,
@@ -666,101 +676,122 @@ class FormWidgets {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: GoogleFonts.outfit(
-            color: Colors.grey[600],
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
         SizedBox(height: 8),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            /// First Dropdown
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Obx(
-                  () => DropdownButtonFormField<String>(
-                    isExpanded: true,
-                    // Ensure the selected value exists in the list; otherwise, set to null
-                    value: items.contains(value.value)
-                        ? value.value
-                        : null, // ✅ FIX HERE
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                      border: InputBorder.none,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label1,
+                    style: GoogleFonts.outfit(
+                      color: Colors.grey[600],
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
-                    hint: Text(
-                      hinttext,
-                      style: GoogleFonts.outfit(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                      ),
+                  ),
+                  SizedBox(height: 6),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    items: items.map((String item) {
-                      return DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(
-                          item,
+                    child: Obx(
+                      () => DropdownButtonFormField<String>(
+                        isExpanded: true,
+                        value: items.contains(value.value) ? value.value : null,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                          border: InputBorder.none,
+                        ),
+                        hint: Text(
+                          hinttext,
                           style: GoogleFonts.outfit(
+                            fontSize: 13,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      value.value = newValue;
-                    },
+                        items: items.map((String item) {
+                          return DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: GoogleFonts.outfit(
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          value.value = newValue;
+                        },
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
+
             SizedBox(width: 16),
+
+            /// Second Dropdown
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Obx(
-                  () => DropdownButtonFormField<String>(
-                    isExpanded: true,
-                    // Ensure the selected value exists in the list; otherwise, set to null
-                    value: items.contains(lookingForValue.value)
-                        ? lookingForValue.value
-                        : null, // ✅ FIX HERE
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                      border: InputBorder.none,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label2,
+                    style: GoogleFonts.outfit(
+                      color: Colors.grey[600],
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
-                    hint: Text(
-                      'Looking for',
-                      style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 13,
-                        color: Colors.black,
-                      ),
+                  ),
+                  SizedBox(height: 6),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    items: items.map((String item) {
-                      return DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(
-                          item,
+                    child: Obx(
+                      () => DropdownButtonFormField<String>(
+                        isExpanded: true,
+                        value: items.contains(lookingForValue.value)
+                            ? lookingForValue.value
+                            : null,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                          border: InputBorder.none,
+                        ),
+                        hint: Text(
+                          'Looking for',
                           style: GoogleFonts.outfit(
+                            fontSize: 13,
                             fontWeight: FontWeight.w400,
+                            color: Colors.black,
                           ),
                         ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      lookingForValue.value = newValue;
-                    },
+                        items: items.map((String item) {
+                          return DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: GoogleFonts.outfit(
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          lookingForValue.value = newValue;
+                        },
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ],
@@ -770,120 +801,136 @@ class FormWidgets {
   }
 
   static Widget buildDropdownPair1({
-    required String label,
+    required String label1,
+    required String label2,
     required Rxn<String> value,
     required Rxn<String> lookingForValue,
-    required List<String> selfItems, // Cities for residence
-    required List<String> lookingForItems, // Cities for looking-for residence
+    required List<String> selfItems,
+    required List<String> lookingForItems,
     required String hinttext,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: GoogleFonts.outfit(
-            color: Colors.grey[600],
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Row(
           children: [
-            // Current Residence City Dropdown
+            // First Dropdown and Label
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Obx(() {
-                  // Ensure value exists in the list, otherwise set to null
-                  String? selectedValue =
-                      selfItems.contains(value.value) ? value.value : null;
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label1,
+                    style: GoogleFonts.outfit(
+                      color: Colors.grey[600],
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Obx(() {
+                      String? selectedValue =
+                          selfItems.contains(value.value) ? value.value : null;
 
-                  return DropdownButtonFormField<String>(
-                    isExpanded: true,
-                    value: selectedValue,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                      border: InputBorder.none,
-                    ),
-                    hint: Text(
-                      hinttext,
-                      style: GoogleFonts.outfit(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    items: selfItems.toSet().map((String item) {
-                      // ✅ Remove duplicates
-                      return DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(
-                          item,
+                      return DropdownButtonFormField<String>(
+                        isExpanded: true,
+                        value: selectedValue,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                          border: InputBorder.none,
+                        ),
+                        hint: Text(
+                          hinttext,
                           style: GoogleFonts.outfit(
+                            fontSize: 13,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
+                        items: selfItems.toSet().map((String item) {
+                          return DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: GoogleFonts.outfit(
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          value.value = newValue;
+                        },
                       );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      value.value = newValue;
-                    },
-                  );
-                }),
+                    }),
+                  ),
+                ],
               ),
             ),
             const SizedBox(width: 16),
-
-            // Looking For Residence City Dropdown
+            // Second Dropdown and Label
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Obx(() {
-                  // Ensure value exists in the list, otherwise set to null
-                  String? selectedLookingForValue =
-                      lookingForItems.contains(lookingForValue.value)
-                          ? lookingForValue.value
-                          : null;
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label2,
+                    style: GoogleFonts.outfit(
+                      color: Colors.grey[600],
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Obx(() {
+                      String? selectedLookingForValue =
+                          lookingForItems.contains(lookingForValue.value)
+                              ? lookingForValue.value
+                              : null;
 
-                  return DropdownButtonFormField<String>(
-                    isExpanded: true,
-                    value: selectedLookingForValue,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                      border: InputBorder.none,
-                    ),
-                    hint: Text(
-                      'Looking for',
-                      style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 13,
-                        color: Colors.black,
-                      ),
-                    ),
-                    items: lookingForItems.toSet().map((String item) {
-                      // ✅ Remove duplicates
-                      return DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(
-                          item,
+                      return DropdownButtonFormField<String>(
+                        isExpanded: true,
+                        value: selectedLookingForValue,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                          border: InputBorder.none,
+                        ),
+                        hint: Text(
+                          'Looking for',
                           style: GoogleFonts.outfit(
                             fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                            color: Colors.black,
                           ),
                         ),
+                        items: lookingForItems.toSet().map((String item) {
+                          return DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: GoogleFonts.outfit(
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          lookingForValue.value = newValue;
+                        },
                       );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      lookingForValue.value = newValue;
-                    },
-                  );
-                }),
+                    }),
+                  ),
+                ],
               ),
             ),
           ],
@@ -893,19 +940,38 @@ class FormWidgets {
   }
 
   Widget buildSingleDropdown({
-    required String label,
+    required String label1,
+    required String label2,
     required Rxn<String> value,
     required List<String> items,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: GoogleFonts.outfit(
-            color: Colors.grey[600],
-            fontSize: Get.width * 0.04,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label1,
+              style: GoogleFonts.outfit(
+                color: Colors.grey[600],
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  label2,
+                  style: GoogleFonts.outfit(
+                    color: Colors.grey[600],
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
         SizedBox(height: 8),
         Container(
@@ -920,7 +986,7 @@ class FormWidgets {
                   border: InputBorder.none,
                 ),
                 hint: Text(
-                  'Select ${label}',
+                  'Select ${label1}',
                   style: GoogleFonts.outfit(
                       fontWeight: FontWeight.w400, fontSize: 13),
                 ),

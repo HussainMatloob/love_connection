@@ -89,7 +89,8 @@ class _UpdateprofileState extends State<Updateprofile> {
                     authController, controller.dateOfBirth.value!, true),
                 SizedBox(height: 10),
                 FormWidgets.buildDropdownPair(
-                  label: 'Education Level',
+                  label1: 'Your Education',
+                  label2: 'Looking For',
                   value: authController.educationLevel,
                   lookingForValue: authController.lookingForEducation,
                   items: authController.educationOptions,
@@ -99,7 +100,8 @@ class _UpdateprofileState extends State<Updateprofile> {
                   print(
                       "Religion value: ${authController.religion.value}"); // Debugging
                   return FormWidgets.buildDropdownPair(
-                    label: 'Religion',
+                    label1: 'Your Religion',
+                    label2: 'Looking For',
                     value: authController
                         .religion, // Fallback value to avoid errors
                     lookingForValue: authController.lookingForReligion,
@@ -114,7 +116,8 @@ class _UpdateprofileState extends State<Updateprofile> {
                       .map<String>((cast) => cast["cast"].toString())
                       .toList();
                   return FormWidgets.buildDropdownPair(
-                    label: 'Caste',
+                    label1: 'Your Caste',
+                    label2: 'Looking For',
                     value: authController.caste,
                     lookingForValue: authController.lookingForCaste,
                     items: casteNames,
@@ -127,7 +130,8 @@ class _UpdateprofileState extends State<Updateprofile> {
                   if (sectController.isLoading.value)
                     return Center(child: CircularProgressIndicator());
                   return FormWidgets.buildDropdownPair(
-                    label: 'Sect',
+                    label1: 'Your Sect',
+                    label2: 'Looking For',
                     value: authController.sect,
                     lookingForValue: authController.lookingForSect,
                     items: sectController.sectList,
@@ -141,7 +145,8 @@ class _UpdateprofileState extends State<Updateprofile> {
                   if (countryController.isLoading.value)
                     return Center(child: CircularProgressIndicator());
                   return FormWidgets.buildDropdownPair(
-                    label: 'Country of Current Residence',
+                    label1: 'Your Country',
+                    label2: 'Looking For',
                     value: authController.currentResidence,
                     lookingForValue: authController.lookingForResidence,
                     items: ["Any", ...countryController.countryList],
@@ -154,7 +159,9 @@ class _UpdateprofileState extends State<Updateprofile> {
                     return Center(child: CircularProgressIndicator());
 
                   return FormWidgets.buildDropdownPair1(
-                    label: 'City of Current Residence',
+                    label1: 'Your City',
+                    label2: 'Looking For',
+
                     value: authController.cityOfResidence,
                     lookingForValue: authController.lookingForCity,
                     selfItems: [
@@ -170,7 +177,8 @@ class _UpdateprofileState extends State<Updateprofile> {
                 }),
                 SizedBox(height: 8.h),
                 FormWidgets.buildDropdownPair(
-                    label: 'Ethnicity',
+                    label1: 'Your Ethnicity',
+                    label2: 'Looking For',
                     value: authController.ethnicity,
                     lookingForValue: authController.lookingForEthnicity,
                     items: authController.ethnicityOptions,

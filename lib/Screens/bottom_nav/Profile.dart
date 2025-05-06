@@ -184,6 +184,9 @@ class _ProfileState extends State<Profile> {
                       left: Get.width * 0.1,
                       right: Get.width * 0.1,
                       child: GestureDetector(
+                        onTap: () {
+                          showBasicInfoBottomSheet(context);
+                        },
                         onVerticalDragUpdate: (details) {
                           if (details.primaryDelta! < -10) {
                             showBasicInfoBottomSheet(context);

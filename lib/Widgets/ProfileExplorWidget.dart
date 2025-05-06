@@ -219,6 +219,9 @@ class ProfileInfoWidget extends StatelessWidget {
             left: screenWidth * 0.1,
             right: screenWidth * 0.1,
             child: GestureDetector(
+              onTap: () {
+                showBasicInfoBottomSheet(context);
+              },
               onVerticalDragUpdate: (details) {
                 if (details.primaryDelta! < -10) {
                   showBasicInfoBottomSheet(context);
