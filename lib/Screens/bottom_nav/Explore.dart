@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:love_connection/Controllers/SendConnectionRequest.dart';
@@ -26,106 +27,113 @@ class _ExploreState extends State<Explore> {
     super.initState();
     _pageController = PageController();
     usersController.fetchUsers();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            /// ✅ Responsive Header with Logo
-            Container(
-              width: double.infinity,
-              height: 50.h, // Scales height
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.white, Colors.pink.shade100],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+      child: GestureDetector(
+        onTap: () {
+          SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+        },
+        child: Scaffold(
+          body: Column(
+            children: [
+              /// ✅ Responsive Header with Logo
+              Container(
+                width: double.infinity,
+                height: 50.h, // Scales height
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.white, Colors.pink.shade100],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/LClogo2.png',
+                    width: 150.w, // Scales with screen width
+                    fit: BoxFit.contain,
+                    color: Colors.pink.shade300,
+                  ),
                 ),
               ),
-              child: Center(
-                child: Image.asset(
-                  'assets/images/LClogo2.png',
-                  width: 150.w, // Scales with screen width
-                  fit: BoxFit.contain,
-                  color: Colors.pink.shade300,
-                ),
-              ),
-            ),
 
-            /// ✅ Expandable PageView to Prevent Overflow
-            Expanded(
-              child: Obx(() {
-                if (usersController.isLoading.value) {
-                  return Center(
-                    child: Lottie.asset(
-                      "assets/animations/circularloader.json",
-                      height: 100.h, // Responsive animation size
-                      width: 100.w,
-                    ),
-                  );
-                } else if (usersController.users.isEmpty) {
-                  return NoProfilesScreen(
-                    onRefresh: () => usersController.fetchUsers(),
-                  );
-                } else {
-                  return PageView.builder(
-                    itemCount: usersController.users.length,
-                    controller: _pageController,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, index) {
-                      final profile = usersController.users[index];
+              /// ✅ Expandable PageView to Prevent Overflow
+              Expanded(
+                child: Obx(() {
+                  if (usersController.isLoading.value) {
+                    return Center(
+                      child: Lottie.asset(
+                        "assets/animations/circularloader.json",
+                        height: 100.h, // Responsive animation size
+                        width: 100.w,
+                      ),
+                    );
+                  } else if (usersController.users.isEmpty) {
+                    return NoProfilesScreen(
+                      onRefresh: () => usersController.fetchUsers(),
+                    );
+                  } else {
+                    return PageView.builder(
+                      itemCount: usersController.users.length,
+                      controller: _pageController,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) {
+                        final profile = usersController.users[index];
 
-                      return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 0.w),
-                        child: ProfileInfoWidget(
-                          name:
-                              '${profile['firstname']} ${profile['lastname']}',
-                          age: _calculateAge(profile['dateofbirth'] ?? ''),
-                          details:
-                              '${profile['education']} from ${profile['city']}',
-                          location: profile['city'] ?? '',
-                          image: _getImageUrl(profile["profileimage"] ?? ''),
-                          onClose: () {},
-
-                          /// ✅ Button with Better UI
-                          onCheck: () async {
-                            final prefs = await SharedPreferences.getInstance();
-                            final userID = prefs.getString("userid");
-                            sendConectionController.sendConnectionRequest(
-                                userID ?? '', profile['id']);
-                            usersController.users.removeAt(index);
-                          },
-                          personalInfo: {
-                            'name':
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 0.w),
+                          child: ProfileInfoWidget(
+                            name:
                                 '${profile['firstname']} ${profile['lastname']}',
-                            'maritalStatus':
-                                profile['maritalstatus'] ?? 'Unknown',
-                            'sect': profile['sect'] ?? 'Unknown',
-                            'caste': profile['cast'] ?? 'Unknown',
-                            'height': profile['height'] ?? 'Unknown',
-                            'dob': _formatDate(
-                                profile['dateofbirth'] ?? 'Unknown'),
-                            'religion': profile['religion'] ?? 'Unknown',
-                            'nationality': profile['country'] ?? 'Unknown',
-                          },
-                          educationInfo: {
-                            'education': profile['education'] ?? 'Unknown',
-                            'monthlyIncome':
-                                profile['monthlyincome'] ?? 'Unknown',
-                            'employmentStatus':
-                                profile['employmentstatus'] ?? 'Unknown',
-                          },
-                        ),
-                      );
-                    },
-                  );
-                }
-              }),
-            ),
-          ],
+                            age: _calculateAge(profile['dateofbirth'] ?? ''),
+                            details:
+                                '${profile['education']} from ${profile['city']}',
+                            location: profile['city'] ?? '',
+                            image: _getImageUrl(profile["profileimage"] ?? ''),
+                            onClose: () {},
+
+                            /// ✅ Button with Better UI
+                            onCheck: () async {
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              final userID = prefs.getString("userid");
+                              sendConectionController.sendConnectionRequest(
+                                  userID ?? '', profile['id']);
+                              usersController.users.removeAt(index);
+                            },
+                            personalInfo: {
+                              'name':
+                                  '${profile['firstname']} ${profile['lastname']}',
+                              'maritalStatus':
+                                  profile['maritalstatus'] ?? 'Unknown',
+                              'sect': profile['sect'] ?? 'Unknown',
+                              'caste': profile['cast'] ?? 'Unknown',
+                              'height': profile['height'] ?? 'Unknown',
+                              'dob': _formatDate(
+                                  profile['dateofbirth'] ?? 'Unknown'),
+                              'religion': profile['religion'] ?? 'Unknown',
+                              'nationality': profile['country'] ?? 'Unknown',
+                            },
+                            educationInfo: {
+                              'education': profile['education'] ?? 'Unknown',
+                              'monthlyIncome':
+                                  profile['monthlyincome'] ?? 'Unknown',
+                              'employmentStatus':
+                                  profile['employmentstatus'] ?? 'Unknown',
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }),
+              ),
+            ],
+          ),
         ),
       ),
     );

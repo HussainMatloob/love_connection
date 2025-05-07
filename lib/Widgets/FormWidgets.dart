@@ -11,6 +11,7 @@ import 'package:love_connection/Controllers/cast_controller.dart';
 import 'package:love_connection/Controllers/city_controller.dart';
 import 'package:love_connection/Controllers/country_controller.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
+import 'package:love_connection/Screens/pending_request_detail_screen.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
 import '../Controllers/BasicInfoController.dart';
 import 'package:intl/intl.dart';
@@ -959,18 +960,15 @@ class FormWidgets {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            Row(
-              children: [
-                Text(
-                  label2,
-                  style: GoogleFonts.outfit(
-                    color: Colors.grey[600],
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
+
+            // Text(
+            //   label2,
+            //   style: GoogleFonts.outfit(
+            //     color: Colors.grey[600],
+            //     fontSize: 16,
+            //     fontWeight: FontWeight.w400,
+            //   ),
+            // ),
           ],
         ),
         SizedBox(height: 8),
@@ -1470,6 +1468,14 @@ class FormWidgets {
                         pendingRequestsController.pendingRequests[index];
 
                     return ProfilePendingCard(
+                      onTap: () {
+                        Get.to(() => PendingRequestDetailScreen(
+                              imageUrl: pendingProfile['profileimage'] != null
+                                  ? 'https://projects.funtashtechnologies.com/gomeetapi/${pendingProfile['profileimage']}'
+                                  : 'assets/images/profile.jpg',
+                              pendingRequestData: pendingProfile,
+                            ));
+                      },
                       imageUrl: pendingProfile['profileimage'] != null
                           ? 'https://projects.funtashtechnologies.com/gomeetapi/${pendingProfile['profileimage']}'
                           : 'assets/images/profile.jpg',

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import '../ApiService/ApiService.dart';
 
-class GetPendingRequestsController extends GetxController{
+class GetPendingRequestsController extends GetxController {
   var isLoading = true.obs;
   var pendingRequests = [].obs;
   var errorMessage = ''.obs;
@@ -19,8 +19,9 @@ class GetPendingRequestsController extends GetxController{
       final response = await ApiService().getPendingRequests();
       if (response['ResponseCode'] == '200' && response['Result'] == 'true') {
         pendingRequests.value = response['Data'];
+        print("=======================+++++++++++${pendingRequests}");
       } else {
-        return errorMessage.value= response['ResponseMsg'];
+        return errorMessage.value = response['ResponseMsg'];
       }
     } catch (e) {
       Get.snackbar('Error', e.toString());
@@ -28,5 +29,4 @@ class GetPendingRequestsController extends GetxController{
       isLoading(false);
     }
   }
-
 }

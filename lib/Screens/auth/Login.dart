@@ -138,6 +138,8 @@ class LoginScreen extends StatelessWidget {
                                   Get.snackbar(
                                     'Error',
                                     'Email and password cannot be empty.',
+                                    backgroundColor: Colors.red,
+                                    colorText: Colors.white,
                                     snackPosition: SnackPosition.BOTTOM,
                                   );
                                 } else {

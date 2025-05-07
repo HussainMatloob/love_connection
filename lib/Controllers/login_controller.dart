@@ -95,10 +95,12 @@ class LoginController extends GetxController {
           ),
         );
       } else {
-        Get.snackbar('Error', 'Login failed: ${response['ResponseMsg']}');
+        Get.snackbar('Error', 'Login failed: ${response['ResponseMsg']}',
+            colorText: Colors.white, backgroundColor: Colors.red);
       }
     } catch (e) {
-      Get.snackbar('Error', 'An error occurred: $e');
+      Get.snackbar('Error', 'An error occurred: $e',
+          colorText: Colors.white, backgroundColor: Colors.red);
     } finally {
       isLoading.value = false;
     }
