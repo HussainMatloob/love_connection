@@ -13,6 +13,7 @@ import 'package:love_connection/Controllers/country_controller.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
 import 'package:love_connection/Screens/pending_request_detail_screen.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
+import 'package:love_connection/constants/api_url_constants.dart';
 import '../Controllers/BasicInfoController.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart'; // Import GoogleFonts
@@ -1470,15 +1471,15 @@ class FormWidgets {
                     return ProfilePendingCard(
                       onTap: () {
                         Get.to(() => PendingRequestDetailScreen(
-                              imageUrl: pendingProfile['profileimage'] != null
-                                  ? 'https://projects.funtashtechnologies.com/gomeetapi/${pendingProfile['profileimage']}'
-                                  : 'assets/images/profile.jpg',
+                              imageUrl: pendingProfile['selfieimage'] != null
+                                  ? '${pendingProfile['selfieimage']}'
+                                  : '',
                               pendingRequestData: pendingProfile,
                             ));
                       },
-                      imageUrl: pendingProfile['profileimage'] != null
-                          ? 'https://projects.funtashtechnologies.com/gomeetapi/${pendingProfile['profileimage']}'
-                          : 'assets/images/profile.jpg',
+                      imageUrl: pendingProfile['selfieimage'] != null
+                          ? '${pendingProfile['selfieimage']}'
+                          : '',
                       name:
                           '${pendingProfile['firstname']} ${pendingProfile['lastname']} - ${_formatDate(pendingProfile['dateofbirth'] ?? 'N/A')}',
                       profession: pendingProfile['city'] ?? 'N/A',

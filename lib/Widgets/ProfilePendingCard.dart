@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:love_connection/constants/api_url_constants.dart';
 
 class ProfilePendingCard extends StatelessWidget {
   final String imageUrl;
@@ -42,30 +43,28 @@ class ProfilePendingCard extends StatelessWidget {
         child: Stack(
           children: [
             // Profile Image as the background
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: CachedNetworkImage(
-                imageUrl:
-                    imageUrl.isNotEmpty ? imageUrl : 'assets/images/logo2.png',
-                width: Get.width,
-                height: Get.height,
-                placeholder: (context, url) => Center(
-                  child: Lottie.asset(
-                    'assets/animations/registerloading.json',
-                    width: Get.width * 0.3,
-                    height: Get.height * 0.3,
-                    fit: BoxFit.contain,
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl.isNotEmpty && imageUrl.contains('.')
+                      ? '${ApiUrlConstants.baseUrl}$imageUrl'
+                      : '',
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Center(
+                    child: Lottie.asset(
+                      'assets/animations/registerloading.json',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Image.asset(
+                    'assets/images/logo2.png',
+                    fit: BoxFit.cover,
                   ),
                 ),
-                errorWidget: (context, url, error) => Image.asset(
-                  'assets/images/logo2.png',
-                  fit: BoxFit.cover,
-                  width: Get.width,
-                  height: Get.height,
-                ),
-                fit: BoxFit.cover,
               ),
             ),
+
             Positioned(
               bottom: 0,
               left: 0,
