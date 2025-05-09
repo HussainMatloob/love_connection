@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:love_connection/Widgets/custom_text.dart';
 
-class PendingRequestDetailWidget extends StatelessWidget {
+class RequestedConnectionDetailWidget extends StatelessWidget {
   double? height;
   double? width;
   double? borderRadius;
@@ -17,7 +17,7 @@ class PendingRequestDetailWidget extends StatelessWidget {
   FontWeight? textFw;
   Color? textColor;
   double? paddingHorizontal;
-  PendingRequestDetailWidget(
+  RequestedConnectionDetailWidget(
       {super.key,
       this.height,
       this.width,

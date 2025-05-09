@@ -5,23 +5,23 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:love_connection/Screens/image_view_screen.dart';
 import 'package:love_connection/Widgets/custom_text.dart';
-import 'package:love_connection/Widgets/pending_request_detail_widget.dart';
+import 'package:love_connection/Widgets/Requested_connection_detail_widget.dart';
 import 'package:love_connection/constants/api_url_constants.dart';
 import 'package:love_connection/utils/date_time_util.dart';
 
-class PendingRequestDetailScreen extends StatefulWidget {
+class RequestedConnectionDetailScreen extends StatefulWidget {
   final String imageUrl;
   final pendingRequestData;
-  PendingRequestDetailScreen(
+  RequestedConnectionDetailScreen(
       {super.key, this.pendingRequestData, required this.imageUrl});
 
   @override
-  State<PendingRequestDetailScreen> createState() =>
-      _PendingRequestDetailScreenState();
+  State<RequestedConnectionDetailScreen> createState() =>
+      _RequestedConnectionDetailScreenState();
 }
 
-class _PendingRequestDetailScreenState
-    extends State<PendingRequestDetailScreen> {
+class _RequestedConnectionDetailScreenState
+    extends State<RequestedConnectionDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,12 +162,12 @@ class _PendingRequestDetailScreenState
                 children: [],
               ),
               SizedBox(height: 20.h),
-              PendingRequestDetailWidget(
+              RequestedConnectionDetailWidget(
                 paddingHorizontal: 30.w,
                 height: 40.h,
                 borderRadius: 10.r,
                 borderColor: Colors.grey,
-                headText: "Your Sect",
+                headText: "Sect",
                 text: "${widget.pendingRequestData['sect']}",
                 headText1: "Looking For",
                 text1: "${widget.pendingRequestData['sectlookingfor']}",
@@ -178,12 +178,12 @@ class _PendingRequestDetailScreenState
                 textSize: 14,
               ),
               SizedBox(height: 10.h),
-              PendingRequestDetailWidget(
+              RequestedConnectionDetailWidget(
                 paddingHorizontal: 30.w,
                 height: 40.h,
                 borderRadius: 10.r,
                 borderColor: Colors.grey,
-                headText: "Your Caste",
+                headText: "Caste",
                 text: "${widget.pendingRequestData['cast']}",
                 headText1: "Looking For",
                 text1: "${widget.pendingRequestData['castlookingfor']}",
@@ -194,12 +194,12 @@ class _PendingRequestDetailScreenState
                 textSize: 14,
               ),
               SizedBox(height: 10.h),
-              PendingRequestDetailWidget(
+              RequestedConnectionDetailWidget(
                 paddingHorizontal: 30.w,
                 height: 40.h,
                 borderRadius: 10.r,
                 borderColor: Colors.grey,
-                headText: "Your Religion",
+                headText: "Religion",
                 text: "${widget.pendingRequestData['religion']}",
                 headText1: "Looking For",
                 text1: "${widget.pendingRequestData['religionlookingfor']}",
@@ -210,12 +210,12 @@ class _PendingRequestDetailScreenState
                 textSize: 14,
               ),
               SizedBox(height: 10.h),
-              PendingRequestDetailWidget(
+              RequestedConnectionDetailWidget(
                 paddingHorizontal: 30.w,
                 height: 40.h,
                 borderRadius: 10.r,
                 borderColor: Colors.grey,
-                headText: "Your nationality",
+                headText: "Nationality",
                 text: "${widget.pendingRequestData['country']}",
                 headText1: "Looking For",
                 text1: "${widget.pendingRequestData['countrylookingfor']}",
@@ -226,12 +226,12 @@ class _PendingRequestDetailScreenState
                 textSize: 14,
               ),
               SizedBox(height: 10.h),
-              PendingRequestDetailWidget(
+              RequestedConnectionDetailWidget(
                 paddingHorizontal: 30.w,
                 height: 40.h,
                 borderRadius: 10.r,
                 borderColor: Colors.grey,
-                headText: "Your Education",
+                headText: "Education",
                 text: "${widget.pendingRequestData['education']}",
                 headText1: "Looking For",
                 text1: "${widget.pendingRequestData['educationlookingfor']}",
@@ -242,7 +242,7 @@ class _PendingRequestDetailScreenState
                 textSize: 14,
               ),
               SizedBox(height: 10.h),
-              PendingRequestDetailWidget(
+              RequestedConnectionDetailWidget(
                 paddingHorizontal: 30.w,
                 height: 40.h,
                 borderRadius: 10.r,
@@ -256,7 +256,7 @@ class _PendingRequestDetailScreenState
                 textSize: 14,
               ),
               SizedBox(height: 10.h),
-              PendingRequestDetailWidget(
+              RequestedConnectionDetailWidget(
                 paddingHorizontal: 30.w,
                 height: 40.h,
                 borderRadius: 10.r,

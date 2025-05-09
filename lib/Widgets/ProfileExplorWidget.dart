@@ -200,7 +200,7 @@ class ProfileInfoWidget extends StatelessWidget {
 
           // 📌 Like & Dislike Buttons at the bottom
           Positioned(
-            bottom: screenHeight * 0.2,
+            bottom: screenHeight * 0.3,
             left: 20.w,
             right: 20.w,
             child: Row(

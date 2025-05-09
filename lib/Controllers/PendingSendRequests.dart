@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../ApiService/ApiService.dart';
 
@@ -35,36 +36,38 @@ class GetPendingRequestsController extends GetxController {
   /*--------------------------------------------------*/
   Future<void> cancelRequest(var specificPersonSendRequest) async {
     try {
-      // final response = await ApiService.cancelConnectionRequest();
-      // if (forSendRequestResponse != null) {
-      //   if (forSendRequestResponse!.statusCode == 201) {
-      //     customerloadingFunction(false);
-      //     checkCustomerPermission();
-      //     Get.snackbar(
-      //       'Success',
-      //       "Request Submitted successfully",
-      //       snackPosition: SnackPosition.BOTTOM,
-      //       colorText: Colors.white,
-      //       backgroundColor: Colors.green,
-      //     );
-      //   } else if (forSendRequestResponse!.statusCode == 403) {
-      //     Get.snackbar('Error',
-      //         "Your request has already been submitted,Please wait for approval",
-      //         snackPosition: SnackPosition.BOTTOM,
-      //         colorText: Colors.white,
-      //         backgroundColor: Colors.red);
-      //   } else {
-      //     customerloadingFunction(false);
-      //     Get.snackbar('Error',
-      //         "Request failed with status: ${forSendRequestResponse!.statusCode}",
-      //         colorText: Colors.white,
-      //         snackPosition: SnackPosition.BOTTOM,
-      //         backgroundColor: Colors.red);
-      //   }
-      // } else {
-      //   //customerloadingFunction(false);
-      // }
+      final response =
+          await ApiService.cancelConnectionRequest(specificPersonSendRequest);
+
+      if (response != null) {
+        if (response.statusCode == 200) {
+          fetchPendingRequests();
+          Get.snackbar(
+            'Success',
+            "Request cancelled successfully",
+            snackPosition: SnackPosition.BOTTOM,
+            colorText: Colors.white,
+            backgroundColor: Colors.green,
+          );
+        } else {
+          //customerloadingFunction(false);
+          Get.snackbar(
+              'Error', "Request failed with status: ${response.statusCode}",
+              colorText: Colors.white,
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.red);
+        }
+      } else {
+        Get.snackbar('Error', "Please try again",
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red);
+      }
     } catch (e) {
-    } finally {}
+      Get.snackbar('Error', "$e",
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red);
+    }
   }
 }

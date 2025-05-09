@@ -20,23 +20,30 @@ class Requests extends StatefulWidget {
 
 class _RequestsState extends State<Requests> {
   // Controller instance
-  final GetReceivedConnectionRequestController _controller = Get.put(GetReceivedConnectionRequestController());
-  final AcceptRequestController acceptRequestController = Get.put(AcceptRequestController(ApiService()));
-
+  final GetReceivedConnectionRequestController _controller =
+      Get.put(GetReceivedConnectionRequestController());
+  final AcceptRequestController acceptRequestController =
+      Get.put(AcceptRequestController(ApiService()));
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _controller.fetchReceivedConnectionRequests();
   }
+
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+// Adjust this factor based on your card layout
+    final childAspectRatio = screenWidth / (screenHeight / 1.4);
     // Fetch the data when the screen is loaded
     _controller.fetchReceivedConnectionRequests();
 
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: true, // Ensures keyboard doesn't cause overflow
+        resizeToAvoidBottomInset:
+            true, // Ensures keyboard doesn't cause overflow
         appBar: AppBar(
           title: Text(
             'Requests Received',
@@ -62,7 +69,8 @@ class _RequestsState extends State<Requests> {
                   SizedBox(height: Get.height * 0.015),
                   Expanded(
                     child: Obx(() {
-                      if (_controller.isLoading.value || acceptRequestController.isLoading.value) {
+                      if (_controller.isLoading.value ||
+                          acceptRequestController.isLoading.value) {
                         return Center(
                           child: Lottie.asset(
                             "assets/animations/circularloader.json",
@@ -71,7 +79,6 @@ class _RequestsState extends State<Requests> {
                           ),
                         );
                       }
-
                       if (_controller.errorMessage.isNotEmpty) {
                         return Center(
                           child: SingleChildScrollView(
@@ -98,7 +105,8 @@ class _RequestsState extends State<Requests> {
                                   ),
                                   SizedBox(height: 8),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 16),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16),
                                     child: Text(
                                       "Your love connection requests will appear here. Send a request or wait for someone special to find you! 💕",
                                       textAlign: TextAlign.center,
@@ -111,20 +119,24 @@ class _RequestsState extends State<Requests> {
                                   SizedBox(height: 20),
                                   ElevatedButton.icon(
                                     onPressed: () {
-                                      _controller.fetchReceivedConnectionRequests();
+                                      _controller
+                                          .fetchReceivedConnectionRequests();
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.pinkAccent,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
-                                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 24, vertical: 14),
                                       elevation: 5,
                                     ),
-                                    icon: Icon(Icons.favorite, color: Colors.white),
+                                    icon: Icon(Icons.favorite,
+                                        color: Colors.white),
                                     label: Text(
                                       "Find Your Match 💖",
-                                      style: TextStyle(color: Colors.white, fontSize: 16),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
                                     ),
                                   ),
                                 ],
@@ -136,21 +148,27 @@ class _RequestsState extends State<Requests> {
 
                       return GridView.builder(
                         shrinkWrap: true,
-                        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                        keyboardDismissBehavior:
+                            ScrollViewKeyboardDismissBehavior.onDrag,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: MediaQuery.of(context).size.width < 360 ? 1 : 2,
+                          crossAxisCount:
+                              MediaQuery.of(context).size.width < 360 ? 1 : 2,
                           crossAxisSpacing: 20,
                           mainAxisSpacing: 16,
-                          childAspectRatio: 0.68,
+                          childAspectRatio: childAspectRatio,
                         ),
                         itemCount: _controller.Getrequests.length,
                         itemBuilder: (context, index) {
                           final request = _controller.Getrequests[index];
-                          final imageUrl = 'https://projects.funtashtechnologies.com/gomeetapi/${request['profileimage']}';
+
+                          final imageUrl =
+                              'https://projects.funtashtechnologies.com/gomeetapi/${request['selfieimage']}';
 
                           return ProfileCard(
+                            isRequestScreen: true,
                             imageUrl: imageUrl,
-                            name: '${request['firstname']},${request['lastname']} - ${request['age'] ?? "N/A"}',
+                            name:
+                                '${request['firstname']},${request['lastname']} - ${request['age'] ?? "N/A"}',
                             profession: request['city'] ?? 'N/A',
                             ignoreButtonText: 'Ignore',
                             acceptButtonText: 'Accept',
@@ -159,12 +177,14 @@ class _RequestsState extends State<Requests> {
                               _controller.update();
                             },
                             onAccept: () async {
-                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                              String userId = prefs.getString("userid").toString();
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              String userId =
+                                  prefs.getString("userid").toString();
                               acceptRequestController.acceptRequest(
-                                userId: userId,
-                                connectionId: request['id'].toString(),
-                              );
+                                  userId: userId,
+                                  // connectionId: request['id'].toString(),
+                                  connectionId: "12");
                             },
                           );
                         },
@@ -179,5 +199,4 @@ class _RequestsState extends State<Requests> {
       ),
     );
   }
-
 }

@@ -4,8 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:love_connection/ApiService/ApiService.dart';
+import 'package:love_connection/Controllers/GetConnections.dart';
+import 'package:love_connection/Widgets/custom_button.dart';
 
 class ProfileCard extends StatelessWidget {
+  final completeRequestData;
+  VoidCallback? onTap;
   final String imageUrl;
   final String name;
   final String profession;
@@ -13,8 +18,9 @@ class ProfileCard extends StatelessWidget {
   final String acceptButtonText;
   final VoidCallback? onIgnore;
   final VoidCallback? onAccept;
+  final bool isRequestScreen;
 
-  const ProfileCard({
+  ProfileCard({
     Key? key,
     required this.imageUrl,
     required this.name,
@@ -23,90 +29,123 @@ class ProfileCard extends StatelessWidget {
     required this.acceptButtonText,
     this.onIgnore,
     this.onAccept,
+    this.onTap,
+    this.completeRequestData,
+    this.isRequestScreen = false,
   }) : super(key: key);
 
   @override
+  final GetConnectionsController connectionsController =
+      Get.put(GetConnectionsController(ApiService()));
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: Get.width,
-          height: Get.height * 0.22,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.pinkAccent), // Grey border
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey[200]!,
-                blurRadius: 10,
-                spreadRadius: 5,
-              ),
-            ],
-          ),
-          child: Stack(
-            children: [
-              // Profile Image as the background
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: CachedNetworkImage(
-                  imageUrl: imageUrl.isEmpty
-                      ? 'assets/images/fallback.png'
-                      : imageUrl,
-                  width: Get.width,
-                  height: Get.height,
-                  placeholder: (context, url) => Center(
-                    child: Lottie.asset(
-                      'assets/animations/registerloading.json',
-                      width: Get.width * 0.3,
-                      height: Get.height * 0.3,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Center(
-                    child: Image.asset(
-                      'assets/images/fallback.png',
-                      // Replace with your fallback image path
-                      fit: BoxFit.cover,
-                      width: Get.width,
-                      height: Get.height,
-                    ),
-                  ),
-                  fit: BoxFit.cover,
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            width: Get.width,
+            height: Get.height * 0.22,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: isRequestScreen
+                  ? BorderRadius.circular(12.r)
+                  : BorderRadius.only(
+                      topLeft: Radius.circular(12.r),
+                      topRight: Radius.circular(12.r)),
+              border: Border.all(color: Colors.pinkAccent), // Grey border
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey[200]!,
+                  blurRadius: 10,
+                  spreadRadius: 5,
                 ),
-              ),
-              // Profile Details Section
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  padding: EdgeInsets.only(left: 10, bottom: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        style: GoogleFonts.outfit(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                        ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                // Profile Image as the background
+                ClipRRect(
+                  borderRadius: isRequestScreen
+                      ? BorderRadius.circular(12.r)
+                      : BorderRadius.only(
+                          topLeft: Radius.circular(12.r),
+                          topRight: Radius.circular(12.r)),
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl.isEmpty
+                        ? 'assets/images/fallback.png'
+                        : imageUrl,
+                    width: Get.width,
+                    height: Get.height,
+                    placeholder: (context, url) => Center(
+                      child: Lottie.asset(
+                        'assets/animations/registerloading.json',
+                        width: Get.width * 0.3,
+                        height: Get.height * 0.3,
+                        fit: BoxFit.contain,
                       ),
-                      Text(
-                        profession,
-                        style: GoogleFonts.outfit(
-                          fontSize: 12,
-                          color: Colors.white,
-                        ),
+                    ),
+                    errorWidget: (context, url, error) => Center(
+                      child: Image.asset(
+                        'assets/images/fallback.png',
+                        // Replace with your fallback image path
+                        fit: BoxFit.cover,
+                        width: Get.width,
+                        height: Get.height,
                       ),
-                    ],
+                    ),
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ),
-            ],
+                // Profile Details Section
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10, bottom: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          name,
+                          style: GoogleFonts.outfit(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          profession,
+                          style: GoogleFonts.outfit(
+                            fontSize: 12,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
+        isRequestScreen
+            ? SizedBox()
+            : CustomButton(
+                onTap: () {
+                  connectionsController.cancelRequest(completeRequestData);
+                },
+                circularBottomLeft: 12.r,
+                circulatBottomRight: 12.r,
+                iscustomCircular: true,
+                width: Get.width,
+                height: 40,
+                bordercircular: 0.r,
+                borderColor: Colors.transparent,
+                text: "Unfollow",
+                textColor: Colors.white,
+                boxColor: Colors.red,
+              ),
         SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -115,10 +154,11 @@ class ProfileCard extends StatelessWidget {
               onTap: onIgnore,
               child: Container(
                 width: 60.w,
-                padding: EdgeInsets.symmetric(vertical: 12.h),
+                height: 50.h,
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  borderRadius: BorderRadius.all(Radius.circular(8.r)),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Center(
                   child: Text(
@@ -137,10 +177,11 @@ class ProfileCard extends StatelessWidget {
               onTap: onAccept,
               child: Container(
                 width: 60.w,
-                padding: EdgeInsets.symmetric(vertical: 12.h),
+                height: 50.h,
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
                 decoration: BoxDecoration(
                   color: Colors.pinkAccent,
-                  borderRadius: BorderRadius.all(Radius.circular(8.r)),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Center(
                   child: Text(

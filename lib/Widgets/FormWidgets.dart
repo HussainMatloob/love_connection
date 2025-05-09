@@ -11,7 +11,7 @@ import 'package:love_connection/Controllers/cast_controller.dart';
 import 'package:love_connection/Controllers/city_controller.dart';
 import 'package:love_connection/Controllers/country_controller.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
-import 'package:love_connection/Screens/pending_request_detail_screen.dart';
+import 'package:love_connection/Screens/requested_connection_detail_screen.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
 
 import '../Controllers/BasicInfoController.dart';
@@ -1306,51 +1306,56 @@ class FormWidgets {
           ),
         );
       } else {
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10.h),
-              FormWidgets.buildSearchView(
-                hintText: "Search",
-                searchQuery: connectionsController.searchQuerytext,
-              ),
-              SizedBox(height: 10.h),
-              SizedBox(
-                height: 0.7.sh, // Responsive height based on screen size
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 10.h),
+            FormWidgets.buildSearchView(
+              hintText: "Search",
+              searchQuery: connectionsController.searchQuerytext,
+            ),
+            SizedBox(height: 10.h),
+            Expanded(
+              child: SizedBox(
+                height: 0.7.sh, // Enough space for grid view
                 child: GridView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 16.w,
                     mainAxisSpacing: 16.h,
-                    childAspectRatio: 0.65,
+                    childAspectRatio: 0.5, // Make card taller to avoid overflow
                   ),
                   itemCount: connectionsController.connections.length,
                   itemBuilder: (context, index) {
                     final connections =
                         connectionsController.connections[index];
                     return ProfileCard(
-                      imageUrl: connections['profileimage'] != null
-                          ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['profileimage']}'
+                      completeRequestData: connections,
+                      onTap: () {
+                        Get.to(() => RequestedConnectionDetailScreen(
+                              imageUrl: connections['selfieimage'] != null
+                                  ? '${connections['selfieimage']}'
+                                  : '',
+                              pendingRequestData: connections,
+                            ));
+                      },
+                      imageUrl: connections['selfieimage'] != null
+                          ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['selfieimage']}'
                           : 'assets/images/profile.jpg',
                       name:
-                          '${connections['firstname']} ${connections['lastname']} - ${_formatDate(connections['dateofbirth'] ?? 'N/A')}',
+                          '${connections['firstname']} ${connections['lastname']}',
                       profession: connections['education'] ?? 'N/A',
                       ignoreButtonText: 'Call',
                       acceptButtonText: 'Chat',
-                      onIgnore: () {
-                        print('Call');
-                      },
-                      onAccept: () {
-                        print('Chat');
-                      },
+                      onIgnore: () => print('Call'),
+                      onAccept: () => print('Chat'),
                     );
                   },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         );
       }
     });
@@ -1456,6 +1461,7 @@ class FormWidgets {
               SizedBox(
                 height: 0.8.sh, // Adjusted height for responsiveness
                 child: GridView.builder(
+                  physics: BouncingScrollPhysics(),
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -1470,7 +1476,7 @@ class FormWidgets {
 
                     return ProfilePendingCard(
                       onTap: () {
-                        Get.to(() => PendingRequestDetailScreen(
+                        Get.to(() => RequestedConnectionDetailScreen(
                               imageUrl: pendingProfile['selfieimage'] != null
                                   ? '${pendingProfile['selfieimage']}'
                                   : '',
@@ -1481,10 +1487,10 @@ class FormWidgets {
                           ? '${pendingProfile['selfieimage']}'
                           : '',
                       name:
-                          '${pendingProfile['firstname']} ${pendingProfile['lastname']} - ${_formatDate(pendingProfile['dateofbirth'] ?? 'N/A')}',
+                          '${pendingProfile['firstname']} ${pendingProfile['lastname']} ',
                       profession: pendingProfile['city'] ?? 'N/A',
                       onClose: () {
-                        pendingRequestsController.cancelRequest(pendingProfile);
+                        // pendingRequestsController.cancelRequest(pendingProfile);
                         // pendingRequestsController.pendingRequests
                         //     .removeAt(index);
                       },

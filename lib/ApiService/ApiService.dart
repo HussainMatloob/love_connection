@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -906,6 +907,43 @@ class ApiService {
     } catch (e) {
       log("API Error: ${e.toString()}");
       throw Exception('Exception: ${e.toString()}');
+    }
+  }
+
+  /*-------------------------------------------------------*/
+  /*               cancel connection request               */
+  /*-------------------------------------------------------*/
+
+  static Future<http.Response?> cancelConnectionRequest(var data) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final userid = prefs.getString('userid').toString();
+      print("connectionuserid ===================${data['id']}");
+      print("id ===================$userid");
+      final uri = Uri.parse(
+          'https://projects.funtashtechnologies.com/gomeetapi/deletefriends.php');
+      final response = await http.post(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "connectionuserid": data['id'],
+          "userid": userid,
+        }),
+      );
+
+      return response;
+    } on SocketException {
+      throw "No Internet connection. Please check your network.";
+    } on TimeoutException {
+      throw "The connection has timed out. Try again later.";
+    } on FormatException {
+      throw "Invalid response format. Please contact support.";
+    } on HttpException catch (e) {
+      throw "Unexpected error occurred: ${e.message}";
+    } catch (e) {
+      throw "An unexpected error occurred: ${e.toString()}";
     }
   }
 }

@@ -3,26 +3,31 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:love_connection/Widgets/custom_text.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({
-    super.key,
-    this.borderColor,
-    this.boxColor,
-    this.text,
-    this.textColor,
-    this.fontSize,
-    this.textAlign,
-    this.height,
-    this.width,
-    this.bordercircular,
-    this.onTap,
-    this.fw,
-    this.borderWidth,
-    this.image,
-    this.icon,
-    this.loader = false,
-    this.horizontalPadding,
-    this.verticalPadding,
-  });
+  const CustomButton(
+      {super.key,
+      this.borderColor,
+      this.boxColor,
+      this.text,
+      this.textColor,
+      this.fontSize,
+      this.textAlign,
+      this.height,
+      this.width,
+      this.bordercircular,
+      this.onTap,
+      this.fw,
+      this.borderWidth,
+      this.image,
+      this.icon,
+      this.loader = false,
+      this.horizontalPadding,
+      this.verticalPadding,
+      this.circularBottomLeft,
+      this.circulatBottomRight,
+      this.iscustomCircular = false});
+  final double? circularBottomLeft;
+  final double? circulatBottomRight;
+  final bool iscustomCircular;
   final Color? borderColor;
   final Color? boxColor;
   final String? text;
@@ -59,9 +64,11 @@ class CustomButton extends StatelessWidget {
                     )
                   : Border.all(),
               color: boxColor,
-              borderRadius: bordercircular == null
-                  ? BorderRadius.all(Radius.circular(25))
-                  : BorderRadius.all(Radius.circular(bordercircular!))),
+              borderRadius: iscustomCircular
+                  ? BorderRadius.only(
+                      bottomLeft: Radius.circular(circularBottomLeft ?? 0.r),
+                      bottomRight: Radius.circular(circulatBottomRight ?? 0.r))
+                  : BorderRadius.all(Radius.circular(bordercircular ?? 20.r))),
           child: Center(
             child: image != null || icon != null && text != null
                 ? Row(
