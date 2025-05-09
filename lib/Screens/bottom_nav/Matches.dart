@@ -20,9 +20,9 @@ class _MatchesState extends State<Matches> {
   final PageController pageController = PageController();
   final BasicInfoController controller = Get.put(BasicInfoController());
   final GetPendingRequestsController getPendingRequestsController =
-  Get.put(GetPendingRequestsController());
+      Get.put(GetPendingRequestsController());
   final GetConnectionsController getConnectionsController =
-  Get.put(GetConnectionsController(ApiService()));
+      Get.put(GetConnectionsController(ApiService()));
 
   @override
   void initState() {
@@ -59,8 +59,8 @@ class _MatchesState extends State<Matches> {
                 child: Obx(() {
                   // Render the screen based on the selected tab
                   return controller.Rcurrentpage.value == 0
-                      ? FormWidgets().buildCompletedTab()
-                      : FormWidgets().buildPendingTab();
+                      ? FormWidgets().buildCompletedTab(context)
+                      : FormWidgets().buildPendingTab(context);
                 }),
               ),
             ],

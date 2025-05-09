@@ -1231,9 +1231,14 @@ class FormWidgets {
     ]);
   }
 
-  Widget buildCompletedTab() {
+  Widget buildCompletedTab(BuildContext context) {
     final GetConnectionsController connectionsController =
         Get.put(GetConnectionsController(ApiService()));
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+// Adjust this factor based on your card layout
+    final childAspectRatio = screenWidth / (screenHeight / 1.0);
 
     return Obx(() {
       if (connectionsController.isLoading.value) {
@@ -1321,11 +1326,12 @@ class FormWidgets {
                 child: GridView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16.w,
-                    mainAxisSpacing: 16.h,
-                    childAspectRatio: 0.5, // Make card taller to avoid overflow
-                  ),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16.w,
+                      mainAxisSpacing: 16.h,
+                      childAspectRatio:
+                          childAspectRatio // Make card taller to avoid overflow
+                      ),
                   itemCount: connectionsController.connections.length,
                   itemBuilder: (context, index) {
                     final connections =
@@ -1337,7 +1343,9 @@ class FormWidgets {
                               imageUrl: connections['selfieimage'] != null
                                   ? '${connections['selfieimage']}'
                                   : '',
-                              pendingRequestData: connections,
+
+                              //pendingRequestData: connections,
+                              pendingRequestData: null,
                             ));
                       },
                       imageUrl: connections['selfieimage'] != null
@@ -1377,7 +1385,11 @@ class FormWidgets {
     }
   }
 
-  Widget buildPendingTab() {
+  Widget buildPendingTab(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+// Adjust this factor based on your card layout
+    final childAspectRatio = screenWidth / (screenHeight / 1.5);
     final GetPendingRequestsController pendingRequestsController =
         Get.put(GetPendingRequestsController());
 
@@ -1464,11 +1476,10 @@ class FormWidgets {
                   physics: BouncingScrollPhysics(),
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16.w,
-                    mainAxisSpacing: 16.h,
-                    childAspectRatio: 0.80,
-                  ),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16.w,
+                      mainAxisSpacing: 16.h,
+                      childAspectRatio: childAspectRatio),
                   itemCount: pendingRequestsController.pendingRequests.length,
                   itemBuilder: (context, index) {
                     final pendingProfile =
