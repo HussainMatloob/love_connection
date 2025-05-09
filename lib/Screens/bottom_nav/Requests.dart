@@ -182,9 +182,9 @@ class _RequestsState extends State<Requests> {
                               String userId =
                                   prefs.getString("userid").toString();
                               acceptRequestController.acceptRequest(
-                                  userId: userId,
-                                  // connectionId: request['id'].toString(),
-                                  connectionId: "12");
+                                userId: userId,
+                                connectionId: request['id'].toString(),
+                              );
                             },
                           );
                         },

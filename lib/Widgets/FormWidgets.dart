@@ -11,6 +11,8 @@ import 'package:love_connection/Controllers/cast_controller.dart';
 import 'package:love_connection/Controllers/city_controller.dart';
 import 'package:love_connection/Controllers/country_controller.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
+import 'package:love_connection/Screens/call_screen.dart';
+import 'package:love_connection/Screens/chat_screen.dart';
 import 'package:love_connection/Screens/requested_connection_detail_screen.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
 
@@ -1337,28 +1339,29 @@ class FormWidgets {
                     final connections =
                         connectionsController.connections[index];
                     return ProfileCard(
-                      completeRequestData: connections,
-                      onTap: () {
-                        Get.to(() => RequestedConnectionDetailScreen(
-                              imageUrl: connections['selfieimage'] != null
-                                  ? '${connections['selfieimage']}'
-                                  : '',
-
-                              //pendingRequestData: connections,
-                              pendingRequestData: null,
-                            ));
-                      },
-                      imageUrl: connections['selfieimage'] != null
-                          ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['selfieimage']}'
-                          : 'assets/images/profile.jpg',
-                      name:
-                          '${connections['firstname']} ${connections['lastname']}',
-                      profession: connections['education'] ?? 'N/A',
-                      ignoreButtonText: 'Call',
-                      acceptButtonText: 'Chat',
-                      onIgnore: () => print('Call'),
-                      onAccept: () => print('Chat'),
-                    );
+                        completeRequestData: connections,
+                        onTap: () {
+                          Get.to(() => RequestedConnectionDetailScreen(
+                                imageUrl: connections['selfieimage'] != null
+                                    ? '${connections['selfieimage']}'
+                                    : '',
+                                pendingRequestData: connections,
+                              ));
+                        },
+                        imageUrl: connections['selfieimage'] != null
+                            ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['selfieimage']}'
+                            : 'assets/images/profile.jpg',
+                        name:
+                            '${connections['firstname']} ${connections['lastname']}',
+                        profession: connections['education'] ?? 'N/A',
+                        ignoreButtonText: 'Call',
+                        acceptButtonText: 'Chat',
+                        onIgnore: () {
+                          Get.to(() => CallScreen());
+                        },
+                        onAccept: () {
+                          Get.to(() => ChatScreen());
+                        });
                   },
                 ),
               ),
