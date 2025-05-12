@@ -25,7 +25,7 @@ class _CallScreenState extends State<CallScreen> {
                 size: 80.sp,
                 color: Colors.grey,
               ),
-              headText: "Call Screen Under Construction",
+              headText: "Call Screen Under Development",
               subtext:
                   "This feature is currently being developed.\nPlease check back soon!",
             ),

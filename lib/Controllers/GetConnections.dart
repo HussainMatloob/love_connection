@@ -47,7 +47,7 @@ class GetConnectionsController extends GetxController {
           getconnections();
           Get.snackbar(
             'Success',
-            "Request cancelled successfully",
+            "User Unfollow successfully",
             snackPosition: SnackPosition.BOTTOM,
             colorText: Colors.white,
             backgroundColor: Colors.green,

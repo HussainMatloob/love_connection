@@ -918,20 +918,23 @@ class ApiService {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final userid = prefs.getString('userid').toString();
+
       print("connectionuserid ===================${data['id']}");
       print("id ===================$userid");
+
       final uri = Uri.parse(
           'https://projects.funtashtechnologies.com/gomeetapi/deletefriends.php');
+
       final response = await http.post(
         uri,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonEncode({
-          "connectionuserid": data['id'],
+        body: {
+          "connectionuserid": data['id'].toString(),
           "userid": userid,
-        }),
+        }, // form data (not JSON)
       );
+
+      print('Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
       return response;
     } on SocketException {

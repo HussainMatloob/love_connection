@@ -36,7 +36,7 @@ class _RequestsState extends State<Requests> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 // Adjust this factor based on your card layout
-    final childAspectRatio = screenWidth / (screenHeight / 1.4);
+    final childAspectRatio = screenWidth / (screenHeight / 1.3);
     // Fetch the data when the screen is loaded
     _controller.fetchReceivedConnectionRequests();
 

@@ -14,7 +14,6 @@ class SendConectionController extends GetxController {
   Future<void> sendConnectionRequest(String userId, String connectionId) async {
     try {
       isLoading.value = true;
-
       final response = await apiService.sendConnectionRequest(
         userId: userId,
         connectionId: connectionId,
