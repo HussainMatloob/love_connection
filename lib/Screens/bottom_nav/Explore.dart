@@ -26,12 +26,13 @@ class _ExploreState extends State<Explore> {
     // TODO: implement initState
     super.initState();
     _pageController = PageController();
-    usersController.fetchUsers();
+    //usersController.fetchUsers();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   @override
   Widget build(BuildContext context) {
+    usersController.fetchUsers();
     return SafeArea(
       child: GestureDetector(
         onTap: () {

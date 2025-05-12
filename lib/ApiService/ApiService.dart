@@ -927,6 +927,7 @@ class ApiService {
 
       final response = await http.post(
         uri,
+               headers: {"Content-Type": "application/x-www-form-urlencoded"},
         body: {
           "connectionuserid": data['id'].toString(),
           "userid": userid,

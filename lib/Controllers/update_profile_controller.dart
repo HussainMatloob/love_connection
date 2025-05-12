@@ -233,14 +233,28 @@ class ProfileController extends GetxController {
           ? authController.dateOfBirth.value!.toIso8601String().trim()
           : '',
       'education': authController.educationLevel.value?.trim() ?? '',
+      ' educationlookingfor':
+          authController.lookingForEducation.value?.trim() ?? '',
       'religion': authController.religion.value?.trim() ?? '',
+      'religionlookingfor':
+          authController.lookingForReligion.value?.trim() ?? '',
       'cast': authController.caste.value?.trim() ?? '',
+      'castlookingfor': authController.lookingForCaste.value?.trim() ?? '',
       'sect': authController.sect.value?.trim() ?? '',
+      'sectlookingfor': authController.lookingForSect.value?.trim() ?? '',
       'country': authController.currentResidence.value?.trim() ?? '',
+      'countrylookingfor':
+          authController.lookingForResidence.value?.trim() ?? '',
       'city': authController.cityOfResidence.value?.trim().isNotEmpty == true
           ? authController.cityOfResidence.value!.trim()
           : "Unknown", // Default if empty
+      'citylookingfor':
+          authController.lookingForCity.value?.trim().isNotEmpty == true
+              ? authController.lookingForCity.value!.trim()
+              : "Unknown", // Default if empty
       'ethnicity': authController.ethnicity.value?.trim() ?? '',
+      'ethnicitylookingfor':
+          authController.lookingForEthnicity.value?.trim() ?? '',
     };
   }
 }

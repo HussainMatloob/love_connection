@@ -44,6 +44,7 @@ class GetConnectionsController extends GetxController {
 
       if (response != null) {
         if (response.statusCode == 200) {
+          connections.clear();
           getconnections();
           Get.snackbar(
             'Success',
