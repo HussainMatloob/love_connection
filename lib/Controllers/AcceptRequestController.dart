@@ -22,8 +22,9 @@ class AcceptRequestController extends GetxController {
       if (response['Result'] == 'true') {
         responseMessage.value = response['ResponseMsg'];
         Get.snackbar('Success', responseMessage.value,
+            colorText: Colors.white,
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.pinkAccent[800]);
+            backgroundColor: Colors.green);
       } else {
         responseMessage.value = response['ResponseMsg'];
       }
@@ -31,6 +32,46 @@ class AcceptRequestController extends GetxController {
       responseMessage.value = 'An error occurred: $e';
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  /*--------------------------------------------------*/
+  /*               ignore send tequest                */
+  /*--------------------------------------------------*/
+  Future<void> ignoreRequest(var connectionUserId) async {
+    try {
+      final response =
+          await ApiService.cancelConnectionRequest(connectionUserId);
+
+      if (response != null) {
+        if (response.statusCode == 200) {
+          //fetchPendingRequests();
+          Get.snackbar(
+            'Success',
+            "Request ignore successfully",
+            snackPosition: SnackPosition.BOTTOM,
+            colorText: Colors.white,
+            backgroundColor: Colors.green,
+          );
+        } else {
+          //customerloadingFunction(false);
+          Get.snackbar(
+              'Error', "Request failed with status: ${response.statusCode}",
+              colorText: Colors.white,
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.red);
+        }
+      } else {
+        Get.snackbar('Error', "Please try again",
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red);
+      }
+    } catch (e) {
+      Get.snackbar('Error', "$e",
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red);
     }
   }
 }

@@ -173,8 +173,9 @@ class _RequestsState extends State<Requests> {
                             ignoreButtonText: 'Ignore',
                             acceptButtonText: 'Accept',
                             onIgnore: () {
-                              _controller.Getrequests.removeAt(index);
-                              _controller.update();
+                              // acceptRequestController.ignoreRequest(request);
+                              // _controller.Getrequests.removeAt(index);
+                              // _controller.update();
                             },
                             onAccept: () async {
                               SharedPreferences prefs =
@@ -185,6 +186,7 @@ class _RequestsState extends State<Requests> {
                                 userId: userId,
                                 connectionId: request['id'].toString(),
                               );
+                              _controller.Getrequests.removeAt(index);
                             },
                           );
                         },

@@ -1356,6 +1356,10 @@ class FormWidgets {
                         profession: connections['education'] ?? 'N/A',
                         ignoreButtonText: 'Call',
                         acceptButtonText: 'Chat',
+                        unfollowTab: () {
+                          connectionsController.cancelRequest(connections);
+                          connectionsController.connections.removeAt(index);
+                        },
                         onIgnore: () {
                           Get.to(() => CallScreen());
                         },
@@ -1504,9 +1508,9 @@ class FormWidgets {
                           '${pendingProfile['firstname']} ${pendingProfile['lastname']} ',
                       profession: pendingProfile['city'] ?? 'N/A',
                       onClose: () {
-                        // pendingRequestsController.cancelRequest(pendingProfile);
                         // pendingRequestsController.pendingRequests
                         //     .removeAt(index);
+                        // pendingRequestsController.cancelRequest(pendingProfile);
                       },
                     );
                   },

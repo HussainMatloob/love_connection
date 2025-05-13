@@ -19,6 +19,7 @@ class ProfileCard extends StatelessWidget {
   final VoidCallback? onIgnore;
   final VoidCallback? onAccept;
   final bool isRequestScreen;
+  final VoidCallback? unfollowTab;
 
   ProfileCard({
     Key? key,
@@ -32,11 +33,10 @@ class ProfileCard extends StatelessWidget {
     this.onTap,
     this.completeRequestData,
     this.isRequestScreen = false,
+    this.unfollowTab,
   }) : super(key: key);
 
   @override
-  final GetConnectionsController connectionsController =
-      Get.put(GetConnectionsController(ApiService()));
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -132,9 +132,7 @@ class ProfileCard extends StatelessWidget {
         isRequestScreen
             ? SizedBox()
             : CustomButton(
-                onTap: () {
-                  connectionsController.cancelRequest(completeRequestData);
-                },
+                onTap: unfollowTab,
                 circularBottomLeft: 12.r,
                 circulatBottomRight: 12.r,
                 iscustomCircular: true,

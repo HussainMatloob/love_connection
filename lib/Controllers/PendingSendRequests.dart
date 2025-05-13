@@ -13,7 +13,7 @@ class GetPendingRequestsController extends GetxController {
     fetchPendingRequests();
   }
 
-  void fetchPendingRequests() async {
+  Future<void> fetchPendingRequests() async {
     try {
       isLoading(true);
       // Call the API
@@ -32,7 +32,7 @@ class GetPendingRequestsController extends GetxController {
   }
 
   /*--------------------------------------------------*/
-  /*               Cancel send tequest                */
+  /*               Cancel send request                */
   /*--------------------------------------------------*/
   Future<void> cancelRequest(var specificPersonSendRequest) async {
     try {
@@ -41,7 +41,7 @@ class GetPendingRequestsController extends GetxController {
 
       if (response != null) {
         if (response.statusCode == 200) {
-          fetchPendingRequests();
+          //fetchPendingRequests();
           Get.snackbar(
             'Success',
             "Request cancelled successfully",

@@ -45,7 +45,7 @@ class GetConnectionsController extends GetxController {
       if (response != null) {
         if (response.statusCode == 200) {
           connections.clear();
-          getconnections();
+          // getconnections();
           Get.snackbar(
             'Success',
             "User Unfollow successfully",
