@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,40 +31,48 @@ class _MatchesState extends State<Matches> {
     // Fetch API data only once
     getPendingRequestsController.fetchPendingRequests();
     getConnectionsController.getconnections();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Matches',
-            style: GoogleFonts.outfit(
-              color: Colors.black,
-              fontWeight: FontWeight.w400,
-              fontSize: 22.sp, // Responsive text
-            ),
-          ),
-          centerTitle: true,
-        ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w), // Responsive padding
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FormWidgets.buildTabs(controller, 'Completed', 'Pending'),
-              SizedBox(height: 10.h), // Responsive spacing
-              Divider(),
-              Expanded(
-                child: Obx(() {
-                  // Render the screen based on the selected tab
-                  return controller.Rcurrentpage.value == 0
-                      ? FormWidgets().buildCompletedTab(context)
-                      : FormWidgets().buildPendingTab(context);
-                }),
+    return GestureDetector(
+      onTap: () {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+        FocusScope.of(context).unfocus();
+      },
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Matches',
+              style: GoogleFonts.outfit(
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+                fontSize: 22.sp, // Responsive text
               ),
-            ],
+            ),
+            centerTitle: true,
+          ),
+          body: Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: 20.w), // Responsive padding
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FormWidgets.buildTabs(controller, 'Completed', 'Pending'),
+                SizedBox(height: 10.h), // Responsive spacing
+                Divider(),
+                Expanded(
+                  child: Obx(() {
+                    // Render the screen based on the selected tab
+                    return controller.Rcurrentpage.value == 0
+                        ? FormWidgets().buildCompletedTab(context)
+                        : FormWidgets().buildPendingTab(context);
+                  }),
+                ),
+              ],
+            ),
           ),
         ),
       ),

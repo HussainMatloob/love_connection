@@ -24,8 +24,8 @@ class GetUsersController extends GetxController {
       final prefs = await SharedPreferences.getInstance();
       userID = prefs.getString("userid").toString();
 
-      print(
-          "============================== USERS DATA =============================");
+      // print(
+      //     "============================== USERS DATA =============================");
       print(
           "================================ User id is :${userID}========================================");
       // Call the API
@@ -33,12 +33,12 @@ class GetUsersController extends GetxController {
 
       // Check response and update the users list
       if (response['ResponseCode'] == '200' && response['Result'] == 'true') {
-        print(
-            "============================ FETCH USERS ===============================");
-        print(
-            "==============================${response['ResponseMsg']}=============================");
-        print(response['Data']);
-        print("===========================================================");
+        // print(
+        //     "============================ FETCH USERS ===============================");
+        // print(
+        //     "==============================${response['ResponseMsg']}=============================");
+        // print(response['Data']);
+        // print("===========================================================");
         users.value = response['Data'];
       } else {
         // Get.snackbar('Error', response['ResponseMsg']);

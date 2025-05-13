@@ -196,7 +196,7 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        print(response.body);
+        //print(response.body);
         return jsonDecode(response.body);
       } else {
         throw Exception('Failed to load login data');
@@ -216,8 +216,8 @@ class ApiService {
         body: {'userid': userId},
       );
 
-      print('Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
+      // print('Status Code: ${response.statusCode}');
+      // print('Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);

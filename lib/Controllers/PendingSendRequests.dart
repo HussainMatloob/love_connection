@@ -20,7 +20,7 @@ class GetPendingRequestsController extends GetxController {
       final response = await ApiService().getPendingRequests();
       if (response['ResponseCode'] == '200' && response['Result'] == 'true') {
         pendingRequests.value = response['Data'];
-        print("=======================+++++++++++${pendingRequests}");
+        // print("=======================+++++++++++${pendingRequests}");
       } else {
         return errorMessage.value = response['ResponseMsg'];
       }

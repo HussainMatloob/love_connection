@@ -94,7 +94,7 @@ class _ExploreState extends State<Explore> {
                             details:
                                 '${profile['education']} from ${profile['city']}',
                             location: profile['city'] ?? '',
-                            image: _getImageUrl(profile["profileimage"] ?? ''),
+                            image: _getImageUrl(profile["selfieimage"] ?? ''),
                             onClose: () {},
 
                             /// ✅ Button with Better UI

@@ -33,6 +33,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       builder: (context, child) {
@@ -282,18 +283,21 @@ class _ProfileState extends State<Profile> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                buildMenuItem(
-                    icon: Icons.person_outline,
-                    title: 'Saved Profiles',
-                    onTap: () {}),
-                buildMenuItem(
-                    icon: Icons.settings_outlined,
-                    title: 'Settings',
-                    onTap: () {}),
-                buildMenuItem(
-                    icon: Icons.share_outlined,
-                    title: 'Share App',
-                    onTap: () {}),
+                /*-------------------------------------------------*/
+                /*        these features in under development      */
+                /*-------------------------------------------------*/
+                // buildMenuItem(
+                //     icon: Icons.person_outline,
+                //     title: 'Saved Profiles',
+                //     onTap: () {}),
+                // buildMenuItem(
+                //     icon: Icons.settings_outlined,
+                //     title: 'Settings',
+                //     onTap: () {}),
+                // buildMenuItem(
+                //     icon: Icons.share_outlined,
+                //     title: 'Share App',
+                //     onTap: () {}),
                 buildMenuItem(
                     icon: Icons.edit,
                     title: 'Edit Profile',

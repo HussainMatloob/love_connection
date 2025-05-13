@@ -27,7 +27,7 @@ class LoginController extends GetxController {
         userId.value = response['userid'];
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('userid', userId.toString());
-        print("User Login Successfully and user id is : $userId");
+        // print("User Login Successfully and user id is : $userId");
 
         // Elegant, Simple Success Dialog
         Get.dialog(
@@ -59,7 +59,7 @@ class LoginController extends GetxController {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    response['ResponseMsg'],
+                    "Login Successfully",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,

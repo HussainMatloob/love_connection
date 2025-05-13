@@ -18,9 +18,9 @@ class GetReceivedConnectionRequestController extends GetxController {
     try {
       isLoading.value = true;
       final response = await ApiService().getSendConRequest();
-      print(
-          "================================== RESPONSE ===================================");
-      print(response);
+      //print(
+      // "================================== RESPONSE ===================================");
+      //print(response);
       if (response['Result'] == 'true') {
         Getrequests.value = response['Data'] ?? [];
         update();

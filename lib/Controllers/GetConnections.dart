@@ -20,9 +20,9 @@ class GetConnectionsController extends GetxController {
       if (response['Result'] == 'true') {
         responseMessage.value = response['ResponseMsg'];
         connections.value = response['ConnectionsData'];
-        print(
-            "================================== CONNECTIONS DATA ===================================");
-        print(connections);
+        // print(
+        //     "================================== CONNECTIONS DATA ===================================");
+        // print(connections);
       } else {
         responseMessage.value = response['ResponseMsg'];
       }
@@ -44,7 +44,7 @@ class GetConnectionsController extends GetxController {
 
       if (response != null) {
         if (response.statusCode == 200) {
-          connections.clear();
+          //connections.clear();
           // getconnections();
           Get.snackbar(
             'Success',

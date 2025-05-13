@@ -69,79 +69,82 @@ class ProfileInfoWidget extends StatelessWidget {
             right: 10.w,
             child: Row(
               children: [
+                /*--------------------------------------------*/
+                /*         These modules in working           */
+                /*--------------------------------------------*/
                 // Save Button Container
-                Container(
-                  width: 80.w, // Responsive width
-                  height: 30.h, // Responsive height
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 2,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                    borderRadius:
-                        BorderRadius.circular(20.r), // Responsive border radius
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 8.w),
-                        // Responsive padding
-                        child: Icon(
-                          Icons.favorite,
-                          color: Colors.pink,
-                          size: 16.sp, // Responsive icon size
-                        ),
-                      ),
-                      SizedBox(width: 5.w), // Responsive spacing
-                      Text(
-                        'Save',
-                        style: GoogleFonts.outfit(
-                          color: Colors.black,
-                          fontSize: 14.sp, // Responsive font size
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   width: 80.w, // Responsive width
+                //   height: 30.h, // Responsive height
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.grey.withOpacity(0.5),
+                //         spreadRadius: 1,
+                //         blurRadius: 2,
+                //         offset: Offset(0, 3),
+                //       ),
+                //     ],
+                //     borderRadius:
+                //         BorderRadius.circular(20.r), // Responsive border radius
+                //   ),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.start,
+                //     crossAxisAlignment: CrossAxisAlignment.center,
+                //     children: [
+                //       Padding(
+                //         padding: EdgeInsets.only(left: 8.w),
+                //         // Responsive padding
+                //         child: Icon(
+                //           Icons.favorite,
+                //           color: Colors.pink,
+                //           size: 16.sp, // Responsive icon size
+                //         ),
+                //       ),
+                //       SizedBox(width: 5.w), // Responsive spacing
+                //       Text(
+                //         'Save',
+                //         style: GoogleFonts.outfit(
+                //           color: Colors.black,
+                //           fontSize: 14.sp, // Responsive font size
+                //           fontWeight: FontWeight.w400,
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
 
-                SizedBox(width: 8.w), // Responsive spacing between items
+                // SizedBox(width: 8.w), // Responsive spacing between items
 
-                // Menu Icon Button
-                Container(
-                  width: 30.w, // Responsive width
-                  height: 30.h, // Responsive height
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 4,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      // Menu button action
-                    },
-                    icon: Icon(
-                      Icons.more_vert,
-                      color: Colors.black,
-                      size: 16.sp, // Responsive icon size
-                    ),
-                    padding: EdgeInsets.zero, // Ensures correct button sizing
-                  ),
-                ),
+                // // Menu Icon Button
+                // Container(
+                //   width: 30.w, // Responsive width
+                //   height: 30.h, // Responsive height
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     shape: BoxShape.circle,
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.grey.withOpacity(0.5),
+                //         spreadRadius: 1,
+                //         blurRadius: 4,
+                //         offset: Offset(0, 3),
+                //       ),
+                //     ],
+                //   ),
+                //   child: IconButton(
+                //     onPressed: () {
+                //       // Menu button action
+                //     },
+                //     icon: Icon(
+                //       Icons.more_vert,
+                //       color: Colors.black,
+                //       size: 16.sp, // Responsive icon size
+                //     ),
+                //     padding: EdgeInsets.zero, // Ensures correct button sizing
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -206,7 +209,7 @@ class ProfileInfoWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildCircleButton(Icons.close, onClose, color: Colors.white),
+                //_buildCircleButton(Icons.close, onClose, color: Colors.white),
                 _buildCircleButton(Icons.check, onCheck,
                     color: Colors.pink.shade300),
               ],
