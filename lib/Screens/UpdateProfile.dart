@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,174 +39,193 @@ class _UpdateprofileState extends State<Updateprofile> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        CustomDialogs.showQuitDialog(context,
-            height: 300.h, width: 200.w, radius: 20.r);
-        return false;
+    return GestureDetector(
+      onTap: () {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+        FocusScope.of(context).unfocus();
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("Update Profile", style: TextStyle(color: Colors.white)),
-          backgroundColor: Colors.pink,
-          centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.white),
-        ),
-        body: Obx(() {
-          if (controller.isProfileloading.value) {
-            return Center(child: CircularProgressIndicator());
-          } else if (controller.userData.value == null) {
-            return Center(
-                child: TextButton(
-                    onPressed: () {
-                      controller.fetchUserDetails(context);
-                    },
-                    child: Text(
-                      "Refresh",
-                      style: TextStyle(fontSize: 16.sp),
-                    )));
-          }
-          return SingleChildScrollView(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(child: _buildProfileImage()),
-                SizedBox(height: 20),
-                _buildTextField("First Name",
-                    controller.controllers['firstname']!, Icons.person),
-                _buildTextField("Last Name",
-                    controller.controllers['lastname']!, Icons.person_outline),
-                _buildTextField(
-                    "Email", controller.controllers['email']!, Icons.email),
-                _buildTextField(
-                    "Password", controller.controllers['password']!, Icons.lock,
-                    obscureText: true),
-                _buildTextField(
-                    "Gender", controller.controllers['gender']!, Icons.male),
-                _buildTextField(
-                    "Height", controller.controllers['height']!, Icons.height),
-                FormWidgets.buildDateOfBirth(
-                    authController, controller.dateOfBirth.value!, true),
-                SizedBox(height: 10),
-                FormWidgets.buildDropdownPair(
-                  label1: 'Your Education',
-                  label2: 'Looking For',
-                  value: authController.educationLevel,
-                  lookingForValue: authController.lookingForEducation,
-                  items: authController.educationOptions,
-                  hinttext: 'Select Education',
-                ),
-                Obx(() {
-                  print(
-                      "Religion value: ${authController.religion.value}"); // Debugging
-                  return FormWidgets.buildDropdownPair(
-                    label1: 'Your Religion',
+      child: WillPopScope(
+        onWillPop: () async {
+          CustomDialogs.showQuitDialog(context,
+              height: 300.h,
+              width: 200.w,
+              radius: 20.r,
+              headText: "Quit Screen?",
+              messageText:
+                  "Are you sure you want to quit this screen? Any unsaved changes will be lost.",
+              quitText: "quit",
+              cancelText: 'cancel', onTap: () {
+            Navigator.of(context).pop(); // Close dialog
+            Navigator.of(context).pop(); // Quit screen
+          });
+          return false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title:
+                Text("Update Profile", style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.pink,
+            centerTitle: true,
+            iconTheme: IconThemeData(color: Colors.white),
+          ),
+          body: Obx(() {
+            if (controller.isProfileloading.value) {
+              return Center(child: CircularProgressIndicator());
+            } else if (controller.userData.value == null) {
+              return Center(
+                  child: TextButton(
+                      onPressed: () {
+                        controller.fetchUserDetails(context);
+                      },
+                      child: Text(
+                        "Refresh",
+                        style: TextStyle(fontSize: 16.sp),
+                      )));
+            }
+            return SingleChildScrollView(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(child: _buildProfileImage()),
+                  SizedBox(height: 20),
+                  _buildTextField("First Name",
+                      controller.controllers['firstname']!, Icons.person),
+                  _buildTextField(
+                      "Last Name",
+                      controller.controllers['lastname']!,
+                      Icons.person_outline),
+                  _buildTextField(
+                      "Email", controller.controllers['email']!, Icons.email),
+                  _buildTextField("Password",
+                      controller.controllers['password']!, Icons.lock,
+                      obscureText: true),
+                  _buildTextField(
+                      "Gender", controller.controllers['gender']!, Icons.male),
+                  _buildTextField("Height", controller.controllers['height']!,
+                      Icons.height),
+                  FormWidgets.buildDateOfBirth(
+                      authController, controller.dateOfBirth.value!, true),
+                  SizedBox(height: 10),
+                  FormWidgets.buildDropdownPair(
+                    label1: 'Your Education',
                     label2: 'Looking For',
-                    value: authController
-                        .religion, // Fallback value to avoid errors
-                    lookingForValue: authController.lookingForReligion,
-                    items: religionController.religions,
-                    hinttext: 'Select Religion',
-                  );
-                }),
-                Obx(() {
-                  if (castController.isLoading.value)
-                    return Center(child: CircularProgressIndicator());
-                  final casteNames = castController.castList
-                      .map<String>((cast) => cast["cast"].toString())
-                      .toList();
-                  return FormWidgets.buildDropdownPair(
-                    label1: 'Your Caste',
-                    label2: 'Looking For',
-                    value: authController.caste,
-                    lookingForValue: authController.lookingForCaste,
-                    items: casteNames,
-                    hinttext:
-                        casteNames.isEmpty ? 'No Cast found' : 'Select Cast',
-                  );
-                }),
-                SizedBox(height: 8.h),
-                Obx(() {
-                  if (sectController.isLoading.value)
-                    return Center(child: CircularProgressIndicator());
-                  return FormWidgets.buildDropdownPair(
-                    label1: 'Your Sect',
-                    label2: 'Looking For',
-                    value: authController.sect,
-                    lookingForValue: authController.lookingForSect,
-                    items: sectController.sectList,
-                    hinttext: sectController.sectList.isEmpty
-                        ? 'No Sect found'
-                        : 'Select Sect',
-                  );
-                }),
-                SizedBox(height: 10),
-                Obx(() {
-                  if (countryController.isLoading.value)
-                    return Center(child: CircularProgressIndicator());
-                  return FormWidgets.buildDropdownPair(
-                    label1: 'Your Country',
-                    label2: 'Looking For',
-                    value: authController.currentResidence,
-                    lookingForValue: authController.lookingForResidence,
-                    items: ["Any", ...countryController.countryList],
-                    hinttext: 'Select Country',
-                  );
-                }),
-                SizedBox(height: 10),
-                Obx(() {
-                  if (cityController.isLoading.value)
-                    return Center(child: CircularProgressIndicator());
+                    value: authController.educationLevel,
+                    lookingForValue: authController.lookingForEducation,
+                    items: authController.educationOptions,
+                    hinttext: 'Select Education',
+                  ),
+                  Obx(() {
+                    print(
+                        "Religion value: ${authController.religion.value}"); // Debugging
+                    return FormWidgets.buildDropdownPair(
+                      label1: 'Your Religion',
+                      label2: 'Looking For',
+                      value: authController
+                          .religion, // Fallback value to avoid errors
+                      lookingForValue: authController.lookingForReligion,
+                      items: religionController.religions,
+                      hinttext: 'Select Religion',
+                    );
+                  }),
+                  Obx(() {
+                    if (castController.isLoading.value)
+                      return Center(child: CircularProgressIndicator());
+                    final casteNames = castController.castList
+                        .map<String>((cast) => cast["cast"].toString())
+                        .toList();
+                    return FormWidgets.buildDropdownPair(
+                      label1: 'Your Caste',
+                      label2: 'Looking For',
+                      value: authController.caste,
+                      lookingForValue: authController.lookingForCaste,
+                      items: casteNames,
+                      hinttext:
+                          casteNames.isEmpty ? 'No Cast found' : 'Select Cast',
+                    );
+                  }),
+                  SizedBox(height: 8.h),
+                  Obx(() {
+                    if (sectController.isLoading.value)
+                      return Center(child: CircularProgressIndicator());
+                    return FormWidgets.buildDropdownPair(
+                      label1: 'Your Sect',
+                      label2: 'Looking For',
+                      value: authController.sect,
+                      lookingForValue: authController.lookingForSect,
+                      items: sectController.sectList,
+                      hinttext: sectController.sectList.isEmpty
+                          ? 'No Sect found'
+                          : 'Select Sect',
+                    );
+                  }),
+                  SizedBox(height: 10),
+                  Obx(() {
+                    if (countryController.isLoading.value)
+                      return Center(child: CircularProgressIndicator());
+                    return FormWidgets.buildDropdownPair(
+                      label1: 'Your Country',
+                      label2: 'Looking For',
+                      value: authController.currentResidence,
+                      lookingForValue: authController.lookingForResidence,
+                      items: ["Any", ...countryController.countryList],
+                      hinttext: 'Select Country',
+                    );
+                  }),
+                  SizedBox(height: 10),
+                  Obx(() {
+                    if (cityController.isLoading.value)
+                      return Center(child: CircularProgressIndicator());
 
-                  return FormWidgets.buildDropdownPair1(
-                    label1: 'Your City',
-                    label2: 'Looking For',
+                    return FormWidgets.buildDropdownPair1(
+                      label1: 'Your City',
+                      label2: 'Looking For',
 
-                    value: authController.cityOfResidence,
-                    lookingForValue: authController.lookingForCity,
-                    selfItems: [
-                      "Any",
-                      ...cityController.cityOptions
-                    ], // Cities for Residence
-                    lookingForItems: [
-                      "Any",
-                      ...cityController.lookingForCityOptions
-                    ], // Cities for Looking For Residence
-                    hinttext: 'Select City',
-                  );
-                }),
-                SizedBox(height: 8.h),
-                FormWidgets.buildDropdownPair(
-                    label1: 'Your Ethnicity',
-                    label2: 'Looking For',
-                    value: authController.ethnicity,
-                    lookingForValue: authController.lookingForEthnicity,
-                    items: authController.ethnicityOptions,
-                    hinttext: "Select Ethnicity"),
-                SizedBox(height: 20.h),
-                Obx(() => controller.isLoading.value
-                    ? Center(child: CircularProgressIndicator())
-                    : SizedBox(
-                        width: 1.sw,
-                        child: ElevatedButton(
-                          onPressed: controller.updateUserProfile,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.pink,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 14, horizontal: 40),
+                      value: authController.cityOfResidence,
+                      lookingForValue: authController.lookingForCity,
+                      selfItems: [
+                        "Any",
+                        ...cityController.cityOptions
+                      ], // Cities for Residence
+                      lookingForItems: [
+                        "Any",
+                        ...cityController.lookingForCityOptions
+                      ], // Cities for Looking For Residence
+                      hinttext: 'Select City',
+                    );
+                  }),
+                  SizedBox(height: 8.h),
+                  FormWidgets.buildDropdownPair(
+                      label1: 'Your Ethnicity',
+                      label2: 'Looking For',
+                      value: authController.ethnicity,
+                      lookingForValue: authController.lookingForEthnicity,
+                      items: authController.ethnicityOptions,
+                      hinttext: "Select Ethnicity"),
+                  SizedBox(height: 20.h),
+                  Obx(() => controller.isLoading.value
+                      ? Center(child: CircularProgressIndicator())
+                      : SizedBox(
+                          width: 1.sw,
+                          child: ElevatedButton(
+                            onPressed: controller.updateUserProfile,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.pink,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 14, horizontal: 40),
+                            ),
+                            child: Text("Update Profile",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white)),
                           ),
-                          child: Text("Update Profile",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white)),
-                        ),
-                      )),
-              ],
-            ),
-          );
-        }),
+                        )),
+                ],
+              ),
+            );
+          }),
+        ),
       ),
     );
   }

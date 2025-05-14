@@ -9,6 +9,11 @@ class CustomDialogs {
     double? height,
     double? width,
     double? radius,
+    String? headText,
+    String? messageText,
+    String? quitText,
+    String? cancelText,
+    VoidCallback? onTap,
   }) {
     showDialog(
       context: context,
@@ -28,13 +33,13 @@ class CustomDialogs {
                         size: 50, color: Colors.redAccent),
                     SizedBox(height: 20.h),
                     CustomText(
-                      "Quit Screen?",
+                      headText,
                       size: 20.sp,
                       fw: FontWeight.w400,
                     ),
                     SizedBox(height: 10.h),
                     CustomText(
-                      "Are you sure you want to quit this screen? Any unsaved changes will be lost.",
+                      messageText,
                       size: 16.sp,
                       textAlign: TextAlign.center,
                     ),
@@ -43,24 +48,20 @@ class CustomDialogs {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         CustomButton(
-                          bordercircular: 10.r,
-                          boxColor: Colors.redAccent,
-                          text: "quit",
-                          textColor: Colors.white,
-                          fontSize: 16.sp,
-                          fw: FontWeight.w400,
-                          height: 40.h,
-                          width: 90.h,
-                          horizontalPadding: 5.w,
-                          borderColor: Colors.transparent,
-                          onTap: () {
-                            Navigator.of(context).pop(); // Close dialog
-                            Navigator.of(context).pop(); // Quit screen
-                          },
-                        ),
+                            bordercircular: 10.r,
+                            boxColor: Colors.redAccent,
+                            text: quitText,
+                            textColor: Colors.white,
+                            fontSize: 16.sp,
+                            fw: FontWeight.w400,
+                            height: 40.h,
+                            width: 90.h,
+                            horizontalPadding: 5.w,
+                            borderColor: Colors.transparent,
+                            onTap: onTap),
                         CustomButton(
                           bordercircular: 10.r,
-                          text: 'cancel',
+                          text: cancelText,
                           textColor: Colors.black,
                           fontSize: 16.sp,
                           fw: FontWeight.w400,

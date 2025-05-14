@@ -7,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:love_connection/Screens/UpdateProfile.dart';
 import 'package:love_connection/Screens/auth/Login.dart';
+import 'package:love_connection/Widgets/custom_dialogs.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../ApiService/ApiService.dart';
@@ -294,10 +296,15 @@ class _ProfileState extends State<Profile> {
                 //     icon: Icons.settings_outlined,
                 //     title: 'Settings',
                 //     onTap: () {}),
-                // buildMenuItem(
-                //     icon: Icons.share_outlined,
-                //     title: 'Share App',
-                //     onTap: () {}),
+                buildMenuItem(
+                    icon: Icons.share_outlined,
+                    title: 'Share App',
+                    onTap: () {
+                      Share.share(
+                        'Check out my app on the Play Store:\nhttps://play.google.com/store/apps/details?id=com.example.love_connection',
+                        subject: 'Install this app',
+                      );
+                    }),
                 buildMenuItem(
                     icon: Icons.edit,
                     title: 'Edit Profile',
@@ -310,9 +317,23 @@ class _ProfileState extends State<Profile> {
                     icon: Icons.logout,
                     title: 'Logout',
                     onTap: () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      prefs.setString("userid", "");
-                      Get.offAll(LoginScreen());
+                      CustomDialogs.showQuitDialog(
+                        context,
+                        height: 300.h,
+                        width: 200.w,
+                        radius: 20.r,
+                        headText: "Logout Confirmation",
+                        messageText:
+                            "Are you sure you want to log out? You will need to sign in again to access your account.",
+                        quitText: "Logout",
+                        cancelText: "Cancel",
+                        onTap: () async {
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.remove(
+                              "userid"); // More appropriate than setting empty string
+                          Get.offAll(LoginScreen());
+                        },
+                      );
                     }),
               ],
             ),

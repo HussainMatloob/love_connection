@@ -504,7 +504,11 @@ class FormWidgets {
             SizedBox(height: 24.h),
 
             Obx(() {
-              final countries = ["Any", ...countryController.countryList];
+              final countries = [
+                "Any",
+                ...countryController.countryList
+                    .where((country) => country != "Any")
+              ];
               final _ = countries.length;
 
               if (countryController.isLoading.value) {
@@ -563,11 +567,13 @@ class FormWidgets {
                   lookingForValue: authController.lookingForCity,
                   selfItems: [
                     "Any",
-                    ...cityController.cityOptions
-                  ], // Cities for Residence with "Any"
+                    ...cityController.cityOptions.where((city) => city != "Any")
+                  ],
+
                   lookingForItems: [
                     "Any",
                     ...cityController.lookingForCityOptions
+                        .where((city) => city != "Any")
                   ], // Cities for Looking For Residence with "Any"
                   hinttext: 'Select City',
                 );
@@ -589,7 +595,10 @@ class FormWidgets {
 
                   value: authController.caste,
                   lookingForValue: authController.lookingForCaste,
-                  items: ["Any", ...casteNames], // Add "Any" option
+                  items: [
+                    "Any",
+                    ...casteNames.where((cast) => cast != "Any")
+                  ], // Add "Any" option
                   hinttext:
                       casteNames.isEmpty ? 'No Cast found' : 'Select Cast',
                 );
@@ -610,7 +619,7 @@ class FormWidgets {
                   lookingForValue: authController.lookingForSect,
                   items: [
                     "Any",
-                    ...sectController.sectList
+                    ...sectController.sectList.where((sect) => sect != "Any")
                   ], // Add "Any" option
                   hinttext: sectController.sectList.isEmpty
                       ? 'No Sect found'
@@ -628,6 +637,7 @@ class FormWidgets {
                   items: [
                     "Any",
                     ...authController.ethnicityOptions
+                        .where((ethnicity) => ethnicity != "Any")
                   ], // Add "Any" option
                   hinttext: "Select Ethnicity"),
               SizedBox(height: 20.h),
