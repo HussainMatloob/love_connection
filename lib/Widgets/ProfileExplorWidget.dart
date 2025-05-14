@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:love_connection/Screens/Service_selection_screen.dart';
 import 'BasicinfoBottom.dart';
 
 class ProfileInfoWidget extends StatelessWidget {
@@ -73,47 +75,52 @@ class ProfileInfoWidget extends StatelessWidget {
                 /*         These modules in working           */
                 /*--------------------------------------------*/
                 // Save Button Container
-                // Container(
-                //   width: 80.w, // Responsive width
-                //   height: 30.h, // Responsive height
-                //   decoration: BoxDecoration(
-                //     color: Colors.white,
-                //     boxShadow: [
-                //       BoxShadow(
-                //         color: Colors.grey.withOpacity(0.5),
-                //         spreadRadius: 1,
-                //         blurRadius: 2,
-                //         offset: Offset(0, 3),
-                //       ),
-                //     ],
-                //     borderRadius:
-                //         BorderRadius.circular(20.r), // Responsive border radius
-                //   ),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.start,
-                //     crossAxisAlignment: CrossAxisAlignment.center,
-                //     children: [
-                //       Padding(
-                //         padding: EdgeInsets.only(left: 8.w),
-                //         // Responsive padding
-                //         child: Icon(
-                //           Icons.favorite,
-                //           color: Colors.pink,
-                //           size: 16.sp, // Responsive icon size
-                //         ),
-                //       ),
-                //       SizedBox(width: 5.w), // Responsive spacing
-                //       Text(
-                //         'Save',
-                //         style: GoogleFonts.outfit(
-                //           color: Colors.black,
-                //           fontSize: 14.sp, // Responsive font size
-                //           fontWeight: FontWeight.w400,
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
+                GestureDetector(
+                  onTap: () {
+                    Get.offAll(() => ServiceSelectionScreen());
+                  },
+                  child: Container(
+                    width: 80.w, // Responsive width
+                    height: 30.h, // Responsive height
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 2,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(
+                          20.r), // Responsive border radius
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 8.w),
+                          // Responsive padding
+                          child: Icon(
+                            Icons.home_filled,
+                            color: Colors.pink,
+                            size: 16.sp, // Responsive icon size
+                          ),
+                        ),
+                        SizedBox(width: 5.w), // Responsive spacing
+                        Text(
+                          'Home',
+                          style: GoogleFonts.outfit(
+                            color: Colors.black,
+                            fontSize: 14.sp, // Responsive font size
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
 
                 // SizedBox(width: 8.w), // Responsive spacing between items
 

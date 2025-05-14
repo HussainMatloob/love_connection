@@ -76,10 +76,10 @@ class _RequestsState extends State<Requests> {
                 padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
                 child: Column(
                   children: [
-                    FormWidgets.buildSearchView(
-                      hintText: "Search",
-                      searchQuery: _controller.searchQuerytext,
-                    ),
+                    // FormWidgets.buildSearchView(
+                    //   hintText: "Search",
+                    //   searchQuery: _controller.searchQuerytext,
+                    // ),
                     SizedBox(height: Get.height * 0.015),
                     Expanded(
                       child: Obx(() {

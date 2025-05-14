@@ -1326,11 +1326,11 @@ class FormWidgets {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 10.h),
-            FormWidgets.buildSearchView(
-              hintText: "Search",
-              searchQuery: connectionsController.searchQuerytext,
-            ),
+            // SizedBox(height: 10.h),
+            // FormWidgets.buildSearchView(
+            //   hintText: "Search",
+            //   searchQuery: connectionsController.searchQuerytext,
+            // ),
             SizedBox(height: 10.h),
             Expanded(
               child: SizedBox(

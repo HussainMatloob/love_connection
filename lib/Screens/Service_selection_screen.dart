@@ -34,16 +34,16 @@ class _ServiceSelectionScreenState extends State<ServiceSelectionScreen> {
             child: Column(
               children: [
                 // Back Button
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.pinkAccent),
-                      onPressed: () => Get.back(),
-                    ),
-                  ),
-                ),
+                // Align(
+                //   alignment: Alignment.topLeft,
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(16.0),
+                //     child: IconButton(
+                //       icon: Icon(Icons.arrow_back, color: Colors.pinkAccent),
+                //       onPressed: () => Get.back(),
+                //     ),
+                //   ),
+                // ),
                 Spacer(),
                 // Main Content Container
                 Container(
@@ -89,69 +89,64 @@ class _ServiceSelectionScreenState extends State<ServiceSelectionScreen> {
                       Column(
                         children: [
                           GestureDetector(
-                                    onTap: () async {
-                                      setState(() {
-                                        isMatchmakingSelected = true;
-                                      });
-                                      Get.to(() => Bottomnavbar());
-                                    },
-                                    child: Container(
-                                      width: double.infinity,
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 14),
-                                      decoration: BoxDecoration(
-                                        color: isMatchmakingSelected
-                                            ? Colors.pinkAccent
-                                            : Colors.white,
-                                        borderRadius: BorderRadius.circular(18),
-                                        border: Border.all(
-                                            color: Colors.pinkAccent),
-                                      ),
-                                      child: Text(
-                                        "Looking For Matchmaking Services",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: isMatchmakingSelected
-                                              ? Colors.white
-                                              : Colors.pinkAccent,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                            onTap: () async {
+                              setState(() {
+                                isMatchmakingSelected = true;
+                              });
+                              Get.to(() => Bottomnavbar());
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              decoration: BoxDecoration(
+                                color: isMatchmakingSelected
+                                    ? Colors.pinkAccent
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(18),
+                                border: Border.all(color: Colors.pinkAccent),
+                              ),
+                              child: Text(
+                                "Looking For Matchmaking Services",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: isMatchmakingSelected
+                                      ? Colors.white
+                                      : Colors.pinkAccent,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
                           SizedBox(height: 16),
                           GestureDetector(
-                                    onTap: () async {
-                                      setState(() {
-                                        isMatchmakingSelected = false;
-                                      });
-                                      Get.to(() => SelectService());
-                                    },
-                                    child: Container(
-                                      width: double.infinity,
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 14),
-                                      decoration: BoxDecoration(
-                                        color: !isMatchmakingSelected
-                                            ? Colors.pinkAccent
-                                            : Colors.white,
-                                        borderRadius: BorderRadius.circular(18),
-                                        border: Border.all(
-                                            color: Colors.pinkAccent),
-                                      ),
-                                      child: Text(
-                                        "Looking For Coaching Services",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: !isMatchmakingSelected
-                                              ? Colors.white
-                                              : Colors.pinkAccent,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-
+                            onTap: () async {
+                              setState(() {
+                                isMatchmakingSelected = false;
+                              });
+                              Get.to(() => SelectService());
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              decoration: BoxDecoration(
+                                color: !isMatchmakingSelected
+                                    ? Colors.pinkAccent
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(18),
+                                border: Border.all(color: Colors.pinkAccent),
+                              ),
+                              child: Text(
+                                "Looking For Coaching Services",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: !isMatchmakingSelected
+                                      ? Colors.white
+                                      : Colors.pinkAccent,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(height: 24),
