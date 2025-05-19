@@ -301,7 +301,7 @@ class _ProfileState extends State<Profile> {
                     title: 'Share App',
                     onTap: () {
                       Share.share(
-                        'Check out my app on the Play Store:\nhttps://play.google.com/store/apps/details?id=com.example.love_connection',
+                        'Check out my app on the Play Store:\nhttps://play.google.com/store/apps/details?id=com.lovecon',
                         subject: 'Install this app',
                       );
                     }),
