@@ -59,7 +59,6 @@ class DocumentUploadScreen extends StatelessWidget {
               ),
               SizedBox(height: 16),
               _buildUploadCard(
-
                 title: "Back Image",
                 image: controller.passportBackImage,
                 onTap: () =>
@@ -69,7 +68,7 @@ class DocumentUploadScreen extends StatelessWidget {
               PinkButton(
                   text: "Next",
                   onTap: () {
-                    Get.to(SelfieImageScreen());
+                    Get.to(() => SelfieImageScreen());
                   })
             ],
           ),
@@ -103,7 +102,7 @@ class DocumentUploadScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Obx(
-            () => DottedBorder(
+        () => DottedBorder(
           color: Colors.pink.shade300,
           borderType: BorderType.RRect,
           radius: Radius.circular(8),
@@ -126,27 +125,26 @@ class DocumentUploadScreen extends StatelessWidget {
               ],
               image: image.value != null
                   ? DecorationImage(
-                image: FileImage(image.value!),
-                fit: BoxFit.cover,
-              )
+                      image: FileImage(image.value!),
+                      fit: BoxFit.cover,
+                    )
                   : null,
             ),
             child: image.value == null
                 ? Center(
-              child: Image.asset(
-                "assets/images/Psp.jpg",
-                fit: BoxFit.fill,
-                width: double.infinity,
-                height: double.infinity,
-              ),
-            )
+                    child: Image.asset(
+                      "assets/images/Psp.jpg",
+                      fit: BoxFit.fill,
+                      width: double.infinity,
+                      height: double.infinity,
+                    ),
+                  )
                 : null,
           ),
         ),
       ),
     );
   }
-
 
   Widget _buildIdCardUploadCard({
     required String title,
@@ -156,30 +154,29 @@ class DocumentUploadScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Obx(() => DottedBorder(
-        color: Colors.pink.shade300,
-        borderType: BorderType.RRect,
-        radius: Radius.circular(8),
-        dashPattern: [6, 4],
-        strokeWidth: 2,
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 8.0),
-          width: Get.width * 0.8,
-          height: 180,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            image: image.value != null
-                ? DecorationImage(
-              image: FileImage(image.value!),
-              fit: BoxFit.cover,
-            )
-                : null,
-          ),
-          child: image.value == null
-              ? Center(child: Text("Upload $title"))
-              : null,
-        ),
-      )),
+            color: Colors.pink.shade300,
+            borderType: BorderType.RRect,
+            radius: Radius.circular(8),
+            dashPattern: [6, 4],
+            strokeWidth: 2,
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 8.0),
+              width: Get.width * 0.8,
+              height: 180,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                image: image.value != null
+                    ? DecorationImage(
+                        image: FileImage(image.value!),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
+              ),
+              child: image.value == null
+                  ? Center(child: Text("Upload $title"))
+                  : null,
+            ),
+          )),
     );
   }
-
 }

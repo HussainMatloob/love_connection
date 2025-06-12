@@ -17,7 +17,7 @@ class ProfilePicture extends StatefulWidget {
 
 class _ProfilepictureState extends State<ProfilePicture> {
   final ProfilepictureController controller =
-  Get.put(ProfilepictureController());
+      Get.put(ProfilepictureController());
   final AuthController authController = Get.put(AuthController());
   final ImageController imageController = Get.put(ImageController());
 
@@ -56,7 +56,8 @@ class _ProfilepictureState extends State<ProfilePicture> {
                       ),
                     ),
                     SizedBox(height: 16.h),
-                    Obx(() => GestureDetector(
+                    Obx(
+                      () => GestureDetector(
                         onTap: () => controller.pickImageFromGallery(),
                         child: DottedBorder(
                           color: Colors.pink.shade300,
@@ -73,26 +74,26 @@ class _ProfilepictureState extends State<ProfilePicture> {
                             ),
                             child: controller.profileImage.value == null
                                 ? Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.camera_alt_outlined,
-                                    size: 40.sp, color: Colors.grey),
-                                SizedBox(height: 8.h),
-                                Text('Upload Image',
-                                    style: GoogleFonts.outfit(
-                                        color: Colors.grey,
-                                        fontSize: 16.sp)),
-                              ],
-                            )
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.camera_alt_outlined,
+                                          size: 40.sp, color: Colors.grey),
+                                      SizedBox(height: 8.h),
+                                      Text('Upload Image',
+                                          style: GoogleFonts.outfit(
+                                              color: Colors.grey,
+                                              fontSize: 16.sp)),
+                                    ],
+                                  )
                                 : ClipRRect(
-                              borderRadius: BorderRadius.circular(8.r),
-                              child: Image.file(
-                                controller.profileImage.value!,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: double.infinity,
-                              ),
-                            ),
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    child: Image.file(
+                                      controller.profileImage.value!,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    ),
+                                  ),
                           ),
                         ),
                       ),
@@ -135,15 +136,15 @@ class _ProfilepictureState extends State<ProfilePicture> {
                                   ],
                                   image: imageController.images[index] != null
                                       ? DecorationImage(
-                                    image: FileImage(
-                                        imageController.images[index]!),
-                                    fit: BoxFit.cover,
-                                  )
+                                          image: FileImage(
+                                              imageController.images[index]!),
+                                          fit: BoxFit.cover,
+                                        )
                                       : null,
                                 ),
                                 child: imageController.images[index] == null
                                     ? Icon(Icons.add,
-                                    color: Colors.black54, size: 40.sp)
+                                        color: Colors.black54, size: 40.sp)
                                     : null,
                               ),
                             );
@@ -166,7 +167,9 @@ class _ProfilepictureState extends State<ProfilePicture> {
                     Get.to(DocumentUploadScreen());
                   } else {
                     Get.snackbar('Incomplete', 'Please select all images.',
-                        snackPosition: SnackPosition.BOTTOM);
+                        snackPosition: SnackPosition.BOTTOM,
+                        colorText: Colors.white,
+                        backgroundColor: Colors.red);
                   }
                 },
               ),

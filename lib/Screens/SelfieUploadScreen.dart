@@ -69,7 +69,8 @@ class SelfieImageScreen extends StatelessWidget {
                     right: 16,
                     child: GestureDetector(
                       onTap: () {
-                        controller.captureSelfie(); // Call your camera function here
+                        controller
+                            .captureSelfie(); // Call your camera function here
                       },
                       child: Container(
                         padding: EdgeInsets.all(12),

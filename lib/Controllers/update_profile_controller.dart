@@ -8,6 +8,7 @@ import 'package:love_connection/ApiService/ApiService.dart';
 import 'package:love_connection/Controllers/sect_controller.dart';
 import 'package:love_connection/utils/date_time_util.dart';
 import 'package:love_connection/utils/flush_messages.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'AuthController.dart';
 
@@ -118,17 +119,58 @@ class ProfileController extends GetxController {
     }
   }
 
+// // Image file map
+//   final Map<String, Rx<File?>> imageFiles = {
+//     'selfieimage': Rx<File?>(null),
+//   };
+
+// // Pick image from gallery or camera
+//   Future<void> pickImage(ImageSource source, String field) async {
+//     final pickedFile = await ImagePicker().pickImage(source: source);
+//    // print("File Picker path.path===========-----${pickedFile!.path}");
+//     if (pickedFile != null) {
+//       imageFiles[field]?.value = File(pickedFile.path);
+//     }
+//   }
+
 // Image file map
   final Map<String, Rx<File?>> imageFiles = {
     'selfieimage': Rx<File?>(null),
   };
 
-// Pick image from gallery or camera
+// Pick image from gallery only
   Future<void> pickImage(ImageSource source, String field) async {
+    if (!await _handleGalleryPermission()) {
+      Get.snackbar('Permission Denied', 'Permission denied to access gallery.',
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red);
+      return;
+    }
+
     final pickedFile = await ImagePicker().pickImage(source: source);
+
     if (pickedFile != null) {
       imageFiles[field]?.value = File(pickedFile.path);
     }
+  }
+
+// Handle permissions properly for gallery
+  Future<bool> _handleGalleryPermission() async {
+    if (Platform.isAndroid) {
+      // Request READ_MEDIA_IMAGES for Android 13+ or fallback to storage
+      var photosPermission = await Permission.photos.request();
+
+      if (photosPermission.isGranted) {
+        return true;
+      }
+
+      // Fallback for Android 12 and below
+      var storagePermission = await Permission.storage.request();
+      return storagePermission.isGranted;
+    }
+
+    return false;
   }
 
   bool validateAllFields() {

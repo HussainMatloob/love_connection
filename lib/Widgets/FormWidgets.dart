@@ -608,7 +608,7 @@ class FormWidgets {
               // Sect Dropdown with "Any" Option
               Obx(() {
                 if (sectController.isLoading.value) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: SizedBox());
                 }
 
                 return buildDropdownPair(

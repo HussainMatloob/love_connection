@@ -288,10 +288,10 @@ class _ProfileState extends State<Profile> {
                 /*-------------------------------------------------*/
                 /*        these features in under development      */
                 /*-------------------------------------------------*/
-                // buildMenuItem(
-                //     icon: Icons.person_outline,
-                //     title: 'Saved Profiles',
-                //     onTap: () {}),
+                buildMenuItem(
+                    icon: Icons.person_outline,
+                    title: 'Verification Document',
+                    onTap: () {}),
                 // buildMenuItem(
                 //     icon: Icons.settings_outlined,
                 //     title: 'Settings',
@@ -301,13 +301,13 @@ class _ProfileState extends State<Profile> {
                     title: 'Share App',
                     onTap: () {
                       Share.share(
-                        'Check out my app on the Play Store:\nhttps://play.google.com/store/apps/details?id=com.lovecon',
+                        'Check out my app on the Play Store:\nhttps://play.google.com/store/apps/details?id=com.loveconnection.app',
                         subject: 'Install this app',
                       );
                     }),
                 buildMenuItem(
                     icon: Icons.edit,
-                    title: 'Edit Profile',
+                    title: 'Edit Preferences',
                     onTap: () {
                       Navigator.of(context).pop();
                       Get.to(() => Updateprofile());
@@ -319,9 +319,9 @@ class _ProfileState extends State<Profile> {
                     onTap: () async {
                       CustomDialogs.showQuitDialog(
                         context,
-                        height: 300.h,
+                        height: 210.h,
                         width: 200.w,
-                        radius: 20.r,
+                        radius: 10.r,
                         headText: "Logout Confirmation",
                         messageText:
                             "Are you sure you want to log out? You will need to sign in again to access your account.",
@@ -402,7 +402,7 @@ class _ProfileState extends State<Profile> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Upgrade',
+                              'Comming Soon',
                               style: GoogleFonts.outfit(
                                 color: Colors.black,
                                 fontSize: 20,
@@ -424,12 +424,12 @@ class _ProfileState extends State<Profile> {
                   const SizedBox(height: 20),
                   FormWidgets().buildInfoRow(
                     context,
-                    "Boost your profile to the top of search results and get faster,\n handpicked matches tailored to your preferences.",
+                    "Boost your profile to the top of search results and get faster, handpicked matches tailored to your preferences.",
                   ),
                   const SizedBox(height: 10),
                   FormWidgets().buildInfoRow(
                     context,
-                    "Enjoy unlimited messages and see who liked your profile\n to connect with more potential matches.",
+                    "Enjoy unlimited messages and see who liked your profile to connect with more potential matches.",
                   ),
                   const SizedBox(height: 20),
                   Container(
@@ -476,7 +476,7 @@ class _ProfileState extends State<Profile> {
                             .buildBasicInfoRow('Height', user['height']),
                         const SizedBox(height: 10),
                         FormWidgets().buildBasicInfoRow(
-                            'Date of Birth', user['dateofbirth']),
+                            'Date of Birth', user['dateofbirth'].split('T').first),
                         const SizedBox(height: 10),
                         FormWidgets()
                             .buildBasicInfoRow('Religion', user['religion']),

@@ -47,14 +47,14 @@ class _UpdateprofileState extends State<Updateprofile> {
       child: WillPopScope(
         onWillPop: () async {
           CustomDialogs.showQuitDialog(context,
-              height: 300.h,
+              height: 210.h,
               width: 200.w,
-              radius: 20.r,
+              radius: 10.r,
               headText: "Quit Screen?",
               messageText:
                   "Are you sure you want to quit this screen? Any unsaved changes will be lost.",
-              quitText: "quit",
-              cancelText: 'cancel', onTap: () {
+              quitText: "Quit",
+              cancelText: 'Cancel', onTap: () {
             Navigator.of(context).pop(); // Close dialog
             Navigator.of(context).pop(); // Quit screen
           });

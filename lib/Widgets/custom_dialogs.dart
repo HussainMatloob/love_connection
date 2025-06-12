@@ -19,6 +19,9 @@ class CustomDialogs {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                  radius ?? 0.r)), // <- Proper corner radius
           child: Container(
               padding: EdgeInsets.all(5.r),
               height: height,
@@ -34,14 +37,20 @@ class CustomDialogs {
                     SizedBox(height: 20.h),
                     CustomText(
                       headText,
-                      size: 20.sp,
-                      fw: FontWeight.w400,
+                      size: 16.sp,
+                      fw: FontWeight.w700,
+                      color: Colors.black,
                     ),
                     SizedBox(height: 10.h),
-                    CustomText(
-                      messageText,
-                      size: 16.sp,
-                      textAlign: TextAlign.center,
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.r),
+                      child: CustomText(
+                        messageText,
+                        size: 9.sp,
+                        fw: FontWeight.w600,
+                        textAlign: TextAlign.center,
+                        color: Colors.black,
+                      ),
                     ),
                     SizedBox(height: 30.h),
                     Row(
@@ -52,10 +61,10 @@ class CustomDialogs {
                             boxColor: Colors.redAccent,
                             text: quitText,
                             textColor: Colors.white,
-                            fontSize: 16.sp,
-                            fw: FontWeight.w400,
-                            height: 40.h,
-                            width: 90.h,
+                            fontSize: 12.sp,
+                            fw: FontWeight.w600,
+                            height: 30.h,
+                            width: 80.h,
                             horizontalPadding: 5.w,
                             borderColor: Colors.transparent,
                             onTap: onTap),
@@ -63,10 +72,10 @@ class CustomDialogs {
                           bordercircular: 10.r,
                           text: cancelText,
                           textColor: Colors.black,
-                          fontSize: 16.sp,
-                          fw: FontWeight.w400,
-                          height: 40.h,
-                          width: 90.h,
+                          fontSize: 12.sp,
+                          fw: FontWeight.w600,
+                          height: 30.h,
+                          width: 80.h,
                           horizontalPadding: 5.w,
                           borderColor: Colors.black,
                           onTap: () {

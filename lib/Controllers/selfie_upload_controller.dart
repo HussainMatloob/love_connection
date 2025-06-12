@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,11 +10,12 @@ class SelfieImageController extends GetxController {
   var selfieImage = Rxn<File>();
   final ImagePicker picker = ImagePicker();
 
-  // Function to request permission and capture selfie
   Future<void> captureSelfie() async {
-    // Request Camera Permission
-    if (await Permission.camera.request().isGranted) {
-      // Open front camera to capture selfie
+    // Request camera permission
+    final status = await Permission.camera.request();
+
+    if (status.isGranted) {
+      // Pick image from front camera
       final pickedFile = await picker.pickImage(
         source: ImageSource.camera,
         preferredCameraDevice: CameraDevice.front,
@@ -21,19 +23,27 @@ class SelfieImageController extends GetxController {
 
       if (pickedFile != null) {
         selfieImage.value = File(pickedFile.path);
-      } else {
-        Get.snackbar(
-          "Selfie Capture Cancelled",
-          "Please try again to capture your selfie.",
-          snackPosition: SnackPosition.BOTTOM,
-        );
       }
+    } else if (status.isPermanentlyDenied) {
+      Get.snackbar(
+        "Camera Permission Permanently Denied",
+        "Please allow camera access from app settings.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        mainButton: TextButton(
+          onPressed: () => openAppSettings(),
+          child: const Text("Open Settings",
+              style: TextStyle(color: Colors.white)),
+        ),
+      );
     } else {
-      // Show message if permission is denied
       Get.snackbar(
         "Camera Permission Denied",
-        "Please allow camera access from settings.",
+        "Camera access is required to take a selfie.",
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
       );
     }
   }
