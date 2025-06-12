@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -76,21 +77,50 @@ class _ProfileState extends State<Profile> {
                 final user = userController.userData.value!;
                 return Stack(
                   children: [
+                    // SizedBox(
+                    //   width: 1.sw,
+                    //   height: 1.sh * 1,
+                    //   child: CachedNetworkImage(
+                    //     imageUrl: _getImageUrl(user['selfieimage']),
+                    //     fadeInCurve: Curves.easeIn,
+                    //     placeholder: (context, url) => Image.asset(
+                    //       "assets/images/PROFILE.png",
+                    //       fit: BoxFit.cover,
+                    //     ),
+                    //     errorWidget: (context, url, error) => Image.asset(
+                    //       "assets/images/PROFILE.png",
+                    //       fit: BoxFit.cover,
+                    //     ),
+                    //     fit: BoxFit.cover,
+                    //   ),
+                    // ),
                     SizedBox(
                       width: 1.sw,
-                      height: 1.sh * 1,
+                      height: 1.sh,
                       child: CachedNetworkImage(
                         imageUrl: _getImageUrl(user['selfieimage']),
                         fadeInCurve: Curves.easeIn,
-                        placeholder: (context, url) => Image.asset(
-                          "assets/images/PROFILE.png",
-                          fit: BoxFit.cover,
-                        ),
-                        errorWidget: (context, url, error) => Image.asset(
-                          "assets/images/PROFILE.png",
-                          fit: BoxFit.cover,
-                        ),
                         fit: BoxFit.cover,
+
+                        // Show red CircularProgressIndicator while loading
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.red),
+                          ),
+                        ),
+
+                        // If failed to load, show fallback professional icon (you can customize this)
+                        errorWidget: (context, url, error) => Container(
+                          color: Colors.grey.shade200,
+                          alignment: Alignment.center,
+                          child: Image.asset(
+                            "assets/images/PROFILE.png", // Professional icon here
+                            fit: BoxFit.contain,
+                            width: 100.w,
+                            height: 100.w,
+                          ),
+                        ),
                       ),
                     ),
 
@@ -204,7 +234,61 @@ class _ProfileState extends State<Profile> {
                 );
               }
 
-              return const Center(child: Text('No user data available.'));
+              return Center(
+                child: FadeIn(
+                  duration: Duration(milliseconds: 500),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Oops! No Internet Connection",
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 24.w),
+                        child: Text(
+                          "Please check your connection and try again.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20.h),
+                      SizedBox(height: 20.h),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          //connectionsController.getconnections();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.pinkAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 24.w, vertical: 14.h),
+                          elevation: 5,
+                          shadowColor: Colors.pinkAccent.withOpacity(0.3),
+                        ),
+                        icon: Icon(Icons.refresh,
+                            color: Colors.white, size: 20.sp),
+                        label: Text(
+                          "Retry",
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 16.sp),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             }),
           ),
         );
@@ -475,8 +559,8 @@ class _ProfileState extends State<Profile> {
                         FormWidgets()
                             .buildBasicInfoRow('Height', user['height']),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow(
-                            'Date of Birth', user['dateofbirth'].split('T').first),
+                        FormWidgets().buildBasicInfoRow('Date of Birth',
+                            user['dateofbirth'].split('T').first),
                         const SizedBox(height: 10),
                         FormWidgets()
                             .buildBasicInfoRow('Religion', user['religion']),
