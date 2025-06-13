@@ -5,9 +5,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:love_connection/ApiService/ApiService.dart';
+import 'package:love_connection/Controllers/document_upload_controller.dart';
 import 'package:love_connection/Controllers/sect_controller.dart';
+import 'package:love_connection/Controllers/selfie_upload_controller.dart';
 import 'package:love_connection/utils/date_time_util.dart';
-import 'package:love_connection/utils/flush_messages.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'AuthController.dart';
@@ -17,6 +19,7 @@ class ProfileController extends GetxController {
   var isProfileloading = false.obs;
   final ApiService _apiService = ApiService();
   var isLoading = false.obs;
+  var isDocumentLoading = false.obs;
   var userId = ''.obs;
   final dateOfBirth = Rxn<DateTime>();
   final AuthController authController = Get.put(AuthController());
@@ -106,36 +109,22 @@ class ProfileController extends GetxController {
 
         isProfileloading(false);
       } else {
-        FlushMessages.snackBarMessage("Error",
-            "Error fetching details ,please refresh page", context, Colors.red);
+        // FlushMessages.snackBarMessage("Error",
+        //     "Error fetching details ,please refresh page", context, Colors.red);
         isProfileloading(false);
       }
     } catch (e) {
-      FlushMessages.snackBarMessage("Error",
-          "Error fetching details ,please refresh page:", context, Colors.red);
+      // FlushMessages.snackBarMessage("Error",
+      //     "Error fetching details ,please refresh page:", context, Colors.red);
       isProfileloading(false);
     } finally {
       isProfileloading(false);
     }
   }
 
-// // Image file map
-//   final Map<String, Rx<File?>> imageFiles = {
-//     'selfieimage': Rx<File?>(null),
-//   };
-
-// // Pick image from gallery or camera
-//   Future<void> pickImage(ImageSource source, String field) async {
-//     final pickedFile = await ImagePicker().pickImage(source: source);
-//    // print("File Picker path.path===========-----${pickedFile!.path}");
-//     if (pickedFile != null) {
-//       imageFiles[field]?.value = File(pickedFile.path);
-//     }
-//   }
-
 // Image file map
   final Map<String, Rx<File?>> imageFiles = {
-    'selfieimage': Rx<File?>(null),
+    'profileimage': Rx<File?>(null),
   };
 
 // Pick image from gallery only
@@ -298,5 +287,81 @@ class ProfileController extends GetxController {
       'ethnicitylookingfor':
           authController.lookingForEthnicity.value?.trim() ?? '',
     };
+  }
+
+  Rx<File?> selfieimage = Rx<File?>(null);
+  Rx<File?> cninfront = Rx<File?>(null);
+  Rx<File?> cninback = Rx<File?>(null);
+  Rx<File?> passportfront = Rx<File?>(null);
+  Rx<File?> passportback = Rx<File?>(null);
+  final DocumentUploadController documentUploadController =
+      Get.put(DocumentUploadController());
+
+  final SelfieImageController _selfieImageController =
+      Get.put(SelfieImageController());
+  /*--------------------------------------------------------------*/
+  /*                      update documents                        */
+  /*--------------------------------------------------------------*/
+  Future<void> updateDocuments() async {
+      isDocumentLoading(true);
+    cninfront = documentUploadController.idCardFrontImage;
+    cninback = documentUploadController.idCardBackImage;
+    passportfront = documentUploadController.passportFrontImage;
+    passportback = documentUploadController.passportBackImage;
+    selfieimage = _selfieImageController.selfieImage;
+    final prefs = await SharedPreferences.getInstance();
+    final String? userId = prefs.getString('userid');
+    if (userId == null || userId.isEmpty) {
+      isDocumentLoading(false);
+      return;
+    }
+
+    if (selfieimage.value == null &&
+        cninfront.value == null &&
+        cninback.value == null &&
+        passportfront.value == null &&
+        passportback.value == null) {
+      Get.snackbar("Success", "Documents updated successfully!",
+          backgroundColor: Colors.green, colorText: Colors.white);
+          isDocumentLoading(false);
+      return;
+    }
+
+   
+    var uri = Uri.parse(
+        "https://projects.funtashtechnologies.com/gomeetapi/updateprofile.php");
+    var request = http.MultipartRequest('POST', uri);
+    request.fields['id'] = userId;
+
+    try {
+      Future<void> addFile(String key, File? file) async {
+        if (file != null && file.existsSync()) {
+          request.files.add(await http.MultipartFile.fromPath(key, file.path));
+        }
+      }
+
+      await addFile('cnic_front', cninfront.value);
+      await addFile('cnic_back', cninback.value);
+      await addFile('passport_front', passportfront.value);
+      await addFile('passport_back', passportback.value);
+      await addFile('selfieimage', selfieimage.value);
+
+      var response = await request.send();
+      var responseBody = await response.stream.bytesToString();
+      var jsonResponse = jsonDecode(responseBody);
+
+      if (jsonResponse["ResponseCode"] == "200") {
+        Get.snackbar("Success", "Documents updated successfully!",
+            backgroundColor: Colors.green, colorText: Colors.white);
+      } else {
+        Get.snackbar("Error", jsonResponse["ResponseMsg"],
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to update profile. Try again.",
+          backgroundColor: Colors.red, colorText: Colors.white);
+    } finally {
+      isDocumentLoading(false);
+    }
   }
 }

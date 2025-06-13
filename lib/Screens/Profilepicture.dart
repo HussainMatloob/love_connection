@@ -164,7 +164,7 @@ class _ProfilepictureState extends State<ProfilePicture> {
                 onTap: () {
                   if (imageController.areAllImagesSelected() &&
                       controller.profileImage.value != null) {
-                    Get.to(DocumentUploadScreen());
+                    Get.to(() => DocumentUploadScreen());
                   } else {
                     Get.snackbar('Incomplete', 'Please select all images.',
                         snackPosition: SnackPosition.BOTTOM,

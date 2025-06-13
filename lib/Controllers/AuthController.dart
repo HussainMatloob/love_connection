@@ -17,6 +17,7 @@ class AuthController extends GetxController {
   final SelfieImageController _selfieImageController =
       Get.put(SelfieImageController());
   final ImageController imageController = Get.put(ImageController());
+  RxBool obsecureText = true.obs;
 
   // Instead of RxString, use TextEditingController
   final TextEditingController firstNameController = TextEditingController();
@@ -31,6 +32,10 @@ class AuthController extends GetxController {
     emailController.dispose();
     passwordController.dispose();
     super.onClose();
+  }
+
+  void changeObsecureText() {
+    obsecureText.value = !obsecureText.value;
   }
 
   // Observables
@@ -201,6 +206,12 @@ class AuthController extends GetxController {
   // final subSectOptions = ['Sub-Sect 1', 'Sub-Sect 2', 'Sub-Sect 3'];
   final ethnicityOptions = ['Asian', 'African', 'European', 'Hispanic'];
 
+  bool isPasswordValid(String password) {
+    final passwordRegex =
+        RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$');
+    return passwordRegex.hasMatch(password);
+  }
+
   String validateFields() {
     profileImage = profilepictureController.profileImage;
     cninfront = documentUploadController.idCardFrontImage;
@@ -231,10 +242,11 @@ class AuthController extends GetxController {
     if (profileImage.value == null) return 'Profile Image is required.';
     if (cninfront.value == null) return ' CNIC Front Image is required.';
     if (cninback.value == null) return ' CNIC Back Image is required.';
-    if (passportfront.value == null) {
-      return ' Passport Front Image is required.';
-    }
-    if (passportback.value == null) return ' Passport Back Image is required.';
+    if (selfieimage.value == null) return 'Selfie Image is required.';
+    // if (passportfront.value == null) {
+    //   return ' Passport Front Image is required.';
+    // }
+    // if (passportback.value == null) return ' Passport Back Image is required.';
     return ''; // No errors
   }
 
@@ -262,39 +274,42 @@ class AuthController extends GetxController {
       final response = await _apiService.registerUser(
         firstname: firstNameController.text.trim(),
         lastname: lastNameController.text.trim(),
-        height: height.value.toString(),
-        cast: caste.value.toString(),
-        // subcast: subCaste.value.toString(),
-        sect: sect.value.toString(),
-        // subsect: subSect.value.toString(),
-        castlookingfor: lookingForCaste.value.toString(),
-        city: cityOfResidence.value.toString(),
-        citylookingfor: lookingForCity.value.toString(),
-        dateofbirth: dateOfBirth.value.toString(),
-        education: educationLevel.value.toString(),
-        educationlookingfor: lookingForEducation.value.toString(),
-        ethnicity: ethnicity.value.toString(),
-        ethnicitylookingfor: lookingForEthnicity.value.toString(),
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
         gender: gender.value.toString(),
+        dateofbirth: dateOfBirth.value.toString(),
+        height: height.value.toString(),
         maritalstatus: maritalStatus.value.toString(),
         religion: religion.value.toString(),
         religionlookingfor: lookingForReligion.value.toString(),
-        sectlookingfor: lookingForSect.value.toString(),
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
+        education: educationLevel.value.toString(),
+        educationlookingfor: lookingForEducation.value.toString(),
         employmentstatus: employmentStatus.value.toString(),
         monthlyincome: monthlyIncome.value.toString(),
+        city: cityOfResidence.value.toString(),
+        citylookingfor: lookingForCity.value.toString(),
+        cast: caste.value.toString(),
+        castlookingfor: lookingForCaste.value.toString(),
+        country: currentResidence.value.toString(),
+        countryLookingfor: lookingForResidence.value.toString(),
+        // subcast: subCaste.value.toString(),
+        sect: sect.value.toString(),
+        sectlookingfor: lookingForSect.value.toString(),
+        // subsect: subSect.value.toString(),
+        ethnicity: ethnicity.value.toString(),
+        ethnicitylookingfor: lookingForEthnicity.value.toString(),
         created_at: createdAt.value.toString(),
         profileimage: File(profileImage.value!.path),
         // Send the profile image
         cnic_front: File(cninfront.value!.path),
         cnic_back: File(cninback.value!.path),
-        passport_front: File(passportfront.value!.path),
-        passport_back: File(passportback.value!.path),
+        passport_front: passportfront.value != null
+            ? File(passportfront.value!.path)
+            : null,
+        passport_back:
+            passportback.value != null ? File(passportback.value!.path) : null,
         selfieimage: File(selfieimage.value!.path),
         gallery: File(profileImage.value!.path),
-        country: currentResidence.value.toString(),
-        countryLookingfor: lookingForResidence.value.toString(),
       );
 
       // Handle the response from the API service

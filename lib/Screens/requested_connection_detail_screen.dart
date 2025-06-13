@@ -136,8 +136,10 @@ class _RequestedConnectionDetailScreenState
                     fw: FontWeight.w700,
                   ),
                   CustomText(
-                    DateTimeUtil.getDate(
-                        widget.pendingRequestData['dateofbirth']),
+                    DateTimeUtil.getDate(widget
+                        .pendingRequestData['dateofbirth']
+                        .split('T')
+                        .first),
                     color: Colors.black,
                     fw: FontWeight.w400,
                   ),

@@ -193,6 +193,7 @@ class FormWidgets {
           child: TextField(
             controller: controller, // Assign controller
             decoration: InputDecoration(
+              
               border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(
                 horizontal: Get.width * 0.04,
@@ -1352,14 +1353,14 @@ class FormWidgets {
                         completeRequestData: connections,
                         onTap: () {
                           Get.to(() => RequestedConnectionDetailScreen(
-                                imageUrl: connections['selfieimage'] != null
-                                    ? '${connections['selfieimage']}'
+                                imageUrl: connections['profileimage'] != null
+                                    ? '${connections['profileimage']}'
                                     : '',
                                 pendingRequestData: connections,
                               ));
                         },
-                        imageUrl: connections['selfieimage'] != null
-                            ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['selfieimage']}'
+                        imageUrl: connections['profileimage'] != null
+                            ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['profileimage']}'
                             : 'assets/images/profile.jpg',
                         name:
                             '${connections['firstname']} ${connections['lastname']}',
@@ -1505,14 +1506,14 @@ class FormWidgets {
                     return ProfilePendingCard(
                       onTap: () {
                         Get.to(() => RequestedConnectionDetailScreen(
-                              imageUrl: pendingProfile['selfieimage'] != null
-                                  ? '${pendingProfile['selfieimage']}'
+                              imageUrl: pendingProfile['profileimage'] != null
+                                  ? '${pendingProfile['profileimage']}'
                                   : '',
                               pendingRequestData: pendingProfile,
                             ));
                       },
-                      imageUrl: pendingProfile['selfieimage'] != null
-                          ? '${pendingProfile['selfieimage']}'
+                      imageUrl: pendingProfile['profileimage'] != null
+                          ? '${pendingProfile['profileimage']}'
                           : '',
                       name:
                           '${pendingProfile['firstname']} ${pendingProfile['lastname']} ',

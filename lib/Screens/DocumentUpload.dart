@@ -50,7 +50,7 @@ class DocumentUploadScreen extends StatelessWidget {
               ),
               SizedBox(height: 18),
               Divider(),
-              _buildSectionTitle("Passport Upload"),
+              _buildSectionTitle("Passport Upload (Optional)"),
               _buildUploadCard(
                 title: "Front Image",
                 image: controller.passportFrontImage,
@@ -113,16 +113,7 @@ class DocumentUploadScreen extends StatelessWidget {
             width: Get.width * 0.8,
             height: 220,
             decoration: BoxDecoration(
-              color: Colors.pink[50],
               borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.pink.withOpacity(0.2),
-                  blurRadius: 8,
-                  spreadRadius: 2,
-                  offset: Offset(2, 4),
-                ),
-              ],
               image: image.value != null
                   ? DecorationImage(
                       image: FileImage(image.value!),
@@ -131,14 +122,7 @@ class DocumentUploadScreen extends StatelessWidget {
                   : null,
             ),
             child: image.value == null
-                ? Center(
-                    child: Image.asset(
-                      "assets/images/Psp.jpg",
-                      fit: BoxFit.fill,
-                      width: double.infinity,
-                      height: double.infinity,
-                    ),
-                  )
+                ? Center(child: Text("Upload $title"))
                 : null,
           ),
         ),

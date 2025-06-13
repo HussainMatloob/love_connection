@@ -10,29 +10,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class DocumentUploadController extends GetxController {
-  // final ImagePicker picker = ImagePicker();
-  // Rx<File?> idCardFrontImage = Rx<File?>(null);
-  // Rx<File?> idCardBackImage = Rx<File?>(null);
-  // Rx<File?> passportFrontImage = Rx<File?>(null);
-  // Rx<File?> passportBackImage = Rx<File?>(null);
-
-  // // Function to pick an image
-  // Future<void> pickImage({required bool isIdCard, required bool isFront}) async {
-  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-  //   if (pickedFile != null) {
-  //     if (pickedFile.path.endsWith(".jpg") || pickedFile.path.endsWith(".jpeg") || pickedFile.path.endsWith(".png")) {
-  //       if (isIdCard) {
-  //         isFront ? idCardFrontImage.value = File(pickedFile.path) : idCardBackImage.value = File(pickedFile.path) ;
-  //       } else {
-  //         isFront ? passportFrontImage.value =File(pickedFile.path) : passportBackImage.value = File(pickedFile.path);
-  //       }
-  //     } else {
-  //       Get.snackbar("Invalid File", "Please upload a valid image file (JPG or PNG).",
-  //           snackPosition: SnackPosition.BOTTOM);
-  //     }
-  //   }
-  // }
+  void clearAllDocuments() {
+    idCardFrontImage.value = null;
+    idCardBackImage.value = null;
+    passportFrontImage.value = null;
+    passportBackImage.value = null;
+  }
 
   final ImagePicker picker = ImagePicker();
   Rx<File?> idCardFrontImage = Rx<File?>(null);

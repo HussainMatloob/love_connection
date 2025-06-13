@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:get/get.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
 import '../Controllers/AuthController.dart';
 import '../Controllers/selfie_upload_controller.dart';
-import 'Service_selection_screen.dart';
 
 class SelfieImageScreen extends StatelessWidget {
   final SelfieImageController controller = Get.put(SelfieImageController());
@@ -100,7 +99,9 @@ class SelfieImageScreen extends StatelessWidget {
             SizedBox(height: 20),
             Obx(
               () => authController.isLoading.value
-                  ? CircularProgressIndicator()
+                  ? CircularProgressIndicator(
+                      color: Colors.pink,
+                    )
                   : PinkButton(
                       text: "Continue",
                       onTap: () async {

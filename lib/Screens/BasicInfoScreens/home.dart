@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:love_connection/Controllers/document_upload_controller.dart';
+import 'package:love_connection/Controllers/selfie_upload_controller.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../Controllers/AuthController.dart';
 import '../../Controllers/BasicInfoController.dart';
@@ -18,7 +20,20 @@ class _HomeState extends State<Home> {
   final BasicInfoController controller = Get.put(BasicInfoController());
   final AuthController authController = Get.put(AuthController());
   final PageController pageController = PageController();
+  final DocumentUploadController documentUploadController =
+      Get.put(DocumentUploadController());
+  final SelfieImageController selfieImageController =
+      Get.put(SelfieImageController());
+
   int currentPageIndex = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    documentUploadController.clearAllDocuments();
+    selfieImageController.clearSelfieImage();
+  }
 
   bool validateCurrentPage(int pageIndex) {
     if (pageIndex == 1) {
@@ -29,6 +44,11 @@ class _HomeState extends State<Home> {
           authController.gender.value == null) {
         showErrorSnackbar(
             'Please fill in all required fields before proceeding.');
+        return false;
+      } else if (!authController
+          .isPasswordValid(authController.passwordController.text)) {
+        showErrorSnackbar(
+            'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character');
         return false;
       }
     }

@@ -178,13 +178,13 @@ class _RequestsState extends State<Requests> {
                             final request = _controller.Getrequests[index];
 
                             final imageUrl =
-                                'https://projects.funtashtechnologies.com/gomeetapi/${request['selfieimage']}';
+                                'https://projects.funtashtechnologies.com/gomeetapi/${request['profileimage']}';
 
                             return ProfileCard(
                               onTap: () {
                                 Get.to(() => RequestedConnectionDetailScreen(
-                                      imageUrl: request['selfieimage'] != null
-                                          ? '${request['selfieimage']}'
+                                      imageUrl: request['profileimage'] != null
+                                          ? '${request['profileimage']}'
                                           : '',
                                       pendingRequestData: request,
                                     ));

@@ -47,8 +47,8 @@ class ApiService {
     required File profileimage,
     required File cnic_front,
     required File cnic_back,
-    required File passport_front,
-    required File passport_back,
+    File? passport_front,
+    File? passport_back,
     required File selfieimage,
     required File gallery,
   }) async {
@@ -104,9 +104,15 @@ class ApiService {
 
       request.fields.addAll(fields);
 
-      // **🔹 Add Files**
-      Future<void> addFile(String key, File file) async {
-        if (file.existsSync()) {
+      // **Add Files**
+      // Future<void> addFile(String key, File file) async {
+      //   if (file.existsSync()) {
+      //     request.files.add(await http.MultipartFile.fromPath(key, file.path));
+      //   }
+      // }
+
+      Future<void> addFile(String key, File? file) async {
+        if (file != null && file.existsSync()) {
           request.files.add(await http.MultipartFile.fromPath(key, file.path));
         }
       }
@@ -460,6 +466,8 @@ class ApiService {
 
         if (responseBody['ResponseCode'] == '200') {
           // Return the response if successful, including the Data array
+          print("User da is=============++++++++++++++++++++ :$responseBody");
+          print("User da is=============++++++++++++++++++++ :$userid");
           return {
             'ResponseCode': responseBody['ResponseCode'],
             'Result': responseBody['Result'],

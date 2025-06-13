@@ -7,8 +7,12 @@ import 'package:get/get.dart';
 import 'dart:io';
 
 class SelfieImageController extends GetxController {
-  var selfieImage = Rxn<File>();
+  var selfieImage = Rxn<File?>();
   final ImagePicker picker = ImagePicker();
+
+  void clearSelfieImage() {
+    selfieImage.value = null;
+  }
 
   Future<void> captureSelfie() async {
     // Request camera permission

@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:love_connection/Screens/UpdateProfile.dart';
 import 'package:love_connection/Screens/auth/Login.dart';
+import 'package:love_connection/Screens/verification_document.dart';
 import 'package:love_connection/Widgets/custom_dialogs.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,28 +78,11 @@ class _ProfileState extends State<Profile> {
                 final user = userController.userData.value!;
                 return Stack(
                   children: [
-                    // SizedBox(
-                    //   width: 1.sw,
-                    //   height: 1.sh * 1,
-                    //   child: CachedNetworkImage(
-                    //     imageUrl: _getImageUrl(user['selfieimage']),
-                    //     fadeInCurve: Curves.easeIn,
-                    //     placeholder: (context, url) => Image.asset(
-                    //       "assets/images/PROFILE.png",
-                    //       fit: BoxFit.cover,
-                    //     ),
-                    //     errorWidget: (context, url, error) => Image.asset(
-                    //       "assets/images/PROFILE.png",
-                    //       fit: BoxFit.cover,
-                    //     ),
-                    //     fit: BoxFit.cover,
-                    //   ),
-                    // ),
                     SizedBox(
                       width: 1.sw,
                       height: 1.sh,
                       child: CachedNetworkImage(
-                        imageUrl: _getImageUrl(user['selfieimage']),
+                        imageUrl: _getImageUrl(user['profileimage']),
                         fadeInCurve: Curves.easeIn,
                         fit: BoxFit.cover,
 
@@ -106,19 +90,19 @@ class _ProfileState extends State<Profile> {
                         placeholder: (context, url) => const Center(
                           child: CircularProgressIndicator(
                             valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.red),
+                                AlwaysStoppedAnimation<Color>(Colors.pink),
                           ),
                         ),
 
                         // If failed to load, show fallback professional icon (you can customize this)
                         errorWidget: (context, url, error) => Container(
+                          width: Get.width,
+                          height: Get.height,
                           color: Colors.grey.shade200,
                           alignment: Alignment.center,
                           child: Image.asset(
                             "assets/images/PROFILE.png", // Professional icon here
                             fit: BoxFit.contain,
-                            width: 100.w,
-                            height: 100.w,
                           ),
                         ),
                       ),
@@ -242,7 +226,7 @@ class _ProfileState extends State<Profile> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Oops! No Internet Connection",
+                        "Something went wrong ",
                         style: TextStyle(
                           fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
@@ -265,7 +249,7 @@ class _ProfileState extends State<Profile> {
                       SizedBox(height: 20.h),
                       ElevatedButton.icon(
                         onPressed: () {
-                          //connectionsController.getconnections();
+                          userController.fetchUserData();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.pinkAccent,
@@ -373,9 +357,11 @@ class _ProfileState extends State<Profile> {
                 /*        these features in under development      */
                 /*-------------------------------------------------*/
                 buildMenuItem(
-                    icon: Icons.person_outline,
+                    icon: Icons.verified,
                     title: 'Verification Document',
-                    onTap: () {}),
+                    onTap: () {
+                      Get.to(() => VerificationDocument());
+                    }),
                 // buildMenuItem(
                 //     icon: Icons.settings_outlined,
                 //     title: 'Settings',

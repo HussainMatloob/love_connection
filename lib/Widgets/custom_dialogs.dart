@@ -46,7 +46,7 @@ class CustomDialogs {
                       padding: EdgeInsets.symmetric(horizontal: 5.r),
                       child: CustomText(
                         messageText,
-                        size: 9.sp,
+                        size: 10.sp,
                         fw: FontWeight.w600,
                         textAlign: TextAlign.center,
                         color: Colors.black,
