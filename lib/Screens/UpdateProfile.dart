@@ -165,7 +165,8 @@ class _UpdateprofileState extends State<Updateprofile> {
                       "Email", controller.controllers['email']!, Icons.email,
                       isReadOnly: true),
                   _buildTextField("Password",
-                      controller.controllers['password']!, Icons.lock,
+                      controller.controllers['password']!, 
+                      Icons.lock,
                       obscureText: authController.obsecureText.value,
                       isSuffix: true, onTap: () {
                     authController.changeObsecureText();

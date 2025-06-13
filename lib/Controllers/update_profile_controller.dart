@@ -209,9 +209,20 @@ class ProfileController extends GetxController {
     return allFieldsValid;
   }
 
+  bool isPasswordValid(String password) {
+    final passwordRegex =
+        RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$');
+    return passwordRegex.hasMatch(password);
+  }
+
   Future<void> updateUserProfile() async {
     if (!validateAllFields()) {
       Get.snackbar("Error", "All fields are required",
+          backgroundColor: Colors.red, colorText: Colors.white);
+      return;
+    } else if (!isPasswordValid(controllers['password']!.text)) {
+      Get.snackbar("Error",
+          "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character",
           backgroundColor: Colors.red, colorText: Colors.white);
       return;
     }
@@ -303,7 +314,7 @@ class ProfileController extends GetxController {
   /*                      update documents                        */
   /*--------------------------------------------------------------*/
   Future<void> updateDocuments() async {
-      isDocumentLoading(true);
+    isDocumentLoading(true);
     cninfront = documentUploadController.idCardFrontImage;
     cninback = documentUploadController.idCardBackImage;
     passportfront = documentUploadController.passportFrontImage;
@@ -323,11 +334,10 @@ class ProfileController extends GetxController {
         passportback.value == null) {
       Get.snackbar("Success", "Documents updated successfully!",
           backgroundColor: Colors.green, colorText: Colors.white);
-          isDocumentLoading(false);
+      isDocumentLoading(false);
       return;
     }
 
-   
     var uri = Uri.parse(
         "https://projects.funtashtechnologies.com/gomeetapi/updateprofile.php");
     var request = http.MultipartRequest('POST', uri);
