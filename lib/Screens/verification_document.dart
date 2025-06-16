@@ -109,8 +109,10 @@ class _VerificationDocumentState extends State<VerificationDocument> {
                                 .userData.value?['passport_back'],
                           ),
                           SizedBox(height: 16),
+                          _buildSectionTitle("Selfie Upload"),
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: EdgeInsets.only(
+                                left: 16.r, right: 16.r, bottom: 16.r),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

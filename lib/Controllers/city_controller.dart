@@ -5,8 +5,10 @@ import '../ApiService/ApiService.dart';
 import 'AuthController.dart';
 
 class CityController extends GetxController {
+  
   var cityOptions = <String>[].obs; // Cities for current residence
-  var lookingForCityOptions = <String>[].obs; // Cities for looking for residence
+  var lookingForCityOptions =
+      <String>[].obs; // Cities for looking for residence
   var isLoading = false.obs;
   final ApiService apiService = ApiService();
   final AuthController authController = Get.put(AuthController());
@@ -60,5 +62,4 @@ class CityController extends GetxController {
       isLoading.value = false;
     }
   }
-
 }

@@ -5,6 +5,7 @@ import 'package:love_connection/ApiService/ApiService.dart';
 import 'package:love_connection/Controllers/AuthController.dart';
 
 class SectController extends GetxController {
+  
   final ApiService _apiService = ApiService();
   final AuthController authController = Get.put(AuthController());
   final RxList<String> sectList = <String>[].obs;

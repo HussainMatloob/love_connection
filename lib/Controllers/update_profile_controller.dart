@@ -26,6 +26,26 @@ class ProfileController extends GetxController {
   final SectController sectController = Get.put(SectController());
   var userID = '';
 
+  var religions = <String>[].obs;
+  var isReligionLoading =
+      false.obs; // Start as false to prevent unnecessary loading
+
+  final RxList<Map<String, dynamic>> castList = <Map<String, dynamic>>[].obs;
+  final RxBool isCasteLoading = true.obs;
+  final RxString errorMessage = ''.obs;
+
+  final RxList<String> sectList = <String>[].obs;
+  final RxBool isSectLoading = true.obs;
+  final RxString sectErrorMessage = ''.obs;
+
+  var countryList = <String>[].obs;
+  var isCountryLoading = true.obs;
+
+  var cityOptions = <String>[].obs; // Cities for current residence
+  var lookingForCityOptions =
+      <String>[].obs; // Cities for looking for residence
+  var isCityLoading = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -107,6 +127,16 @@ class ProfileController extends GetxController {
         authController.lookingForEthnicity.value =
             userData.value?['ethnicitylookingfor'] ?? '';
 
+        await fetchReligions();
+        await fetchCastData(authController.religion.value ?? '', false);
+        await fetchSectData(authController.religion.value ?? '',
+            authController.caste.value ?? '', false);
+        await fetchCountryList();
+        await loadCities(
+          authController.currentResidence.value ?? "",
+          false,
+        );
+
         isProfileloading(false);
       } else {
         // FlushMessages.snackBarMessage("Error",
@@ -119,6 +149,108 @@ class ProfileController extends GetxController {
       isProfileloading(false);
     } finally {
       isProfileloading(false);
+    }
+  }
+
+  Future<void> fetchReligions() async {
+    try {
+      isReligionLoading.value = true;
+      var fetchedReligions = await _apiService.fetchReligions();
+      religions.clear();
+
+      if (fetchedReligions.isNotEmpty) {
+        religions.assignAll(fetchedReligions);
+        print('Religions: $religions');
+      } else {
+        print('No religions found.');
+      }
+    } catch (e) {
+      print('Error fetching religions: $e');
+    } finally {
+      isReligionLoading.value =
+          false; // Ensure loading stops even if an error occurs
+    }
+  }
+
+  Future<void> fetchCastData(String religion, bool isValuesClear) async {
+    try {
+      if (isValuesClear) {
+        authController.caste.value = null;
+        authController.lookingForCaste.value = null;
+      }
+      isCasteLoading(true);
+      final data = await _apiService.fetchCastData(religion);
+      castList.clear();
+      castList.assignAll(data);
+      isCasteLoading(false);
+
+      errorMessage('');
+    } catch (e) {
+      isCasteLoading(false);
+
+      errorMessage(e.toString());
+    } finally {
+      isCasteLoading(false);
+    }
+  }
+
+  Future<void> fetchSectData(
+      String religion, String caste, bool isValuesClear) async {
+    try {
+      if (isValuesClear) {
+        authController.sect.value = null;
+        authController.lookingForSect.value = null;
+      }
+      isSectLoading(true);
+      final data =
+          await _apiService.fetchSectData(religion: religion, caste: caste);
+      sectList.clear();
+      sectList.assignAll(data);
+      isSectLoading(false);
+    } catch (e) {
+      isSectLoading(false);
+      sectErrorMessage(e.toString());
+    } finally {
+      isSectLoading(false);
+    }
+  }
+
+  Future<void> fetchCountryList() async {
+    isCountryLoading.value = true;
+    var countries = await _apiService.fetchCountries(); // Call instance method\
+    // print all the countries with Good response message
+    countryList.clear();
+
+    if (countries.isNotEmpty) {
+      countryList.assignAll(countries);
+    }
+    isCountryLoading.value = false;
+  }
+
+  // Fetch cities based on the selected country
+  Future<void> loadCities(String countryName, bool isValuesClear) async {
+    isCityLoading.value = true;
+    try {
+      if (isValuesClear) {
+        authController.cityOfResidence.value = null;
+        authController.lookingForCity.value = null;
+      }
+      List<String> cities = await _apiService.fetchCities(countryName);
+
+      lookingForCityOptions.clear();
+      cityOptions.clear();
+
+      lookingForCityOptions.assignAll(cities);
+
+      // Ensure the selected value is valid
+
+      cityOptions.assignAll(cities);
+    } catch (e) {
+      lookingForCityOptions.assignAll([]);
+
+      cityOptions.assignAll([]);
+    } finally {
+      isCityLoading.value = false;
     }
   }
 

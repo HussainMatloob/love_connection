@@ -165,8 +165,7 @@ class _UpdateprofileState extends State<Updateprofile> {
                       "Email", controller.controllers['email']!, Icons.email,
                       isReadOnly: true),
                   _buildTextField("Password",
-                      controller.controllers['password']!, 
-                      Icons.lock,
+                      controller.controllers['password']!, Icons.lock,
                       obscureText: authController.obsecureText.value,
                       isSuffix: true, onTap: () {
                     authController.changeObsecureText();
@@ -191,37 +190,38 @@ class _UpdateprofileState extends State<Updateprofile> {
                     print(
                         "Religion value: ${authController.religion.value}"); // Debugging
                     return FormWidgets.buildDropdownPair(
-                      label1: 'Your Religion',
-                      label2: 'Looking For',
-                      value: authController
-                          .religion, // Fallback value to avoid errors
-                      lookingForValue: authController.lookingForReligion,
-                      items: religionController.religions,
-                      hinttext: 'Select Religion',
-                    );
+                        label1: 'Your Religion',
+                        label2: 'Looking For',
+                        value: authController
+                            .religion, // Fallback value to avoid errors
+                        lookingForValue: authController.lookingForReligion,
+                        items: controller.religions,
+                        hinttext: 'Select Religion',
+                        fetchData: "Fetch Cast");
                   }),
                   Obx(() {
-                    if (castController.isLoading.value)
+                    if (controller.isCasteLoading.value)
                       return Center(
                           child: CircularProgressIndicator(
                         color: Colors.pink,
                       ));
-                    final casteNames = castController.castList
+                    final casteNames = controller.castList
                         .map<String>((cast) => cast["cast"].toString())
                         .toList();
                     return FormWidgets.buildDropdownPair(
-                      label1: 'Your Caste',
-                      label2: 'Looking For',
-                      value: authController.caste,
-                      lookingForValue: authController.lookingForCaste,
-                      items: casteNames,
-                      hinttext:
-                          casteNames.isEmpty ? 'No Cast found' : 'Select Cast',
-                    );
+                        label1: 'Your Caste',
+                        label2: 'Looking For',
+                        value: authController.caste,
+                        lookingForValue: authController.lookingForCaste,
+                        items: casteNames,
+                        hinttext: casteNames.isEmpty
+                            ? 'No Cast found'
+                            : 'Select Cast',
+                        fetchData: "Fetch Sect");
                   }),
                   SizedBox(height: 8.h),
                   Obx(() {
-                    if (sectController.isLoading.value)
+                    if (controller.isSectLoading.value)
                       return Center(
                           child: CircularProgressIndicator(
                         color: Colors.pink,
@@ -231,31 +231,31 @@ class _UpdateprofileState extends State<Updateprofile> {
                       label2: 'Looking For',
                       value: authController.sect,
                       lookingForValue: authController.lookingForSect,
-                      items: sectController.sectList,
-                      hinttext: sectController.sectList.isEmpty
+                      items: controller.sectList,
+                      hinttext: controller.sectList.isEmpty
                           ? 'No Sect found'
                           : 'Select Sect',
                     );
                   }),
                   SizedBox(height: 10),
                   Obx(() {
-                    if (countryController.isLoading.value)
+                    if (controller.isCountryLoading.value)
                       return Center(
                           child: CircularProgressIndicator(
                         color: Colors.pink,
                       ));
                     return FormWidgets.buildDropdownPair(
-                      label1: 'Your Country',
-                      label2: 'Looking For',
-                      value: authController.currentResidence,
-                      lookingForValue: authController.lookingForResidence,
-                      items: ["Any", ...countryController.countryList],
-                      hinttext: 'Select Country',
-                    );
+                        label1: 'Your Country',
+                        label2: 'Looking For',
+                        value: authController.currentResidence,
+                        lookingForValue: authController.lookingForResidence,
+                        items: ["Any", ...controller.countryList],
+                        hinttext: 'Select Country',
+                        fetchData: "Fetch Cities");
                   }),
                   SizedBox(height: 10),
                   Obx(() {
-                    if (cityController.isLoading.value)
+                    if (controller.isCityLoading.value)
                       return Center(
                           child: CircularProgressIndicator(
                         color: Colors.pink,
@@ -269,11 +269,11 @@ class _UpdateprofileState extends State<Updateprofile> {
                       lookingForValue: authController.lookingForCity,
                       selfItems: [
                         "Any",
-                        ...cityController.cityOptions
+                        ...controller.cityOptions
                       ], // Cities for Residence
                       lookingForItems: [
                         "Any",
-                        ...cityController.lookingForCityOptions
+                        ...controller.lookingForCityOptions
                       ], // Cities for Looking For Residence
                       hinttext: 'Select City',
                     );

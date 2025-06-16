@@ -10,6 +10,7 @@ import 'package:love_connection/Screens/UpdateProfile.dart';
 import 'package:love_connection/Screens/auth/Login.dart';
 import 'package:love_connection/Screens/verification_document.dart';
 import 'package:love_connection/Widgets/custom_dialogs.dart';
+import 'package:love_connection/utils/date_time_util.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -353,19 +354,12 @@ class _ProfileState extends State<Profile> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                /*-------------------------------------------------*/
-                /*        these features in under development      */
-                /*-------------------------------------------------*/
                 buildMenuItem(
                     icon: Icons.verified,
                     title: 'Verification Document',
                     onTap: () {
                       Get.to(() => VerificationDocument());
                     }),
-                // buildMenuItem(
-                //     icon: Icons.settings_outlined,
-                //     title: 'Settings',
-                //     onTap: () {}),
                 buildMenuItem(
                     icon: Icons.share_outlined,
                     title: 'Share App',
@@ -521,14 +515,14 @@ class _ProfileState extends State<Profile> {
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
-                            GestureDetector(
-                                onTap: () {
-                                  // Get.to(() => UpdateProfileScreen());
+                            IconButton(
+                                onPressed: () {
+                                  Get.to(() => Updateprofile());
                                 },
-                                child: Icon(
+                                icon: Icon(
                                   Icons.edit,
                                   color: Colors.pink,
-                                )),
+                                ))
                           ],
                         ),
                         const SizedBox(height: 10),
@@ -545,8 +539,10 @@ class _ProfileState extends State<Profile> {
                         FormWidgets()
                             .buildBasicInfoRow('Height', user['height']),
                         const SizedBox(height: 10),
-                        FormWidgets().buildBasicInfoRow('Date of Birth',
-                            user['dateofbirth'].split('T').first),
+                        FormWidgets().buildBasicInfoRow(
+                            'Date of Birth',
+                            DateTimeUtil.getDate(
+                                user['dateofbirth'].split('T').first)),
                         const SizedBox(height: 10),
                         FormWidgets()
                             .buildBasicInfoRow('Religion', user['religion']),

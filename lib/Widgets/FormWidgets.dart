@@ -10,6 +10,7 @@ import 'package:love_connection/Controllers/PendingSendRequests.dart';
 import 'package:love_connection/Controllers/cast_controller.dart';
 import 'package:love_connection/Controllers/city_controller.dart';
 import 'package:love_connection/Controllers/country_controller.dart';
+import 'package:love_connection/Controllers/update_profile_controller.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
 import 'package:love_connection/Screens/call_screen.dart';
 import 'package:love_connection/Screens/chat_screen.dart';
@@ -193,7 +194,6 @@ class FormWidgets {
           child: TextField(
             controller: controller, // Assign controller
             decoration: InputDecoration(
-              
               border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(
                 horizontal: Get.width * 0.04,
@@ -680,14 +680,16 @@ class FormWidgets {
     );
   }
 
-  static Widget buildDropdownPair({
-    required String label1,
-    required String label2,
-    required Rxn<String> value,
-    required Rxn<String> lookingForValue,
-    required List<String> items,
-    required String hinttext,
-  }) {
+  static Widget buildDropdownPair(
+      {required String label1,
+      required String label2,
+      required Rxn<String> value,
+      required Rxn<String> lookingForValue,
+      required List<String> items,
+      required String hinttext,
+      String? fetchData}) {
+    final ProfileController profileController = Get.put(ProfileController());
+    final AuthController authController = Get.put(AuthController());
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -742,6 +744,23 @@ class FormWidgets {
                         }).toList(),
                         onChanged: (String? newValue) {
                           value.value = newValue;
+                          if (fetchData == "Fetch Cast") {
+                            profileController.fetchCastData(
+                                newValue ?? '', true);
+                          }
+                          if (fetchData == "Fetch Sect") {
+                            profileController.fetchSectData(
+                              authController.religion.value ?? "",
+                              newValue ?? "",
+                              true,
+                            );
+                          }
+                          if (fetchData == "Fetch Cities") {
+                            profileController.loadCities(
+                              newValue ?? "",
+                              true,
+                            );
+                          }
                         },
                       ),
                     ),
@@ -800,9 +819,7 @@ class FormWidgets {
                             ),
                           );
                         }).toList(),
-                        onChanged: (String? newValue) {
-                          lookingForValue.value = newValue;
-                        },
+                        onChanged: (String? newValue) {},
                       ),
                     ),
                   ),

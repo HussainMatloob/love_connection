@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import '../ApiService/ApiService.dart';
 
 class ReligionController extends GetxController {
+  
   var religions = <String>[].obs;
   var isLoading = false.obs; // Start as false to prevent unnecessary loading
   final ApiService apiService = ApiService();
@@ -12,7 +13,7 @@ class ReligionController extends GetxController {
     super.onInit();
   }
 
-  // Fetch religions and update list
+ // Fetch religions and update list
   Future<void> fetchReligions() async {
     try {
       isLoading.value = true;
