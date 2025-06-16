@@ -695,6 +695,52 @@ class ApiService {
     }
   }
 
+  // Fetch Education list from API
+  Future<List<String>> fetchEducation() async {
+    try {
+      final response = await http.get(Uri.parse("$_baseUrl/getdegrees.php"));
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+
+        if (jsonData["Result"] == "true") {
+          List<dynamic> data = jsonData["Data"];
+          return data.map((item) => item["degreename"].toString()).toList();
+        } else {
+          return [];
+        }
+      } else {
+        throw Exception("Failed to load education");
+      }
+    } catch (e) {
+      print("Error fetching education: $e");
+      return [];
+    }
+  }
+
+  // Fetch Ethnicity list from API
+  Future<List<String>> fetchEthenicityList() async {
+    try {
+      final response = await http.get(Uri.parse("$_baseUrl/getethnicity.php"));
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+
+        if (jsonData["Result"] == "true") {
+          List<dynamic> data = jsonData["Data"];
+          return data.map((item) => item["name"].toString()).toList();
+        } else {
+          return [];
+        }
+      } else {
+        throw Exception("Failed to load ethnicity");
+      }
+    } catch (e) {
+      print("Error fetching ethnicity: $e");
+      return [];
+    }
+  }
+
   Future<List<String>> fetchReligions() async {
     try {
       final response = await http.get(Uri.parse("$_baseUrl/getreligion.php"));

@@ -10,6 +10,8 @@ import 'package:love_connection/Controllers/PendingSendRequests.dart';
 import 'package:love_connection/Controllers/cast_controller.dart';
 import 'package:love_connection/Controllers/city_controller.dart';
 import 'package:love_connection/Controllers/country_controller.dart';
+import 'package:love_connection/Controllers/education_controller.dart';
+import 'package:love_connection/Controllers/ethnicity_controller.dart';
 import 'package:love_connection/Controllers/update_profile_controller.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
 import 'package:love_connection/Screens/call_screen.dart';
@@ -487,6 +489,8 @@ class FormWidgets {
   static Widget buildPreferencesForm(BasicInfoController controller) {
     final AuthController authController = Get.put(AuthController());
     final CountryController countryController = Get.put(CountryController());
+    final EducationController educationController =
+        Get.put(EducationController());
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.all(20.w), // Using ScreenUtil for padding
@@ -494,14 +498,21 @@ class FormWidgets {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Education Level Dropdown Pair
-            buildDropdownPair(
-              label1: 'Your Education',
-              label2: 'Looking For',
-              value: authController.educationLevel,
-              lookingForValue: authController.lookingForEducation,
-              items: authController.educationOptions,
-              hinttext: 'Select Education',
-            ),
+            Obx(() {
+              final educationList = [
+                "Any",
+                ...educationController.educationList
+                    .where((country) => country != "Any")
+              ];
+              return buildDropdownPair(
+                label1: 'Your Education',
+                label2: 'Looking For',
+                value: authController.educationLevel,
+                lookingForValue: authController.lookingForEducation,
+                items: educationList,
+                hinttext: 'Select Education',
+              );
+            }),
             SizedBox(height: 24.h),
 
             Obx(() {
@@ -549,6 +560,8 @@ class FormWidgets {
     final CityController cityController = Get.put(CityController());
     final CastController castController = Get.put(CastController());
     final SectController sectController = Get.put(SectController());
+    final EthnicityController ethnicityController =
+        Get.put(EthnicityController());
 
     return Stack(
       children: [
@@ -637,7 +650,7 @@ class FormWidgets {
                   lookingForValue: authController.lookingForEthnicity,
                   items: [
                     "Any",
-                    ...authController.ethnicityOptions
+                    ...ethnicityController.ethnicityList
                         .where((ethnicity) => ethnicity != "Any")
                   ], // Add "Any" option
                   hinttext: "Select Ethnicity"),
@@ -687,6 +700,7 @@ class FormWidgets {
       required Rxn<String> lookingForValue,
       required List<String> items,
       required String hinttext,
+      List<String>? lookingForItems,
       String? fetchData}) {
     final ProfileController profileController = Get.put(ProfileController());
     final AuthController authController = Get.put(AuthController());
@@ -793,9 +807,13 @@ class FormWidgets {
                     child: Obx(
                       () => DropdownButtonFormField<String>(
                         isExpanded: true,
-                        value: items.contains(lookingForValue.value)
-                            ? lookingForValue.value
-                            : null,
+                        value: lookingForItems != null
+                            ? lookingForItems.contains(lookingForValue.value)
+                                ? lookingForValue.value
+                                : null
+                            : items.contains(lookingForValue.value)
+                                ? lookingForValue.value
+                                : null,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 16),
                           border: InputBorder.none,
@@ -819,7 +837,9 @@ class FormWidgets {
                             ),
                           );
                         }).toList(),
-                        onChanged: (String? newValue) {},
+                        onChanged: (String? newValue) {
+                          lookingForValue.value = newValue;
+                        },
                       ),
                     ),
                   ),

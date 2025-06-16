@@ -11,6 +11,7 @@ import 'package:love_connection/Controllers/city_controller.dart';
 import 'package:love_connection/Controllers/country_controller.dart';
 import 'package:love_connection/Controllers/religion_controller.dart';
 import 'package:love_connection/Controllers/sect_controller.dart';
+import 'package:love_connection/Screens/verification_document.dart';
 import 'package:love_connection/Widgets/FormWidgets.dart';
 import 'package:love_connection/Widgets/custom_button.dart';
 import 'package:love_connection/Widgets/custom_dialogs.dart';
@@ -152,6 +153,12 @@ class _UpdateprofileState extends State<Updateprofile> {
                       width: 80.h,
                       horizontalPadding: 5.w,
                       borderColor: Colors.transparent,
+                      onTap: () {
+                        if (controller.userData.value?['status'] ==
+                            "unverified") {
+                          Get.to(() => VerificationDocument());
+                        }
+                      },
                     ),
                   ),
                   SizedBox(height: 20),
@@ -183,7 +190,7 @@ class _UpdateprofileState extends State<Updateprofile> {
                     label2: 'Looking For',
                     value: authController.educationLevel,
                     lookingForValue: authController.lookingForEducation,
-                    items: authController.educationOptions,
+                    items: controller.educationList,
                     hinttext: 'Select Education',
                   ),
                   Obx(() {
@@ -197,6 +204,7 @@ class _UpdateprofileState extends State<Updateprofile> {
                         lookingForValue: authController.lookingForReligion,
                         items: controller.religions,
                         hinttext: 'Select Religion',
+                        lookingForItems: controller.religionsLookingFor,
                         fetchData: "Fetch Cast");
                   }),
                   Obx(() {
@@ -284,7 +292,7 @@ class _UpdateprofileState extends State<Updateprofile> {
                       label2: 'Looking For',
                       value: authController.ethnicity,
                       lookingForValue: authController.lookingForEthnicity,
-                      items: authController.ethnicityOptions,
+                      items: controller.ethnicityList,
                       hinttext: "Select Ethnicity"),
                   SizedBox(height: 20.h),
                   Obx(() => controller.isLoading.value

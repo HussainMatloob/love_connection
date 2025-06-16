@@ -27,6 +27,7 @@ class ProfileController extends GetxController {
   var userID = '';
 
   var religions = <String>[].obs;
+  var religionsLookingFor = <String>[].obs;
   var isReligionLoading =
       false.obs; // Start as false to prevent unnecessary loading
 
@@ -46,6 +47,14 @@ class ProfileController extends GetxController {
       <String>[].obs; // Cities for looking for residence
   var isCityLoading = false.obs;
 
+  var educationList = <String>[].obs;
+
+  var isEducationLoading = true.obs;
+
+  final RxList<String> ethnicityList = <String>[].obs;
+  final RxBool isEthnicityLoading = true.obs;
+  final RxString ethnicityerrorMessage = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -54,7 +63,7 @@ class ProfileController extends GetxController {
 
   Future<void> loadUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId.value = prefs.getString("userid")!;
+    userId.value = prefs.getString("userid") ?? "";
   }
 
   final Map<String, TextEditingController> controllers = {
@@ -127,6 +136,7 @@ class ProfileController extends GetxController {
         authController.lookingForEthnicity.value =
             userData.value?['ethnicitylookingfor'] ?? '';
 
+        await fetchEducationList();
         await fetchReligions();
         await fetchCastData(authController.religion.value ?? '', false);
         await fetchSectData(authController.religion.value ?? '',
@@ -136,6 +146,7 @@ class ProfileController extends GetxController {
           authController.currentResidence.value ?? "",
           false,
         );
+        await fetchEthnicityData();
 
         isProfileloading(false);
       } else {
@@ -146,10 +157,25 @@ class ProfileController extends GetxController {
     } catch (e) {
       // FlushMessages.snackBarMessage("Error",
       //     "Error fetching details ,please refresh page:", context, Colors.red);
-      isProfileloading(false);
+      //isProfileloading(false);
     } finally {
       isProfileloading(false);
     }
+  }
+
+  Future<void> fetchEducationList() async {
+    isEducationLoading.value = true;
+    var education = await _apiService.fetchEducation(); // Call instance method\
+    // print all the countries with Good response message
+    print("================== Education  ==================");
+    print(education);
+
+    if (education.isNotEmpty) {
+      educationList.clear();
+
+      educationList.assignAll(education);
+    }
+    isEducationLoading.value = false;
   }
 
   Future<void> fetchReligions() async {
@@ -157,10 +183,12 @@ class ProfileController extends GetxController {
       isReligionLoading.value = true;
       var fetchedReligions = await _apiService.fetchReligions();
       religions.clear();
+      religionsLookingFor.clear();
 
       if (fetchedReligions.isNotEmpty) {
+        religions.add("Other");
         religions.assignAll(fetchedReligions);
-        print('Religions: $religions');
+        religionsLookingFor.addAll(fetchedReligions);
       } else {
         print('No religions found.');
       }
@@ -181,6 +209,7 @@ class ProfileController extends GetxController {
       isCasteLoading(true);
       final data = await _apiService.fetchCastData(religion);
       castList.clear();
+      //castList.add("Other");
       castList.assignAll(data);
       isCasteLoading(false);
 
@@ -205,6 +234,7 @@ class ProfileController extends GetxController {
       final data =
           await _apiService.fetchSectData(religion: religion, caste: caste);
       sectList.clear();
+      sectList.add("Other");
       sectList.assignAll(data);
       isSectLoading(false);
     } catch (e) {
@@ -251,6 +281,22 @@ class ProfileController extends GetxController {
       cityOptions.assignAll([]);
     } finally {
       isCityLoading.value = false;
+    }
+  }
+
+  Future<void> fetchEthnicityData() async {
+    try {
+      isEthnicityLoading(true);
+      final ApiService _apiService = ApiService();
+      final data = await _apiService.fetchEthenicityList();
+      ethnicityList.clear();
+      ethnicityList.assignAll(data);
+      isEthnicityLoading(false);
+    } catch (e) {
+      isEthnicityLoading(false);
+      errorMessage(e.toString());
+    } finally {
+      isEthnicityLoading(false);
     }
   }
 
@@ -445,7 +491,7 @@ class ProfileController extends GetxController {
   /*--------------------------------------------------------------*/
   /*                      update documents                        */
   /*--------------------------------------------------------------*/
-  Future<void> updateDocuments() async {
+  Future<void> updateDocuments(String status) async {
     isDocumentLoading(true);
     cninfront = documentUploadController.idCardFrontImage;
     cninback = documentUploadController.idCardBackImage;
@@ -459,12 +505,8 @@ class ProfileController extends GetxController {
       return;
     }
 
-    if (selfieimage.value == null &&
-        cninfront.value == null &&
-        cninback.value == null &&
-        passportfront.value == null &&
-        passportback.value == null) {
-      Get.snackbar("Success", "Documents updated successfully!",
+    if (status == "verified") {
+      Get.snackbar("Success", "Your profile is already verified!",
           backgroundColor: Colors.green, colorText: Colors.white);
       isDocumentLoading(false);
       return;
@@ -474,6 +516,7 @@ class ProfileController extends GetxController {
         "https://projects.funtashtechnologies.com/gomeetapi/updateprofile.php");
     var request = http.MultipartRequest('POST', uri);
     request.fields['id'] = userId;
+    request.fields['status'] = "verified";
 
     try {
       Future<void> addFile(String key, File? file) async {
@@ -493,14 +536,14 @@ class ProfileController extends GetxController {
       var jsonResponse = jsonDecode(responseBody);
 
       if (jsonResponse["ResponseCode"] == "200") {
-        Get.snackbar("Success", "Documents updated successfully!",
+        Get.snackbar("Success", "Your profile verified successfully!",
             backgroundColor: Colors.green, colorText: Colors.white);
       } else {
         Get.snackbar("Error", jsonResponse["ResponseMsg"],
             backgroundColor: Colors.red, colorText: Colors.white);
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to update profile. Try again.",
+      Get.snackbar("Error", "Failed to verify your profile. Try again.",
           backgroundColor: Colors.red, colorText: Colors.white);
     } finally {
       isDocumentLoading(false);

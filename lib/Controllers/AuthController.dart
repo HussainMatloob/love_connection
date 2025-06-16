@@ -87,13 +87,13 @@ class AuthController extends GetxController {
     return profilepictureController.profileImage;
   }
 
-  final List<String> educationOptions = [
-    'High School',
-    'Bachelor\'s Degree',
-    'Master\'s Degree',
-    'Doctorate',
-    'Other'
-  ];
+  // final List<String> educationOptions = [
+  //   'High School',
+  //   'Bachelor\'s Degree',
+  //   'Master\'s Degree',
+  //   'Doctorate',
+  //   'Other'
+  // ];
 
   final List<String> employmentOptions = [
     'Employed',
@@ -204,7 +204,7 @@ class AuthController extends GetxController {
   final sectOptions = ['Sunni', 'Shia', 'Ahmadiyya', 'Ibadi'];
 
   // final subSectOptions = ['Sub-Sect 1', 'Sub-Sect 2', 'Sub-Sect 3'];
-  final ethnicityOptions = ['Asian', 'African', 'European', 'Hispanic'];
+  //final ethnicityOptions = ['Asian', 'African', 'European', 'Hispanic'];
 
   bool isPasswordValid(String password) {
     final passwordRegex =

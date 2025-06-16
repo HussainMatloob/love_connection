@@ -30,7 +30,9 @@ class _VerificationDocumentState extends State<VerificationDocument> {
     super.initState();
     docController.clearAllDocuments();
     controller.clearSelfieImage();
-    profileController.fetchUserDetails(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      profileController.fetchUserDetails(context);
+    });
   }
 
   @override
@@ -40,7 +42,7 @@ class _VerificationDocumentState extends State<VerificationDocument> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Update Documents",
+          "Verify Your Documents",
           style: TextStyle(color: Colors.black),
         ),
         iconTheme: IconThemeData(color: Colors.black),
@@ -262,9 +264,11 @@ class _VerificationDocumentState extends State<VerificationDocument> {
                                   ),
                                 )
                               : PinkButton(
-                                  text: "Update",
+                                  text: "Verify",
                                   onTap: () {
-                                    profileController.updateDocuments();
+                                    profileController.updateDocuments(
+                                        profileController
+                                            .userData.value?['status']);
                                   }),
                         ],
                       ),
