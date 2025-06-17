@@ -183,12 +183,12 @@ class ProfileController extends GetxController {
       isReligionLoading.value = true;
       var fetchedReligions = await _apiService.fetchReligions();
       religions.clear();
-      religionsLookingFor.clear();
+      // religionsLookingFor.clear();
 
       if (fetchedReligions.isNotEmpty) {
-        religions.add("Other");
         religions.assignAll(fetchedReligions);
-        religionsLookingFor.addAll(fetchedReligions);
+        //religions.add("Other");
+        // religionsLookingFor.assignAll(fetchedReligions);
       } else {
         print('No religions found.');
       }
@@ -209,8 +209,9 @@ class ProfileController extends GetxController {
       isCasteLoading(true);
       final data = await _apiService.fetchCastData(religion);
       castList.clear();
-      //castList.add("Other");
+
       castList.assignAll(data);
+      // castList.add({'cast': 'Other'});
       isCasteLoading(false);
 
       errorMessage('');
@@ -234,8 +235,8 @@ class ProfileController extends GetxController {
       final data =
           await _apiService.fetchSectData(religion: religion, caste: caste);
       sectList.clear();
-      sectList.add("Other");
       sectList.assignAll(data);
+      //sectList.add("Other");
       isSectLoading(false);
     } catch (e) {
       isSectLoading(false);

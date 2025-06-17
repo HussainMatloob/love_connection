@@ -204,7 +204,6 @@ class _UpdateprofileState extends State<Updateprofile> {
                         lookingForValue: authController.lookingForReligion,
                         items: controller.religions,
                         hinttext: 'Select Religion',
-                        lookingForItems: controller.religionsLookingFor,
                         fetchData: "Fetch Cast");
                   }),
                   Obx(() {

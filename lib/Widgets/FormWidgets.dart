@@ -700,7 +700,6 @@ class FormWidgets {
       required Rxn<String> lookingForValue,
       required List<String> items,
       required String hinttext,
-      List<String>? lookingForItems,
       String? fetchData}) {
     final ProfileController profileController = Get.put(ProfileController());
     final AuthController authController = Get.put(AuthController());
@@ -807,13 +806,9 @@ class FormWidgets {
                     child: Obx(
                       () => DropdownButtonFormField<String>(
                         isExpanded: true,
-                        value: lookingForItems != null
-                            ? lookingForItems.contains(lookingForValue.value)
-                                ? lookingForValue.value
-                                : null
-                            : items.contains(lookingForValue.value)
-                                ? lookingForValue.value
-                                : null,
+                        value: items.contains(lookingForValue.value)
+                            ? lookingForValue.value
+                            : null,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 16),
                           border: InputBorder.none,
