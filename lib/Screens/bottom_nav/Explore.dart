@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:love_connection/ApiService/ApiService.dart';
 import 'package:love_connection/Controllers/SendConnectionRequest.dart';
+import 'package:love_connection/Controllers/UserInfoController.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../Controllers/GetuserController.dart';
@@ -20,6 +22,8 @@ class _ExploreState extends State<Explore> {
   final GetUsersController usersController = Get.put(GetUsersController());
   final SendConectionController sendConectionController =
       Get.put(SendConectionController());
+  final UserController userController = Get.put(UserController(ApiService()));
+
   late final PageController _pageController;
   @override
   void initState() {
@@ -27,6 +31,7 @@ class _ExploreState extends State<Explore> {
     super.initState();
     _pageController = PageController();
     //usersController.fetchUsers();
+    userController.fetchUserData();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
@@ -73,9 +78,14 @@ class _ExploreState extends State<Explore> {
                         width: 100.w,
                       ),
                     );
-                  } else if (usersController.users.isEmpty) {
+                  } else if (usersController.users.isEmpty ||
+                      userController.userData.value?['status'] ==
+                          "unverified") {
                     return NoProfilesScreen(
-                      onRefresh: () => usersController.fetchUsers(),
+                      onRefresh: () {
+                        usersController.fetchUsers();
+                      },
+                      isVerifiedUser: userController.userData.value?['status'],
                     );
                   } else {
                     return PageView.builder(

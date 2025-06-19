@@ -46,6 +46,10 @@ class _HomeState extends State<Home> {
             'Please fill in all required fields before proceeding.');
         return false;
       } else if (!authController
+          .isEmailValid(authController.emailController.text)) {
+        showErrorSnackbar('Please enter a valid email address');
+        return false;
+      } else if (!authController
           .isPasswordValid(authController.passwordController.text)) {
         showErrorSnackbar(
             'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character');

@@ -32,6 +32,7 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
+
     userController.fetchUserData();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
@@ -466,7 +467,7 @@ class _ProfileState extends State<Profile> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Comming Soon',
+                              'Coming Soon',
                               style: GoogleFonts.outfit(
                                 color: Colors.black,
                                 fontSize: 20,

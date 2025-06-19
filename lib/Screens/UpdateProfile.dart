@@ -37,9 +37,8 @@ class _UpdateprofileState extends State<Updateprofile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    controller.fetchUserDetails(context);
+    controller.fetchUserDetails(context, true);
   }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -107,7 +106,7 @@ class _UpdateprofileState extends State<Updateprofile> {
                       SizedBox(height: 20.h),
                       ElevatedButton.icon(
                         onPressed: () {
-                          controller.fetchUserDetails(context);
+                          controller.fetchUserDetails(context, false);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.pinkAccent,

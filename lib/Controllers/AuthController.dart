@@ -212,6 +212,12 @@ class AuthController extends GetxController {
     return passwordRegex.hasMatch(password);
   }
 
+  bool isEmailValid(String email) {
+  final emailRegex = RegExp(r'^[a-zA-Z0-9._%-]+@gmail\.com$');
+  return emailRegex.hasMatch(email);
+}
+
+
   String validateFields() {
     profileImage = profilepictureController.profileImage;
     cninfront = documentUploadController.idCardFrontImage;

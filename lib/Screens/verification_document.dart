@@ -31,7 +31,7 @@ class _VerificationDocumentState extends State<VerificationDocument> {
     docController.clearAllDocuments();
     controller.clearSelfieImage();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      profileController.fetchUserDetails(context);
+      profileController.fetchUserDetails(context, false);
     });
   }
 
@@ -217,7 +217,6 @@ class _VerificationDocumentState extends State<VerificationDocument> {
                                                     ),
                                         ),
                                       ),
-
                                       Positioned(
                                         bottom: 16,
                                         right: 16,
@@ -264,7 +263,7 @@ class _VerificationDocumentState extends State<VerificationDocument> {
                                   ),
                                 )
                               : PinkButton(
-                                  text: "Verify",
+                                  text: "Submit",
                                   onTap: () {
                                     profileController.updateDocuments(
                                         profileController
@@ -305,7 +304,8 @@ class _VerificationDocumentState extends State<VerificationDocument> {
                           SizedBox(height: 20.h),
                           ElevatedButton.icon(
                             onPressed: () {
-                              profileController.fetchUserDetails(context);
+                              profileController.fetchUserDetails(
+                                  context, false);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.pinkAccent,

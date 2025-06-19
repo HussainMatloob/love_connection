@@ -9,6 +9,7 @@ import 'package:love_connection/Controllers/document_upload_controller.dart';
 import 'package:love_connection/Controllers/sect_controller.dart';
 import 'package:love_connection/Controllers/selfie_upload_controller.dart';
 import 'package:love_connection/utils/date_time_util.dart';
+import 'package:love_connection/utils/helper/dialog_helper.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -82,7 +83,7 @@ class ProfileController extends GetxController {
   var userData = Rxn<Map<String, dynamic>?>(); // Stores the user data
 
   // Method to fetch user data
-  Future<void> fetchUserDetails(BuildContext context) async {
+  Future<void> fetchUserDetails(BuildContext context, bool isOpenScreen) async {
     try {
       isProfileloading(true);
 
@@ -149,6 +150,24 @@ class ProfileController extends GetxController {
         await fetchEthnicityData();
 
         isProfileloading(false);
+
+        final prefs = await SharedPreferences.getInstance();
+        final isFirstTimeVerifiedDialog =
+            prefs.getBool('isFirstTimeVerifiedDialog');
+//
+        if (isOpenScreen) {
+          if (userData.value?['status'] == "verified" &&
+              (isFirstTimeVerifiedDialog == false ||
+                  isFirstTimeVerifiedDialog == null)) {
+            prefs.setBool('isFirstTimeVerifiedDialog', true);
+            DialogHelper.showSuccessDialog(
+                "You're now a verified member of our app. Thank you!");
+          } else if (userData.value?['status'] == "unverified") {
+            DialogHelper.showErrorDialog(
+                "You're not yet verified. Kindly upload your documents or contact the admin to proceed",
+                headText: "Attention");
+          }
+        }
       } else {
         // FlushMessages.snackBarMessage("Error",
         //     "Error fetching details ,please refresh page", context, Colors.red);
@@ -506,9 +525,12 @@ class ProfileController extends GetxController {
       return;
     }
 
-    if (status == "verified") {
-      Get.snackbar("Success", "Your profile is already verified!",
-          backgroundColor: Colors.green, colorText: Colors.white);
+    if (cninfront.value == null ||
+        cninback.value == null ||
+        selfieimage.value == null) {
+      DialogHelper.showErrorDialog(
+          "Please upload your clear and recent documents");
+
       isDocumentLoading(false);
       return;
     }
@@ -537,15 +559,14 @@ class ProfileController extends GetxController {
       var jsonResponse = jsonDecode(responseBody);
 
       if (jsonResponse["ResponseCode"] == "200") {
-        Get.snackbar("Success", "Your profile verified successfully!",
-            backgroundColor: Colors.green, colorText: Colors.white);
+        DialogHelper.showSuccessDialog(
+            "Your documents have been submitted successfully. Verification may take a moment to process");
       } else {
-        Get.snackbar("Error", jsonResponse["ResponseMsg"],
-            backgroundColor: Colors.red, colorText: Colors.white);
+        DialogHelper.showErrorDialog(jsonResponse["ResponseMsg"]);
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to verify your profile. Try again.",
-          backgroundColor: Colors.red, colorText: Colors.white);
+      DialogHelper.showErrorDialog(
+          "Failed to upload your documents.Please try again");
     } finally {
       isDocumentLoading(false);
     }
