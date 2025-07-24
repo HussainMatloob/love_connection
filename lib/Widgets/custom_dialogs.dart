@@ -14,6 +14,7 @@ class CustomDialogs {
     String? quitText,
     String? cancelText,
     VoidCallback? onTap,
+    bool? isChat = false,
   }) {
     showDialog(
       context: context,
@@ -52,38 +53,59 @@ class CustomDialogs {
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(height: 30.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        CustomButton(
-                            bordercircular: 10.r,
-                            boxColor: Colors.redAccent,
-                            text: quitText,
-                            textColor: Colors.white,
-                            fontSize: 12.sp,
-                            fw: FontWeight.w600,
-                            height: 30.h,
-                            width: 80.h,
-                            horizontalPadding: 5.w,
-                            borderColor: Colors.transparent,
-                            onTap: onTap),
-                        CustomButton(
-                          bordercircular: 10.r,
-                          text: cancelText,
-                          textColor: Colors.black,
-                          fontSize: 12.sp,
-                          fw: FontWeight.w600,
-                          height: 30.h,
-                          width: 80.h,
-                          horizontalPadding: 5.w,
-                          borderColor: Colors.black,
-                          onTap: () {
-                            Navigator.of(context).pop(); // Just close dialog
-                          },
-                        ),
-                      ],
-                    )
+                    SizedBox(height: isChat == true ? 8.h : 30.h),
+                    isChat == true
+                        ? SizedBox(
+                            height: 36.h,
+                            width: 36.w,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.pink, // or any color
+                              child: IconButton(
+                                onPressed: onTap,
+                                icon: Icon(
+                                  Icons.phone,
+                                  color: Colors.white,
+                                  size: 20.sp,
+                                ),
+                                padding:
+                                    EdgeInsets.zero, // remove extra padding
+                                constraints:
+                                    BoxConstraints(), // remove default IconButton constraints
+                              ),
+                            ),
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              CustomButton(
+                                  bordercircular: 10.r,
+                                  boxColor: Colors.redAccent,
+                                  text: quitText,
+                                  textColor: Colors.white,
+                                  fontSize: 12.sp,
+                                  fw: FontWeight.w600,
+                                  height: 30.h,
+                                  width: 80.h,
+                                  horizontalPadding: 5.w,
+                                  borderColor: Colors.transparent,
+                                  onTap: onTap),
+                              CustomButton(
+                                bordercircular: 10.r,
+                                text: cancelText,
+                                textColor: Colors.black,
+                                fontSize: 12.sp,
+                                fw: FontWeight.w600,
+                                height: 30.h,
+                                width: 80.h,
+                                horizontalPadding: 5.w,
+                                borderColor: Colors.black,
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .pop(); // Just close dialog
+                                },
+                              ),
+                            ],
+                          )
                   ])),
         );
       },

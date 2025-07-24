@@ -14,10 +14,11 @@ import 'package:love_connection/Controllers/education_controller.dart';
 import 'package:love_connection/Controllers/ethnicity_controller.dart';
 import 'package:love_connection/Controllers/update_profile_controller.dart';
 import 'package:love_connection/Screens/Profilepicture.dart';
-import 'package:love_connection/Screens/call_screen.dart';
-import 'package:love_connection/Screens/chat_screen.dart';
+
 import 'package:love_connection/Screens/requested_connection_detail_screen.dart';
 import 'package:love_connection/Widgets/PinkButton.dart';
+import 'package:love_connection/Widgets/custom_dialogs.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Controllers/BasicInfoController.dart';
 import 'package:intl/intl.dart';
@@ -149,7 +150,8 @@ class FormWidgets {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildInputField('Email', authController.emailController),
+            _buildInputField('Email', authController.emailController,
+                isOnChange: true),
             SizedBox(height: Get.height * 0.02),
             _buildInputField('Password', authController.passwordController),
             SizedBox(height: Get.height * 0.02),
@@ -174,37 +176,46 @@ class FormWidgets {
   }
 
   // Method to build input field
-  static Widget _buildInputField(
-      String label, TextEditingController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.outfit(
-            color: Colors.grey[600],
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        SizedBox(height: Get.height * 0.01),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(Get.width * 0.02),
-          ),
-          child: TextField(
-            controller: controller, // Assign controller
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: Get.width * 0.04,
-                vertical: Get.height * 0.015,
+  static Widget _buildInputField(String label, TextEditingController controller,
+      {bool isOnChange = false}) {
+    return GetBuilder<AuthController>(
+      builder: (authController) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: GoogleFonts.outfit(
+                color: Colors.grey[600],
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
               ),
             ),
-          ),
-        ),
-      ],
+            SizedBox(height: Get.height * 0.01),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(Get.width * 0.02),
+              ),
+              child: TextField(
+                controller: controller, // Assign controller
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: Get.width * 0.04,
+                    vertical: Get.height * 0.015,
+                  ),
+                ),
+                onChanged: (value) {
+                  if (isOnChange == true) {
+                    authController.checkIsEmailExist(value);
+                  }
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -337,13 +348,13 @@ class FormWidgets {
     );
   }
 
-  Widget buildDropdownField({
+  static Widget buildDropdownField({
     required String label,
     required Rxn<String> value,
-    required List<String> items,
+    required List<String> itemsList,
     double? width,
   }) {
-    List<String> uniqueItems = items.toSet().toList();
+    List<String> uniqueItems = itemsList.toSet().toList();
 
     if (!uniqueItems.contains(value.value)) {
       value.value = null;
@@ -431,26 +442,35 @@ class FormWidgets {
               children: [
                 Expanded(
                   child: Obx(() {
-                    final religions = religionController.religions;
-                    if (religions.isEmpty)
+                    final List<String> yourReligionsList = religionController
+                        .religions
+                        .where((religion) => religion.toLowerCase() != "any")
+                        .toList();
+
+                    if (yourReligionsList.isEmpty)
                       return const CircularProgressIndicator();
                     return buildDropdownField(
                       label: 'Religion',
                       value: authController.religion,
-                      items: religions,
+                      itemsList: yourReligionsList,
                     );
                   }),
                 ),
                 SizedBox(width: 10.w),
                 Expanded(
                   child: Obx(() {
-                    final religions = religionController.religions;
-                    if (religions.isEmpty)
+                    final List<String> lookingForReligionsList = [
+                      "Any",
+                      ...religionController.religions
+                          .where((religion) => religion.toLowerCase() != "any"),
+                    ];
+
+                    if (lookingForReligionsList.isEmpty)
                       return const CircularProgressIndicator();
                     return buildDropdownField(
                       label: 'Looking for',
                       value: authController.lookingForReligion,
-                      items: religions,
+                      itemsList: lookingForReligionsList,
                     );
                   }),
                 ),
@@ -460,13 +480,13 @@ class FormWidgets {
             buildDropdownField(
               label: 'Height',
               value: authController.height,
-              items: authController.heightOptions,
+              itemsList: authController.heightOptions,
             ),
             SizedBox(height: 20.h),
             buildDropdownField(
               label: 'Marital Status',
               value: authController.maritalStatus,
-              items: authController.maritalStatusOptions,
+              itemsList: authController.maritalStatusOptions,
             ),
             SizedBox(height: 20.h),
             Text(
@@ -499,7 +519,10 @@ class FormWidgets {
           children: [
             // Education Level Dropdown Pair
             Obx(() {
-              final educationList = [
+              final yourEducationList = educationController.educationList
+                  .where((item) => item.toLowerCase() != "any")
+                  .toList();
+              final lookingForeducationList = [
                 "Any",
                 ...educationController.educationList
                     .where((country) => country != "Any")
@@ -509,19 +532,24 @@ class FormWidgets {
                 label2: 'Looking For',
                 value: authController.educationLevel,
                 lookingForValue: authController.lookingForEducation,
-                items: educationList,
+                yourList: yourEducationList,
+                lookingForList: lookingForeducationList,
                 hinttext: 'Select Education',
               );
             }),
             SizedBox(height: 24.h),
 
             Obx(() {
-              final countries = [
+              final yourCountriesList = countryController.countryList
+                  .where((item) => item.toLowerCase() != "any")
+                  .toList();
+
+              final lookingForcountries = [
                 "Any",
                 ...countryController.countryList
                     .where((country) => country != "Any")
               ];
-              final _ = countries.length;
+              final _ = lookingForcountries.length;
 
               if (countryController.isLoading.value) {
                 return Center(child: CircularProgressIndicator());
@@ -531,7 +559,8 @@ class FormWidgets {
                 label2: 'Looking For',
                 value: authController.currentResidence,
                 lookingForValue: authController.lookingForResidence,
-                items: countries,
+                yourList: yourCountriesList,
+                lookingForList: lookingForcountries,
                 hinttext: 'Select Country',
               );
             }),
@@ -574,49 +603,58 @@ class FormWidgets {
               Obx(() {
                 if (cityController.isLoading.value)
                   return Center(child: CircularProgressIndicator());
+
+                final List<String> yourCitiesList = cityController.cityOptions
+                    .where((city) => city.toLowerCase() != "any")
+                    .toList();
+                final List<String> lookingCitiesList = [
+                  "Any",
+                  ...cityController.cityOptions
+                      .where((city) => city.toLowerCase() != "any")
+                ];
                 return buildDropdownPair1(
                   label1: 'Your City',
                   label2: 'Looking For',
                   value: authController.cityOfResidence,
                   lookingForValue: authController.lookingForCity,
-                  selfItems: [
-                    "Any",
-                    ...cityController.cityOptions.where((city) => city != "Any")
-                  ],
+                  selfItems: yourCitiesList,
 
-                  lookingForItems: [
-                    "Any",
-                    ...cityController.lookingForCityOptions
-                        .where((city) => city != "Any")
-                  ], // Cities for Looking For Residence with "Any"
+                  lookingForItems:
+                      lookingCitiesList, // Cities for Looking For Residence with "Any"
                   hinttext: 'Select City',
                 );
               }),
               SizedBox(height: 8.h),
 
               // Caste Dropdown with "Any" Option
+
               Obx(() {
                 if (castController.isLoading.value) {
                   return Center(child: CircularProgressIndicator());
                 }
 
-                final List<String> casteNames = castController.castList
+                final List<String> yourCasteList = castController.castList
+                    .map<String>((cast) => cast["cast"].toString())
+                    .where((cast) => cast.toLowerCase() != "any")
+                    .toList();
+                final List<String> lookingForCasteList = castController.castList
                     .map<String>((cast) => cast["cast"].toString())
                     .toList();
+
                 return buildDropdownPair(
                   label1: 'Your Caste',
                   label2: 'Looking For',
 
                   value: authController.caste,
                   lookingForValue: authController.lookingForCaste,
-                  items: [
-                    "Any",
-                    ...casteNames.where((cast) => cast != "Any")
-                  ], // Add "Any" option
-                  hinttext:
-                      casteNames.isEmpty ? 'No Cast found' : 'Select Cast',
+                  yourList: yourCasteList,
+                  lookingForList: lookingForCasteList, // Add "Any" option
+                  hinttext: lookingForCasteList.isEmpty
+                      ? 'No Cast found'
+                      : 'Select Cast',
                 );
               }),
+
               SizedBox(height: 8.h),
 
               // Sect Dropdown with "Any" Option
@@ -624,17 +662,21 @@ class FormWidgets {
                 if (sectController.isLoading.value) {
                   return Center(child: SizedBox());
                 }
-
+                final List<String> yourSectList = sectController.sectList
+                    .where((sect) => sect.toLowerCase() != "any")
+                    .toList();
+                final List<String> lookingForSectList = [
+                  "Any",
+                  ...sectController.sectList
+                      .where((sect) => sect.toLowerCase() != "any")
+                ];
                 return buildDropdownPair(
                   label1: 'Your Sect',
                   label2: 'Looking For',
-
                   value: authController.sect,
                   lookingForValue: authController.lookingForSect,
-                  items: [
-                    "Any",
-                    ...sectController.sectList.where((sect) => sect != "Any")
-                  ], // Add "Any" option
+                  yourList: yourSectList,
+                  lookingForList: lookingForSectList,
                   hinttext: sectController.sectList.isEmpty
                       ? 'No Sect found'
                       : 'Select Sect',
@@ -648,10 +690,13 @@ class FormWidgets {
                   label2: 'Looking For',
                   value: authController.ethnicity,
                   lookingForValue: authController.lookingForEthnicity,
-                  items: [
+                  yourList: ethnicityController.ethnicityList
+                      .where((ethnicity) => ethnicity.toLowerCase() != "any")
+                      .toList(),
+                  lookingForList: [
                     "Any",
                     ...ethnicityController.ethnicityList
-                        .where((ethnicity) => ethnicity != "Any")
+                        .where((ethnicity) => ethnicity.toLowerCase() != "any")
                   ], // Add "Any" option
                   hinttext: "Select Ethnicity"),
               SizedBox(height: 20.h),
@@ -684,7 +729,7 @@ class FormWidgets {
                     );
                     return;
                   } else {
-                    Get.to(ProfilePicture());
+                    Get.to(() => ProfilePicture());
                   }
                 }),
           ),
@@ -698,7 +743,8 @@ class FormWidgets {
       required String label2,
       required Rxn<String> value,
       required Rxn<String> lookingForValue,
-      required List<String> items,
+      required List<String> yourList,
+      required List<String> lookingForList,
       required String hinttext,
       String? fetchData}) {
     final ProfileController profileController = Get.put(ProfileController());
@@ -732,7 +778,8 @@ class FormWidgets {
                     child: Obx(
                       () => DropdownButtonFormField<String>(
                         isExpanded: true,
-                        value: items.contains(value.value) ? value.value : null,
+                        value:
+                            yourList.contains(value.value) ? value.value : null,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 16),
                           border: InputBorder.none,
@@ -744,7 +791,7 @@ class FormWidgets {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        items: items.map((String item) {
+                        items: yourList.map((String item) {
                           return DropdownMenuItem<String>(
                             value: item,
                             child: Text(
@@ -806,7 +853,7 @@ class FormWidgets {
                     child: Obx(
                       () => DropdownButtonFormField<String>(
                         isExpanded: true,
-                        value: items.contains(lookingForValue.value)
+                        value: lookingForList.contains(lookingForValue.value)
                             ? lookingForValue.value
                             : null,
                         decoration: InputDecoration(
@@ -821,7 +868,7 @@ class FormWidgets {
                             color: Colors.black,
                           ),
                         ),
-                        items: items.map((String item) {
+                        items: lookingForList.map((String item) {
                           return DropdownMenuItem<String>(
                             value: item,
                             child: Text(
@@ -1382,33 +1429,61 @@ class FormWidgets {
                     final connections =
                         connectionsController.connections[index];
                     return ProfileCard(
-                        completeRequestData: connections,
-                        onTap: () {
-                          Get.to(() => RequestedConnectionDetailScreen(
-                                imageUrl: connections['profileimage'] != null
-                                    ? '${connections['profileimage']}'
-                                    : '',
-                                pendingRequestData: connections,
-                              ));
-                        },
-                        imageUrl: connections['profileimage'] != null
-                            ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['profileimage']}'
-                            : 'assets/images/profile.jpg',
-                        name:
-                            '${connections['firstname']} ${connections['lastname']}',
-                        profession: connections['education'] ?? 'N/A',
-                        ignoreButtonText: 'Call',
-                        acceptButtonText: 'Chat',
-                        unfollowTab: () {
-                          connectionsController.cancelRequest(connections);
-                          connectionsController.connections.removeAt(index);
-                        },
-                        onIgnore: () {
-                          Get.to(() => CallScreen());
-                        },
-                        onAccept: () {
-                          Get.to(() => ChatScreen());
-                        });
+                      completeRequestData: connections,
+                      onTap: () {
+                        Get.to(() => RequestedConnectionDetailScreen(
+                              imageUrl: connections['profileimage'] != null
+                                  ? '${connections['profileimage']}'
+                                  : '',
+                              pendingRequestData: connections,
+                            ));
+                      },
+                      imageUrl: connections['profileimage'] != null
+                          ? 'https://projects.funtashtechnologies.com/gomeetapi/${connections['profileimage']}'
+                          : 'assets/images/profile.jpg',
+                      name:
+                          '${connections['firstname']} ${connections['lastname']}',
+                      profession: connections['education'] ?? 'N/A',
+                      unfollowTab: () {
+                        connectionsController.unfollowUser(connections);
+                        connectionsController.connections.removeAt(index);
+                      },
+                      onAccept: () {
+                        CustomDialogs.showQuitDialog(
+                          context,
+                          height: 210.h,
+                          width: 200.w,
+                          radius: 10.r,
+                          headText: "Access Restricted",
+                          messageText:
+                              "This feature is available to premium users only. Please upgrade your account or contact support for assistance.",
+                          onTap: () async {
+                            Navigator.of(context).pop();
+                            final String phone = "447932234967";
+                            final String message = "Hello, I need help";
+                            final Uri uri = Uri.parse(
+                                "whatsapp://send?phone=$phone&text=${Uri.encodeComponent(message)}");
+
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri,
+                                  mode: LaunchMode.externalApplication);
+                            } else {
+                              // Show a snackbar if WhatsApp is not installed
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'WhatsApp is not installed on your device.'),
+                                  duration: Duration(seconds: 3),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          },
+                          isChat: true,
+                        );
+                      },
+                      isChatModule: true,
+                    );
                   },
                 ),
               ),

@@ -36,12 +36,11 @@ class AcceptRequestController extends GetxController {
   }
 
   /*--------------------------------------------------*/
-  /*               ignore send tequest                */
+  /*               ignore send request                */
   /*--------------------------------------------------*/
   Future<void> ignoreRequest(var connectionUserId) async {
     try {
-      final response =
-          await ApiService.cancelConnectionRequest(connectionUserId);
+      final response = await ApiService.ignoreSendrequest(connectionUserId);
 
       if (response != null) {
         if (response.statusCode == 200) {

@@ -42,8 +42,21 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
+
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+   <!-- Permission to read from the photo library -->
+   <key>NSPhotoLibraryUsageDescription</key>
+   <string>This app needs access to your photo library to upload your profile image.</string>
+
+   <!-- (Optional) Permission to add to the photo library, if you ever save images -->
+   <key>NSPhotoLibraryAddUsageDescription</key>
+   <string>This app needs permission to save images to your photo library.</string>
+
+   <key>NSCameraUsageDescription</key>
+   <string>This app needs access to your camera to take a selfie.</string>
+
 </dict>
 </plist>

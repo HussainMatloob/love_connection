@@ -30,6 +30,20 @@ class ImageController extends GetxController {
             return;
           }
         }
+      } else if (Platform.isIOS) {
+        // iOS uses photos permission
+        PermissionStatus photoStatus = await Permission.photos.request();
+
+        if (!photoStatus.isGranted) {
+          Get.snackbar(
+            'Permission Denied',
+            'Photos permission is required to upload images.',
+            snackPosition: SnackPosition.BOTTOM,
+            colorText: Colors.white,
+            backgroundColor: Colors.red,
+          );
+          return;
+        }
       }
 
       final XFile? pickedFile =

@@ -197,9 +197,9 @@ class _RequestsState extends State<Requests> {
                               ignoreButtonText: 'Ignore',
                               acceptButtonText: 'Accept',
                               onIgnore: () {
-                                // acceptRequestController.ignoreRequest(request);
-                                // _controller.Getrequests.removeAt(index);
-                                // _controller.update();
+                                acceptRequestController.ignoreRequest(request);
+                                _controller.Getrequests.removeAt(index);
+                                _controller.update();
                               },
                               onAccept: () async {
                                 SharedPreferences prefs =

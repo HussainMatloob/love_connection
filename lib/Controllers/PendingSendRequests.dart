@@ -37,7 +37,7 @@ class GetPendingRequestsController extends GetxController {
   Future<void> cancelRequest(var specificPersonSendRequest) async {
     try {
       final response =
-          await ApiService.cancelConnectionRequest(specificPersonSendRequest);
+          await ApiService.cancelSendrequest(specificPersonSendRequest);
 
       if (response != null) {
         if (response.statusCode == 200) {

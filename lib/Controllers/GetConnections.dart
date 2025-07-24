@@ -35,12 +35,11 @@ class GetConnectionsController extends GetxController {
   }
 
   /*--------------------------------------------------*/
-  /*               Cancel send tequest                */
+  /*                   Unfollow user                  */
   /*--------------------------------------------------*/
-  Future<void> cancelRequest(var specificPersonSendRequest) async {
+  Future<void> unfollowUser(var specificPersonSendRequest) async {
     try {
-      final response =
-          await ApiService.cancelConnectionRequest(specificPersonSendRequest);
+      final response = await ApiService.unfollow(specificPersonSendRequest);
 
       if (response != null) {
         if (response.statusCode == 200) {

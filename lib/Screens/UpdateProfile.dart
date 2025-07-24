@@ -39,6 +39,7 @@ class _UpdateprofileState extends State<Updateprofile> {
     super.initState();
     controller.fetchUserDetails(context, true);
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -163,10 +164,8 @@ class _UpdateprofileState extends State<Updateprofile> {
                   SizedBox(height: 20),
                   _buildTextField("First Name",
                       controller.controllers['firstname']!, Icons.person),
-                  _buildTextField(
-                      "Last Name",
-                      controller.controllers['lastname']!,
-                      Icons.person_outline),
+                  _buildTextField("Last Name",
+                      controller.controllers['lastname']!, Icons.person),
                   _buildTextField(
                       "Email", controller.controllers['email']!, Icons.email,
                       isReadOnly: true),
@@ -176,124 +175,132 @@ class _UpdateprofileState extends State<Updateprofile> {
                       isSuffix: true, onTap: () {
                     authController.changeObsecureText();
                   }),
-                  _buildTextField(
-                      "Gender", controller.controllers['gender']!, Icons.male),
-                  _buildTextField("Height", controller.controllers['height']!,
-                      Icons.height),
                   SizedBox(height: 8),
                   FormWidgets.buildDateOfBirth(
                       authController, controller.dateOfBirth.value!, true),
                   SizedBox(height: 10),
+                  FormWidgets.buildDropdownField(
+                    label: 'Height',
+                    value: authController.height,
+                    itemsList: authController.heightOptions,
+                  ),
+                  SizedBox(height: 10),
+                  FormWidgets.buildDropdownField(
+                    label: 'Gender',
+                    value: authController.selectedGender,
+                    itemsList: authController.genderOptions,
+                  ),
                   FormWidgets.buildDropdownPair(
                     label1: 'Your Education',
                     label2: 'Looking For',
                     value: authController.educationLevel,
                     lookingForValue: authController.lookingForEducation,
-                    items: controller.educationList,
+                    yourList: controller.educationList
+                        .where((item) => item.toLowerCase() != "any")
+                        .toList(),
+                    lookingForList: controller.educationList,
                     hinttext: 'Select Education',
                   ),
-                  Obx(() {
-                    print(
-                        "Religion value: ${authController.religion.value}"); // Debugging
-                    return FormWidgets.buildDropdownPair(
-                        label1: 'Your Religion',
-                        label2: 'Looking For',
-                        value: authController
-                            .religion, // Fallback value to avoid errors
-                        lookingForValue: authController.lookingForReligion,
-                        items: controller.religions,
-                        hinttext: 'Select Religion',
-                        fetchData: "Fetch Cast");
-                  }),
-                  Obx(() {
-                    if (controller.isCasteLoading.value)
-                      return Center(
+                  FormWidgets.buildDropdownPair(
+                      label1: 'Your Religion',
+                      label2: 'Looking For',
+                      value: authController
+                          .religion, // Fallback value to avoid errors
+                      lookingForValue: authController.lookingForReligion,
+                      yourList: controller.religions
+                          .where((religion) => religion.toLowerCase() != "any")
+                          .toList(),
+                      lookingForList: controller.religions,
+                      hinttext: 'Select Religion',
+                      fetchData: "Fetch Cast"),
+                  controller.isCasteLoading.value
+                      ? Center(
                           child: CircularProgressIndicator(
-                        color: Colors.pink,
-                      ));
-                    final casteNames = controller.castList
-                        .map<String>((cast) => cast["cast"].toString())
-                        .toList();
-                    return FormWidgets.buildDropdownPair(
-                        label1: 'Your Caste',
-                        label2: 'Looking For',
-                        value: authController.caste,
-                        lookingForValue: authController.lookingForCaste,
-                        items: casteNames,
-                        hinttext: casteNames.isEmpty
-                            ? 'No Cast found'
-                            : 'Select Cast',
-                        fetchData: "Fetch Sect");
-                  }),
+                          color: Colors.pink,
+                        ))
+                      : FormWidgets.buildDropdownPair(
+                          label1: 'Your Caste',
+                          label2: 'Looking For',
+                          value: authController.caste,
+                          lookingForValue: authController.lookingForCaste,
+                          yourList: controller.casteNames
+                              .where((caste) => caste.toLowerCase() != "any")
+                              .toList(),
+                          lookingForList: controller.casteNames,
+                          hinttext: controller.casteNames.isEmpty
+                              ? 'No Cast found'
+                              : 'Select Cast',
+                          fetchData: "Fetch Sect"),
                   SizedBox(height: 8.h),
-                  Obx(() {
-                    if (controller.isSectLoading.value)
-                      return Center(
+                  controller.isSectLoading.value
+                      ? Center(
                           child: CircularProgressIndicator(
-                        color: Colors.pink,
-                      ));
-                    return FormWidgets.buildDropdownPair(
-                      label1: 'Your Sect',
-                      label2: 'Looking For',
-                      value: authController.sect,
-                      lookingForValue: authController.lookingForSect,
-                      items: controller.sectList,
-                      hinttext: controller.sectList.isEmpty
-                          ? 'No Sect found'
-                          : 'Select Sect',
-                    );
-                  }),
+                          color: Colors.pink,
+                        ))
+                      : FormWidgets.buildDropdownPair(
+                          label1: 'Your Sect',
+                          label2: 'Looking For',
+                          value: authController.sect,
+                          lookingForValue: authController.lookingForSect,
+                          yourList: controller.sectList
+                              .where((sect) => sect.toLowerCase() != "any")
+                              .toList(),
+                          lookingForList: controller.sectList,
+                          hinttext: controller.sectList.isEmpty
+                              ? 'No Sect found'
+                              : 'Select Sect',
+                        ),
                   SizedBox(height: 10),
-                  Obx(() {
-                    if (controller.isCountryLoading.value)
-                      return Center(
+                  controller.isCountryLoading.value
+                      ? Center(
                           child: CircularProgressIndicator(
-                        color: Colors.pink,
-                      ));
-                    return FormWidgets.buildDropdownPair(
-                        label1: 'Your Country',
-                        label2: 'Looking For',
-                        value: authController.currentResidence,
-                        lookingForValue: authController.lookingForResidence,
-                        items: ["Any", ...controller.countryList],
-                        hinttext: 'Select Country',
-                        fetchData: "Fetch Cities");
-                  }),
+                          color: Colors.pink,
+                        ))
+                      : FormWidgets.buildDropdownPair(
+                          label1: 'Your Country',
+                          label2: 'Looking For',
+                          value: authController.currentResidence,
+                          lookingForValue: authController.lookingForResidence,
+                          yourList: controller.countryList
+                              .where(
+                                  (country) => country.toLowerCase() != "any")
+                              .toList(),
+                          lookingForList: controller.countryList,
+                          hinttext: 'Select Country',
+                          fetchData: "Fetch Cities"),
                   SizedBox(height: 10),
-                  Obx(() {
-                    if (controller.isCityLoading.value)
-                      return Center(
+                  controller.isCityLoading.value
+                      ? Center(
                           child: CircularProgressIndicator(
-                        color: Colors.pink,
-                      ));
+                          color: Colors.pink,
+                        ))
+                      : FormWidgets.buildDropdownPair1(
+                          label1: 'Your City',
+                          label2: 'Looking For',
 
-                    return FormWidgets.buildDropdownPair1(
-                      label1: 'Your City',
-                      label2: 'Looking For',
-
-                      value: authController.cityOfResidence,
-                      lookingForValue: authController.lookingForCity,
-                      selfItems: [
-                        "Any",
-                        ...controller.cityOptions
-                      ], // Cities for Residence
-                      lookingForItems: [
-                        "Any",
-                        ...controller.lookingForCityOptions
-                      ], // Cities for Looking For Residence
-                      hinttext: 'Select City',
-                    );
-                  }),
+                          value: authController.cityOfResidence,
+                          lookingForValue: authController.lookingForCity,
+                          selfItems: controller.cityOptions,
+                          // Cities for Residence
+                          lookingForItems: controller.lookingForCityOptions
+                              .where((city) => city.toLowerCase() != "any")
+                              .toList(), // Cities for Looking For Residence
+                          hinttext: 'Select City',
+                        ),
                   SizedBox(height: 8.h),
                   FormWidgets.buildDropdownPair(
                       label1: 'Your Ethnicity',
                       label2: 'Looking For',
                       value: authController.ethnicity,
                       lookingForValue: authController.lookingForEthnicity,
-                      items: controller.ethnicityList,
+                      yourList: controller.ethnicityList
+                          .where(
+                              (ethnicity) => ethnicity.toLowerCase() != "any")
+                          .toList(),
+                      lookingForList: controller.ethnicityList,
                       hinttext: "Select Ethnicity"),
                   SizedBox(height: 20.h),
-                  Obx(() => controller.isLoading.value
+                  controller.isLoading.value
                       ? Center(
                           child: CircularProgressIndicator(
                           color: Colors.pink,
@@ -313,7 +320,7 @@ class _UpdateprofileState extends State<Updateprofile> {
                                 style: TextStyle(
                                     fontSize: 16, color: Colors.white)),
                           ),
-                        )),
+                        ),
                 ],
               ),
             );

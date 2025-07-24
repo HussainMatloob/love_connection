@@ -4,8 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:love_connection/ApiService/ApiService.dart';
-import 'package:love_connection/Controllers/GetConnections.dart';
 import 'package:love_connection/Widgets/custom_button.dart';
 
 class ProfileCard extends StatelessWidget {
@@ -14,26 +12,28 @@ class ProfileCard extends StatelessWidget {
   final String imageUrl;
   final String name;
   final String profession;
-  final String ignoreButtonText;
-  final String acceptButtonText;
+  String? ignoreButtonText;
+  String? acceptButtonText;
   final VoidCallback? onIgnore;
   final VoidCallback? onAccept;
   final bool isRequestScreen;
   final VoidCallback? unfollowTab;
+  bool? isChatModule = false;
 
   ProfileCard({
     Key? key,
     required this.imageUrl,
     required this.name,
     required this.profession,
-    required this.ignoreButtonText,
-    required this.acceptButtonText,
+    this.ignoreButtonText,
+    this.acceptButtonText,
     this.onIgnore,
     this.onAccept,
     this.onTap,
     this.completeRequestData,
     this.isRequestScreen = false,
     this.unfollowTab,
+    this.isChatModule,
   }) : super(key: key);
 
   @override
@@ -96,6 +96,27 @@ class ProfileCard extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
+                isChatModule == true
+                    ? Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Container(
+                          height: 36.h,
+                          width: 36.h,
+                          decoration: BoxDecoration(
+                              color: Colors.pink,
+                              borderRadius: BorderRadius.circular(100.r)),
+                          child: Center(
+                            child: IconButton(
+                                onPressed: onAccept,
+                                icon: Icon(
+                                  Icons.chat_bubble_outline,
+                                  color: Colors.white,
+                                  size: 18.sp,
+                                )),
+                          ),
+                        ))
+                    : SizedBox(),
                 // Profile Details Section
                 Positioned(
                   bottom: 0,
@@ -142,59 +163,61 @@ class ProfileCard extends StatelessWidget {
                 borderColor: Colors.transparent,
                 text: "Unfollow",
                 textColor: Colors.white,
-                boxColor: Colors.red,
+                boxColor: Colors.pink,
               ),
         SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            GestureDetector(
-              onTap: onIgnore,
-              child: Container(
-                width: 60.w,
-                height: 50.h,
-                padding: EdgeInsets.symmetric(horizontal: 4.w),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Center(
-                  child: Text(
-                    ignoreButtonText,
-                    style: GoogleFonts.outfit(
-                      color: Colors.pink,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
+        onIgnore == null
+            ? SizedBox()
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: onIgnore,
+                    child: Container(
+                      width: 60.w,
+                      height: 40.h,
+                      padding: EdgeInsets.symmetric(horizontal: 4.w),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Center(
+                        child: Text(
+                          ignoreButtonText ?? "",
+                          style: GoogleFonts.outfit(
+                            color: Colors.pink,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ),
-            SizedBox(width: 16),
-            GestureDetector(
-              onTap: onAccept,
-              child: Container(
-                width: 60.w,
-                height: 50.h,
-                padding: EdgeInsets.symmetric(horizontal: 4.w),
-                decoration: BoxDecoration(
-                  color: Colors.pinkAccent,
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Center(
-                  child: Text(
-                    acceptButtonText,
-                    style: GoogleFonts.outfit(
-                      color: Colors.white,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
+                  SizedBox(width: 16),
+                  GestureDetector(
+                    onTap: onAccept,
+                    child: Container(
+                      width: 60.w,
+                      height: 40.h,
+                      padding: EdgeInsets.symmetric(horizontal: 4.w),
+                      decoration: BoxDecoration(
+                        color: Colors.pinkAccent,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Center(
+                        child: Text(
+                          acceptButtonText ?? "",
+                          style: GoogleFonts.outfit(
+                            color: Colors.white,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ),
-          ],
-        ),
       ],
     );
   }

@@ -96,13 +96,13 @@ class ProfilePendingCard extends StatelessWidget {
             // Close Button
             Positioned(
               // Position the close button at the top rightL
-              top: 8,
-              left: 8,
+              top: 10,
+              left: 10,
               child: GestureDetector(
                 onTap: onClose,
                 child: Container(
-                  width: 24,
-                  height: 24,
+                  width: 30,
+                  height: 30,
                   decoration: BoxDecoration(
                     color: Colors.pink,
                     shape: BoxShape.circle,

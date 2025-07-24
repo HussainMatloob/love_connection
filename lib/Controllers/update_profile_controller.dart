@@ -55,6 +55,7 @@ class ProfileController extends GetxController {
   final RxList<String> ethnicityList = <String>[].obs;
   final RxBool isEthnicityLoading = true.obs;
   final RxString ethnicityerrorMessage = ''.obs;
+  var casteNames = <String>[].obs;
 
   @override
   void onInit() {
@@ -72,8 +73,6 @@ class ProfileController extends GetxController {
     'lastname': TextEditingController(),
     'email': TextEditingController(),
     'password': TextEditingController(),
-    'gender': TextEditingController(),
-    'height': TextEditingController(),
   };
 
   /*-------------------------------------------------------*/
@@ -95,8 +94,8 @@ class ProfileController extends GetxController {
         controllers['lastname']?.text = userData.value?['lastname'] ?? '';
         controllers['email']?.text = userData.value?['email'] ?? '';
         controllers['password']?.text = userData.value?['password'] ?? '';
-        controllers['gender']?.text = userData.value?['gender'] ?? '';
-        controllers['height']?.text = userData.value?['height'] ?? '';
+        authController.selectedGender.value = userData.value?['gender'] ?? '';
+        authController.height.value = userData.value?['height'] ?? '';
         dateOfBirth.value = DateTimeUtil.setDateOfBirth(
             userData.value?['dateofbirth'] ?? "02/03/2000");
 
@@ -193,6 +192,7 @@ class ProfileController extends GetxController {
       educationList.clear();
 
       educationList.assignAll(education);
+      educationList.add("Any");
     }
     isEducationLoading.value = false;
   }
@@ -206,6 +206,7 @@ class ProfileController extends GetxController {
 
       if (fetchedReligions.isNotEmpty) {
         religions.assignAll(fetchedReligions);
+        religions.add("Any");
         //religions.add("Other");
         // religionsLookingFor.assignAll(fetchedReligions);
       } else {
@@ -228,8 +229,10 @@ class ProfileController extends GetxController {
       isCasteLoading(true);
       final data = await _apiService.fetchCastData(religion);
       castList.clear();
-
       castList.assignAll(data);
+      casteNames.clear();
+      casteNames.value =
+          castList.map<String>((cast) => cast["cast"].toString()).toList();
       // castList.add({'cast': 'Other'});
       isCasteLoading(false);
 
@@ -255,7 +258,7 @@ class ProfileController extends GetxController {
           await _apiService.fetchSectData(religion: religion, caste: caste);
       sectList.clear();
       sectList.assignAll(data);
-      //sectList.add("Other");
+      sectList.add("Any");
       isSectLoading(false);
     } catch (e) {
       isSectLoading(false);
@@ -273,6 +276,7 @@ class ProfileController extends GetxController {
 
     if (countries.isNotEmpty) {
       countryList.assignAll(countries);
+      countryList.add("Any");
     }
     isCountryLoading.value = false;
   }
@@ -295,6 +299,7 @@ class ProfileController extends GetxController {
       // Ensure the selected value is valid
 
       cityOptions.assignAll(cities);
+      cityOptions.add("Any");
     } catch (e) {
       lookingForCityOptions.assignAll([]);
 
@@ -311,6 +316,7 @@ class ProfileController extends GetxController {
       final data = await _apiService.fetchEthenicityList();
       ethnicityList.clear();
       ethnicityList.assignAll(data);
+      ethnicityList.add("Any");
       isEthnicityLoading(false);
     } catch (e) {
       isEthnicityLoading(false);
@@ -355,6 +361,10 @@ class ProfileController extends GetxController {
       // Fallback for Android 12 and below
       var storagePermission = await Permission.storage.request();
       return storagePermission.isGranted;
+    } else if (Platform.isIOS) {
+      // iOS uses photos permission
+      PermissionStatus photosPermission = await Permission.photos.request();
+      return photosPermission.isGranted;
     }
 
     return false;
@@ -365,42 +375,42 @@ class ProfileController extends GetxController {
 
     controllers.forEach((key, controller) {
       if (controller.text.trim().isEmpty) {
-        print("Missing field: $key");
         allFieldsValid = false;
       }
     });
 
+    if (authController.height.value?.trim().isEmpty ?? true) {
+      allFieldsValid = false;
+    }
+
+    if (authController.selectedGender.value?.trim().isEmpty ?? true) {
+      allFieldsValid = false;
+    }
+
     if (authController.educationLevel.value?.trim().isEmpty ?? true) {
-      print("Missing field: educationLevel");
       allFieldsValid = false;
     }
     if (authController.religion.value?.trim().isEmpty ?? true) {
-      print("Missing field: religion");
       allFieldsValid = false;
     }
     if (authController.caste.value?.trim().isEmpty ?? true) {
-      print("Missing field: caste");
       allFieldsValid = false;
     }
     if (authController.sect.value?.trim().isEmpty ?? true) {
-      print("Missing field: sect");
       allFieldsValid = false;
     }
     if (authController.currentResidence.value?.trim().isEmpty ?? true) {
-      print("Missing field: currentResidence");
       allFieldsValid = false;
     }
 
     // FIX: Preserve value, only assign default if NULL or empty
     if (authController.cityOfResidence.value == null ||
         authController.cityOfResidence.value!.trim().isEmpty) {
-      print("Missing field: cityOfResidence. Assigning default.");
       authController.cityOfResidence.value = "Unknown";
       allFieldsValid = false;
     }
 
     if (authController.ethnicity.value?.trim().isEmpty ?? true) {
-      print("Missing field: ethnicity");
       allFieldsValid = false;
     }
 
@@ -469,6 +479,8 @@ class ProfileController extends GetxController {
       'id': userId.toString(),
       ...controllers
           .map((key, controller) => MapEntry(key, controller.text.trim())),
+      'gender': authController.selectedGender.value?.trim() ?? '',
+      'height': authController.height.value?.trim() ?? '',
       'dateofbirth': authController.dateOfBirth.value != null
           ? authController.dateOfBirth.value!.toIso8601String().trim()
           : '',

@@ -965,16 +965,13 @@ class ApiService {
   }
 
   /*-------------------------------------------------------*/
-  /*               cancel connection request               */
+  /*                   unfollow user api                   */
   /*-------------------------------------------------------*/
 
-  static Future<http.Response?> cancelConnectionRequest(var data) async {
+  static Future<http.Response?> unfollow(var data) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final userid = prefs.getString('userid').toString();
-
-      print("connectionuserid ===================${data['id']}");
-      print("id ===================$userid");
 
       final uri = Uri.parse(
           'https://projects.funtashtechnologies.com/gomeetapi/deletefriends.php');
@@ -985,6 +982,107 @@ class ApiService {
         body: {
           "connectionuserid": data['id'].toString(),
           "userid": userid,
+        }, // form data (not JSON)
+      );
+
+      return response;
+    } on SocketException {
+      throw "No Internet connection. Please check your network.";
+    } on TimeoutException {
+      throw "The connection has timed out. Try again later.";
+    } on FormatException {
+      throw "Invalid response format. Please contact support.";
+    } on HttpException catch (e) {
+      throw "Unexpected error occurred: ${e.message}";
+    } catch (e) {
+      throw "An unexpected error occurred: ${e.toString()}";
+    }
+  }
+
+  /*-------------------------------------------------------*/
+  /*           Cancel send or pending request api          */
+  /*-------------------------------------------------------*/
+
+  static Future<http.Response?> cancelSendrequest(var data) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final userid = prefs.getString('userid').toString();
+
+      final uri = Uri.parse(
+          'https://projects.funtashtechnologies.com/gomeetapi/deletefriends.php');
+
+      final response = await http.post(
+        uri,
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: {
+          "connectionuserid": data['id'].toString(),
+          "userid": userid,
+        }, // form data (not JSON)
+      );
+
+      return response;
+    } on SocketException {
+      throw "No Internet connection. Please check your network.";
+    } on TimeoutException {
+      throw "The connection has timed out. Try again later.";
+    } on FormatException {
+      throw "Invalid response format. Please contact support.";
+    } on HttpException catch (e) {
+      throw "Unexpected error occurred: ${e.message}";
+    } catch (e) {
+      throw "An unexpected error occurred: ${e.toString()}";
+    }
+  }
+
+  /*-------------------------------------------------------*/
+  /*                ignore user request api                */
+  /*-------------------------------------------------------*/
+
+  static Future<http.Response?> ignoreSendrequest(var data) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final userid = prefs.getString('userid').toString();
+
+      final uri = Uri.parse(
+          'https://projects.funtashtechnologies.com/gomeetapi/removeconnectionreq.php');
+
+      final response = await http.post(
+        uri,
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: {
+          "connectionid": data['id'].toString(),
+          "userid": userid,
+        }, // form data (not JSON)
+      );
+
+      return response;
+    } on SocketException {
+      throw "No Internet connection. Please check your network.";
+    } on TimeoutException {
+      throw "The connection has timed out. Try again later.";
+    } on FormatException {
+      throw "Invalid response format. Please contact support.";
+    } on HttpException catch (e) {
+      throw "Unexpected error occurred: ${e.message}";
+    } catch (e) {
+      throw "An unexpected error occurred: ${e.toString()}";
+    }
+  }
+
+  /*-------------------------------------------------------*/
+  /*                check email exist or not               */
+  /*-------------------------------------------------------*/
+
+  static Future<http.Response?> emailExisOrNot(String email) async {
+    try {
+      final uri = Uri.parse(
+          'https://projects.funtashtechnologies.com/gomeetapi/checkemailexists.php');
+
+      final response = await http.post(
+        uri,
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: {
+          "email": email,
         }, // form data (not JSON)
       );
 

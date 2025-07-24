@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,9 @@ class AuthController extends GetxController {
   var createdAt = DateTime.now().obs; // Reactive variable to store created_at
 
   // Second form fields
+  final selectedGender = Rxn<String>();
   final height = Rxn<String>();
+
   final maritalStatus = Rxn<String>();
   final religion = Rxn<String>();
   final lookingForReligion = Rxn<String>();
@@ -75,7 +78,7 @@ class AuthController extends GetxController {
   final educationLevel = Rxn<String>();
   final lookingForEducation = Rxn<String>();
   final employmentStatus = Rxn<String>();
-  final monthlyIncome = Rxn<String>();
+  final monthlyIncome = Rxn<String?>();
   final currentResidence = Rxn<String>();
   final lookingForResidence = Rxn<String>();
 
@@ -119,6 +122,7 @@ class AuthController extends GetxController {
     'Other'
   ];
 
+  final List<String> genderOptions = ["male", "female"];
   // Dropdown options
   final List<String> heightOptions = [
     '4\'8"',
@@ -213,10 +217,9 @@ class AuthController extends GetxController {
   }
 
   bool isEmailValid(String email) {
-  final emailRegex = RegExp(r'^[a-zA-Z0-9._%-]+@gmail\.com$');
-  return emailRegex.hasMatch(email);
-}
-
+    final emailRegex = RegExp(r'^[a-zA-Z0-9._%-]+@gmail\.com$');
+    return emailRegex.hasMatch(email);
+  }
 
   String validateFields() {
     profileImage = profilepictureController.profileImage;
@@ -350,5 +353,117 @@ class AuthController extends GetxController {
   void logout() {
     userData({}); // Clear user data
     Get.snackbar('Logged out', 'You have been logged out.');
+  }
+
+  bool? emailResult;
+  String? emailResponseMessage = "Something went wrong please try again";
+  /*--------------------------------------------------*/
+  /*                  check is Email Exist            */
+  /*--------------------------------------------------*/
+  Future<void> checkIsEmailExist(String email) async {
+    try {
+      final response = await ApiService.emailExisOrNot(email);
+
+      if (response != null) {
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+          if (data['Result'] == "true") {
+            emailResponseMessage = data['ResponseMsg'];
+            emailResult = false;
+            update();
+          } else {
+            emailResult = true;
+            update();
+          }
+        } else {
+          emailResponseMessage = "Something went wrong please try again";
+          emailResult = false;
+          update();
+        }
+      } else {
+        emailResponseMessage = "Something went wrong please try again";
+        emailResult = false;
+        update();
+      }
+    } catch (e) {
+      emailResult = false;
+      emailResponseMessage = "$e";
+      update();
+    }
+  }
+
+  final PageController pageController = PageController();
+
+  int currentPageIndex = 0;
+
+  bool validateCurrentPage(int pageIndex) {
+    if (pageIndex == 1) {
+      if (firstNameController.text.isEmpty ||
+          lastNameController.text.isEmpty ||
+          emailController.text.isEmpty ||
+          passwordController.text.isEmpty ||
+          gender.value == null) {
+        showErrorSnackbar(
+            'Please fill in all required fields before proceeding.');
+        return false;
+      } else if (!isEmailValid(emailController.text)) {
+        showErrorSnackbar('Please enter a valid email address');
+        return false;
+      } else if (emailResult == false || emailResult == null) {
+        showErrorSnackbar("${emailResponseMessage}");
+        return false;
+      } else if (!isPasswordValid(passwordController.text)) {
+        showErrorSnackbar(
+            'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character');
+        return false;
+      }
+    }
+    if (pageIndex == 2) {
+      if (religion.value == null ||
+          lookingForReligion.value == null ||
+          height.value == null ||
+          maritalStatus.value == null ||
+          dateOfBirth.value == null) {
+        showErrorSnackbar(
+            'Please complete the required details before proceeding.');
+        return false;
+      }
+    }
+    if (pageIndex == 3) {
+      if (educationLevel.value == null ||
+          lookingForEducation.value == null ||
+          currentResidence.value == null ||
+          lookingForResidence.value == null ||
+          employmentStatus.value == null) {
+        showErrorSnackbar(
+            'Please fill in all required education and residence details.');
+        return false;
+      }
+    }
+    return true;
+  }
+
+  void showErrorSnackbar(String message) {
+    Get.snackbar('Error', message,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white);
+  }
+
+  void onPageChanged(int index) {
+    if (!validateCurrentPage(index)) {
+      pageController.jumpToPage(currentPageIndex);
+      return;
+    }
+
+    currentPageIndex = index;
+    update();
+  }
+
+  void onDotClicked(int index) {
+    if (validateCurrentPage(index)) {
+      pageController.animateToPage(index,
+          duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    }
   }
 }

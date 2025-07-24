@@ -47,6 +47,19 @@ class DocumentUploadController extends GetxController {
         );
         return;
       }
+    } else if (Platform.isIOS) {
+      PermissionStatus status = await Permission.photos.request();
+
+      if (!status.isGranted) {
+        Get.snackbar(
+          "Permission Denied",
+          "Photos permission is required to pick image.",
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
+        );
+        return;
+      }
     }
 
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
