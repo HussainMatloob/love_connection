@@ -44,8 +44,7 @@ class ProfileController extends GetxController {
   var isCountryLoading = true.obs;
 
   var cityOptions = <String>[].obs; // Cities for current residence
-  var lookingForCityOptions =
-      <String>[].obs; // Cities for looking for residence
+
   var isCityLoading = false.obs;
 
   var educationList = <String>[].obs;
@@ -291,18 +290,11 @@ class ProfileController extends GetxController {
       }
       List<String> cities = await _apiService.fetchCities(countryName);
 
-      lookingForCityOptions.clear();
       cityOptions.clear();
-
-      lookingForCityOptions.assignAll(cities);
-
-      // Ensure the selected value is valid
 
       cityOptions.assignAll(cities);
       cityOptions.add("Any");
     } catch (e) {
-      lookingForCityOptions.assignAll([]);
-
       cityOptions.assignAll([]);
     } finally {
       isCityLoading.value = false;

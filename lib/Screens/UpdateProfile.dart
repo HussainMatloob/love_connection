@@ -277,14 +277,12 @@ class _UpdateprofileState extends State<Updateprofile> {
                       : FormWidgets.buildDropdownPair1(
                           label1: 'Your City',
                           label2: 'Looking For',
-
                           value: authController.cityOfResidence,
                           lookingForValue: authController.lookingForCity,
-                          selfItems: controller.cityOptions,
-                          // Cities for Residence
-                          lookingForItems: controller.lookingForCityOptions
+                          selfItems: controller.cityOptions
                               .where((city) => city.toLowerCase() != "any")
-                              .toList(), // Cities for Looking For Residence
+                              .toList(),
+                          lookingForItems: controller.cityOptions,
                           hinttext: 'Select City',
                         ),
                   SizedBox(height: 8.h),
